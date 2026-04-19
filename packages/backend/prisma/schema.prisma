@@ -1,0 +1,227 @@
+// 하루 데이터 모델
+// Postgres + Prisma. 사용자·Area·Project·Task·Tag·Checklist·Share.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum TaskStatus {
+  OPEN
+  COMPLETED
+  CANCELED
+}
+
+enum SocialProvider {
+  KAKAO
+  NAVER
+  APPLE
+  GOOGLE
+  EMAIL
+}
+
+model User {
+  id            String    @id @default(uuid())
+  email         String?   @unique
+  passwordHash  String?
+  nickname      String
+  timezone      String    @default("Asia/Seoul")
+  locale        String    @default("ko-KR")
+  avatarUrl     String?
+  plan          String    @default("free") // free | pro | team
+  // 개인정보보호
+  marketingOptIn      Boolean  @default(false)
+  marketingOptInAt    DateTime?
+  privacyAgreedAt     DateTime
+  termsAgreedAt       DateTime
+  deletedAt     DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  socials       SocialAccount[]
+  areas         Area[]
+  projects      Project[]
+  tasks         Task[]
+  tags          Tag[]
+  memberships   AreaMember[]
+  sessions      Session[]
+  notificationPreference NotificationPreference?
+}
+
+model SocialAccount {
+  id         String         @id @default(uuid())
+  userId     String
+  user       User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  provider   SocialProvider
+  providerId String
+  createdAt  DateTime       @default(now())
+
+  @@unique([provider, providerId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  refreshHash  String
+  deviceLabel  String?
+  ipAddress    String?
+  userAgent    String?
+  expiresAt    DateTime
+  revokedAt    DateTime?
+  createdAt    DateTime @default(now())
+
+  @@index([userId])
+}
+
+model Area {
+  id        String   @id @default(uuid())
+  ownerId   String
+  owner     User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  title     String
+  colorHex  String   @default("#1C1C1E")
+  icon      String?
+  shared    Boolean  @default(false)
+  sortOrder Int      @default(0)
+  archivedAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  projects  Project[]
+  tasks     Task[]
+  members   AreaMember[]
+
+  @@index([ownerId])
+}
+
+model AreaMember {
+  id       String   @id @default(uuid())
+  areaId   String
+  area     Area     @relation(fields: [areaId], references: [id], onDelete: Cascade)
+  userId   String
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role     String   @default("member") // owner | member | viewer
+  invitedAt DateTime @default(now())
+  joinedAt  DateTime?
+
+  @@unique([areaId, userId])
+  @@index([userId])
+}
+
+model Project {
+  id        String     @id @default(uuid())
+  ownerId   String
+  owner     User       @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  areaId    String?
+  area      Area?      @relation(fields: [areaId], references: [id], onDelete: SetNull)
+  title     String
+  notes     String?    @db.Text
+  deadline  DateTime?
+  status    TaskStatus @default(OPEN)
+  sortOrder Int        @default(0)
+  completedAt DateTime?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  tasks     Task[]
+
+  @@index([ownerId])
+  @@index([areaId])
+}
+
+model Task {
+  id          String      @id @default(uuid())
+  ownerId     String
+  owner       User        @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  projectId   String?
+  project     Project?    @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  areaId      String?
+  area        Area?       @relation(fields: [areaId], references: [id], onDelete: SetNull)
+
+  title       String
+  notes       String?     @db.Text
+  status      TaskStatus  @default(OPEN)
+  /// 예정 시각 (오늘 뷰 표시 기준)
+  when        DateTime?
+  /// 마감 시각
+  deadline    DateTime?
+  allDay      Boolean     @default(true)
+
+  // 반복 규칙 (직렬화)
+  recurrenceJson Json?
+
+  sortOrder   Int         @default(0)
+  completedAt DateTime?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  checklistItems ChecklistItem[]
+  taskTags       TaskTag[]
+
+  @@index([ownerId, status, when])
+  @@index([projectId])
+  @@index([areaId])
+}
+
+model ChecklistItem {
+  id       String  @id @default(uuid())
+  taskId   String
+  task     Task    @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  title    String
+  done     Boolean @default(false)
+  sortOrder Int    @default(0)
+
+  @@index([taskId])
+}
+
+model Tag {
+  id       String    @id @default(uuid())
+  ownerId  String
+  owner    User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  name     String
+  colorHex String?
+  createdAt DateTime @default(now())
+
+  taskTags TaskTag[]
+
+  @@unique([ownerId, name])
+}
+
+model TaskTag {
+  taskId  String
+  tagId   String
+  task    Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  tag     Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([taskId, tagId])
+}
+
+model NotificationPreference {
+  userId       String   @id
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  push         Boolean  @default(true)
+  kakaoAlimtalk Boolean @default(false)
+  quietStart   String   @default("22:00")
+  quietEnd     String   @default("07:00")
+  dailyDigest  Boolean  @default(true)
+  digestHour   Int      @default(8)
+}
+
+/** 감사 로그 — 개인정보보호법 대응 */
+model AuditLog {
+  id        String   @id @default(uuid())
+  actorId   String?
+  action    String
+  resource  String
+  details   Json?
+  ipAddress String?
+  createdAt DateTime @default(now())
+
+  @@index([actorId])
+  @@index([createdAt])
+}
