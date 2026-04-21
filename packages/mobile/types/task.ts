@@ -15,6 +15,9 @@ export interface TaskItem {
   done?: boolean;
   doneAt?: string | null;
 
+  // 분류
+  someday?: boolean;
+
   // 메타 (나중에 스토어에서 사용)
   areaId?: string | null;
   projectId?: string | null;
