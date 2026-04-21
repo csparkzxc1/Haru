@@ -1,0 +1,1417 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<title>하루 — v2 확장 목업</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.css" rel="stylesheet">
+<style>
+:root {
+  --ink: #1C1C1E;
+  --paper: #FAFAF7;
+  --accent: #FF6B35;
+  --accent-2: #E04E2A;
+  --muted: #8E8E93;
+  --border: rgba(0,0,0,0.06);
+  --border-2: rgba(0,0,0,0.1);
+  --kakao: #FEE500;
+  --naver: #03C75A;
+  --toss: #0064FF;
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; padding: 0;
+  background: #EFEEE8;
+  font-family: "Pretendard Variable", Pretendard, -apple-system, system-ui, sans-serif;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  -webkit-font-smoothing: antialiased;
+}
+header.hero {
+  padding: 56px 32px 16px;
+  text-align: center;
+}
+header.hero h1 { font-size: 36px; font-weight: 800; margin: 0 0 8px; letter-spacing: -0.03em; }
+header.hero p { color: var(--muted); margin: 0; font-size: 14px; }
+header.hero .tag-v {
+  display: inline-block; background: var(--accent); color: #fff;
+  padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;
+  margin-top: 14px; letter-spacing: 0.02em;
+}
+.section-title {
+  font-size: 11px; font-weight: 700; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 0.18em;
+  margin: 64px 0 8px; text-align: center;
+}
+.section-desc { text-align: center; color: var(--muted); font-size: 13px; margin-bottom: 24px; }
+.row {
+  display: flex; gap: 32px;
+  justify-content: center; flex-wrap: wrap;
+  padding: 0 24px;
+}
+
+/* ---------- Phone frame ---------- */
+.phone {
+  width: 320px; height: 660px;
+  background: var(--paper);
+  border-radius: 44px;
+  box-shadow: 0 0 0 10px #111, 0 0 0 12px #2a2a2a, 0 28px 60px rgba(0,0,0,0.22);
+  overflow: hidden; position: relative;
+  display: flex; flex-direction: column;
+}
+.phone .notch {
+  position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
+  width: 110px; height: 30px; background: #111; border-radius: 16px; z-index: 10;
+}
+.statusbar {
+  height: 50px; flex-shrink: 0;
+  display: flex; justify-content: space-between; align-items: flex-end;
+  padding: 0 20px 6px;
+  font-size: 11px; font-weight: 600;
+}
+.screen-body {
+  flex: 1; overflow: hidden;
+  padding: 10px 20px 6px;
+  display: flex; flex-direction: column;
+}
+.screen-title { font-size: 26px; font-weight: 700; letter-spacing: -0.02em; margin: 6px 0 2px; }
+.screen-sub { font-size: 11px; color: var(--muted); margin-bottom: 14px; }
+.screen-sub .badge {
+  display: inline-block; color: #fff; background: var(--accent);
+  padding: 1px 6px; border-radius: 8px; font-size: 9px; margin-left: 4px; vertical-align: middle;
+}
+
+.quick {
+  border: 1px solid var(--border-2); border-radius: 12px;
+  padding: 10px 12px; font-size: 12px; color: var(--muted);
+  margin-bottom: 8px;
+  display: flex; align-items: center; gap: 6px;
+}
+.quick.active { border-color: var(--accent); color: var(--ink); }
+
+ul.tasks { list-style: none; margin: 0; padding: 0; overflow-y: auto; flex: 1; }
+ul.tasks li {
+  display: flex; gap: 10px; padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  align-items: flex-start;
+  position: relative;
+}
+.check {
+  width: 18px; height: 18px; border-radius: 50%;
+  border: 1.5px solid var(--muted); flex-shrink: 0; margin-top: 2px;
+  display: flex; align-items: center; justify-content: center;
+}
+.check.done { background: var(--accent); border-color: var(--accent); color: #fff; font-size: 10px; }
+.check.star { border-color: var(--accent); color: var(--accent); }
+.task-title { font-size: 14px; line-height: 1.35; }
+.task-title.done { text-decoration: line-through; color: var(--muted); }
+.task-meta { font-size: 10px; color: var(--muted); margin-top: 3px; display: flex; flex-wrap: wrap; gap: 8px; }
+.tag { background: rgba(0,0,0,0.05); padding: 1px 5px; border-radius: 3px; }
+.deadline-badge { background: rgba(224,78,42,0.12); color: var(--accent-2); padding: 1px 5px; border-radius: 3px; }
+.priority { color: var(--accent); font-weight: 700; }
+
+.tabbar {
+  border-top: 1px solid var(--border); height: 62px;
+  display: flex; padding-bottom: 10px;
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(10px); flex-shrink: 0;
+}
+.tab {
+  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  font-size: 9px; color: var(--muted); gap: 2px; padding-top: 6px;
+}
+.tab .ico { font-size: 16px; line-height: 1; }
+.tab.active { color: var(--accent); }
+
+.fab {
+  position: absolute; bottom: 78px; right: 18px;
+  width: 52px; height: 52px; border-radius: 50%;
+  background: var(--accent); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px;
+  box-shadow: 0 8px 20px rgba(255,107,53,0.4);
+  z-index: 5;
+}
+
+.caption { text-align: center; color: var(--muted); font-size: 12px; margin-top: 14px; max-width: 320px; }
+.caption strong { color: var(--ink); font-weight: 600; }
+
+/* ---------- Onboarding ---------- */
+.ob-illust {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  flex-direction: column; padding: 30px 20px;
+}
+.ob-logo {
+  width: 100px; height: 100px; border-radius: 30px;
+  background: linear-gradient(135deg, var(--accent), #FF8A5B);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 52px; color: #fff; font-weight: 800;
+  box-shadow: 0 20px 40px rgba(255,107,53,0.25);
+  margin-bottom: 30px;
+}
+.ob-title { font-size: 26px; font-weight: 800; text-align: center; letter-spacing: -0.02em; margin: 0 0 10px; }
+.ob-desc { font-size: 13px; color: var(--muted); text-align: center; line-height: 1.5; max-width: 240px; margin: 0 auto; }
+.ob-dots { display: flex; justify-content: center; gap: 6px; padding: 18px 0; }
+.ob-dots span { width: 6px; height: 6px; border-radius: 50%; background: rgba(0,0,0,0.12); }
+.ob-dots span.active { background: var(--accent); width: 18px; border-radius: 3px; }
+.ob-btn {
+  margin: 0 20px 16px; padding: 14px; border-radius: 14px;
+  background: var(--ink); color: #fff; text-align: center;
+  font-size: 14px; font-weight: 600;
+}
+.ob-btn.kakao { background: var(--kakao); color: #3C1E1E; }
+.ob-btn.naver { background: var(--naver); color: #fff; }
+.ob-btn.apple { background: #000; color: #fff; }
+.ob-btn.ghost { background: transparent; color: var(--muted); font-weight: 500; font-size: 12px; margin-bottom: 22px; }
+.ob-btn.line { background: transparent; border: 1px solid var(--border-2); color: var(--ink); }
+
+/* Permission cards */
+.perm-card {
+  display: flex; gap: 12px; padding: 14px;
+  background: #fff; border-radius: 14px; margin-bottom: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  border: 1px solid var(--border);
+}
+.perm-card .icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  background: rgba(255,107,53,0.12);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+}
+.perm-card h4 { margin: 0 0 3px; font-size: 13px; font-weight: 600; }
+.perm-card p { margin: 0; font-size: 11px; color: var(--muted); line-height: 1.4; }
+.toggle {
+  width: 40px; height: 24px; border-radius: 12px; background: var(--accent);
+  position: relative; flex-shrink: 0; align-self: center;
+}
+.toggle::after {
+  content: ""; position: absolute; top: 2px; right: 2px;
+  width: 20px; height: 20px; border-radius: 50%; background: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.toggle.off { background: rgba(0,0,0,0.14); }
+.toggle.off::after { right: auto; left: 2px; }
+
+/* Empty state */
+.empty {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; padding: 40px 24px;
+}
+.empty-art {
+  width: 120px; height: 120px; border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #FFE4D1, #FFF1E6);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 48px; margin-bottom: 20px;
+}
+.empty h3 { margin: 0 0 6px; font-size: 18px; font-weight: 700; letter-spacing: -0.02em; }
+.empty p { margin: 0 0 18px; font-size: 12px; color: var(--muted); text-align: center; line-height: 1.5; }
+.empty-cta {
+  padding: 10px 20px; background: var(--accent); color: #fff;
+  border-radius: 20px; font-size: 12px; font-weight: 600;
+}
+
+/* Task detail */
+.back-row { display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--muted); margin-bottom: 10px; }
+.back-row .back { font-size: 18px; color: var(--ink); }
+.detail-title { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; margin: 0 0 4px; line-height: 1.3; }
+.detail-sub { font-size: 11px; color: var(--muted); margin-bottom: 14px; }
+.detail-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.detail-chip {
+  background: #fff; border: 1px solid var(--border); padding: 5px 9px;
+  border-radius: 20px; font-size: 10px;
+  display: flex; align-items: center; gap: 4px;
+}
+.detail-chip.accent { background: rgba(255,107,53,0.1); border-color: transparent; color: var(--accent); font-weight: 600; }
+.detail-chip.red { background: rgba(224,78,42,0.1); border-color: transparent; color: var(--accent-2); font-weight: 600; }
+.detail-section { margin-bottom: 12px; }
+.detail-section h5 { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em; margin: 0 0 6px; }
+.notes {
+  background: #fff; border: 1px solid var(--border); border-radius: 10px;
+  padding: 10px; font-size: 12px; line-height: 1.5; color: #333;
+}
+.notes b { font-weight: 700; }
+.subtask {
+  display: flex; gap: 8px; padding: 7px 0; align-items: center;
+  font-size: 12px;
+}
+.sub-check { width: 14px; height: 14px; border-radius: 4px; border: 1.5px solid var(--muted); }
+.sub-check.done { background: var(--accent); border-color: var(--accent); }
+
+/* Swipe demo */
+.swipe-demo-wrap ul.tasks li { overflow: visible; }
+.swipe-row {
+  position: relative; padding: 0 !important; border: none !important;
+  margin-bottom: 8px;
+}
+.swipe-bg {
+  position: absolute; inset: 0; display: flex;
+  align-items: center; justify-content: space-between;
+  border-radius: 10px; padding: 0 16px; font-size: 11px; font-weight: 600;
+}
+.swipe-bg .done-bg { color: #fff; display: flex; align-items: center; gap: 4px; }
+.swipe-bg .post-bg { color: #fff; display: flex; align-items: center; gap: 4px; }
+.swipe-bg-left { background: var(--accent); }
+.swipe-bg-right { background: #4C7AE8; }
+.swipe-content {
+  position: relative; background: var(--paper); padding: 12px;
+  border-radius: 10px;
+  display: flex; gap: 10px; align-items: flex-start;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  border: 1px solid var(--border);
+}
+.swipe-content.slide-right { transform: translateX(70px); }
+.swipe-content.slide-left { transform: translateX(-70px); }
+.swipe-hint {
+  background: rgba(0,0,0,0.04); padding: 8px 10px; border-radius: 8px;
+  font-size: 10px; color: var(--muted); margin-bottom: 10px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+
+/* Magic Plus drag demo */
+.magic-cal {
+  display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px;
+  margin-top: 14px;
+}
+.magic-cal .d {
+  aspect-ratio: 1; border: 1px dashed transparent;
+  font-size: 11px; display: flex; align-items: center; justify-content: center;
+  border-radius: 8px; color: var(--muted);
+}
+.magic-cal .d.target {
+  border-color: var(--accent); background: rgba(255,107,53,0.1); color: var(--accent); font-weight: 700;
+}
+.magic-cal .d.today { background: var(--accent); color: #fff; font-weight: 600; }
+.drag-card {
+  position: absolute; width: 180px; padding: 10px 12px;
+  background: #fff; border-radius: 10px;
+  box-shadow: 0 14px 28px rgba(0,0,0,0.18);
+  font-size: 12px; font-weight: 600;
+  transform: rotate(-3deg);
+  border: 1px solid var(--border);
+}
+.drag-card .meta { font-size: 10px; color: var(--muted); font-weight: 400; margin-top: 2px; }
+.drag-trail {
+  position: absolute; border: 2px dashed var(--accent);
+  border-radius: 8px; opacity: 0.4;
+}
+
+/* Search */
+.search-bar {
+  background: rgba(0,0,0,0.06); border-radius: 10px;
+  padding: 9px 12px; display: flex; align-items: center; gap: 8px;
+  margin-bottom: 12px; font-size: 13px;
+}
+.search-bar .cancel { margin-left: auto; color: var(--accent); font-size: 12px; font-weight: 500; }
+.filter-pills { display: flex; gap: 6px; overflow-x: auto; margin-bottom: 12px; padding-bottom: 4px; }
+.filter-pills::-webkit-scrollbar { display: none; }
+.pill {
+  padding: 4px 10px; border: 1px solid var(--border-2);
+  border-radius: 20px; font-size: 10px; white-space: nowrap;
+}
+.pill.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+.search-group { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin: 8px 0 6px; }
+
+/* Settings */
+.settings-group {
+  background: #fff; border-radius: 14px; margin-bottom: 14px;
+  border: 1px solid var(--border); overflow: hidden;
+}
+.settings-row {
+  padding: 12px 14px; display: flex; align-items: center; gap: 12px;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.settings-row:last-child { border-bottom: none; }
+.settings-row .icon {
+  width: 28px; height: 28px; border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; flex-shrink: 0; color: #fff;
+}
+.settings-row .chevron { margin-left: auto; color: var(--muted); }
+.settings-row .value { margin-left: auto; font-size: 12px; color: var(--muted); }
+.settings-header {
+  font-size: 11px; color: var(--muted); text-transform: uppercase;
+  letter-spacing: 0.12em; padding: 4px 14px 8px;
+}
+.profile-card {
+  background: #fff; border-radius: 16px; padding: 16px;
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 16px; border: 1px solid var(--border);
+}
+.avatar {
+  width: 50px; height: 50px; border-radius: 50%;
+  background: linear-gradient(135deg, #FF6B35, #FFB088);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 20px; font-weight: 700;
+}
+.profile-card h4 { margin: 0 0 2px; font-size: 15px; }
+.profile-card p { margin: 0; font-size: 11px; color: var(--muted); }
+.pro-badge { display: inline-block; background: var(--accent); color: #fff; padding: 1px 6px; border-radius: 4px; font-size: 9px; font-weight: 700; margin-left: 6px; vertical-align: middle; }
+
+/* ---------- iOS Home screen with widgets ---------- */
+.home-screen {
+  background: linear-gradient(180deg, #2c3e50 0%, #465971 40%, #7B8BA3 100%);
+  color: #fff; padding: 8px 16px 0;
+}
+.home-screen .statusbar { color: #fff; }
+.widget-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+  margin-top: 14px;
+}
+.widget {
+  background: rgba(255,255,255,0.96); color: var(--ink);
+  border-radius: 18px; padding: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+.widget.span-2 { grid-column: span 2; }
+.widget h5 { margin: 0 0 6px; font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; display: flex; align-items: center; gap: 4px; }
+.widget h5 .dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; }
+.widget-item {
+  display: flex; align-items: center; gap: 6px; font-size: 11px;
+  padding: 3px 0; line-height: 1.3;
+}
+.widget-item .mini-check { width: 10px; height: 10px; border-radius: 50%; border: 1.2px solid var(--muted); flex-shrink: 0; }
+.widget-item .mini-check.done { background: var(--accent); border-color: var(--accent); }
+.widget-item .mini-check.star { border-color: var(--accent); background: var(--accent); }
+.dday-num { font-size: 42px; font-weight: 800; letter-spacing: -0.04em; color: var(--accent); line-height: 1; margin: 4px 0; }
+.dday-label { font-size: 11px; color: var(--muted); }
+.progress-ring {
+  width: 60px; height: 60px; border-radius: 50%;
+  background: conic-gradient(var(--accent) 0% 72%, rgba(0,0,0,0.08) 72% 100%);
+  display: flex; align-items: center; justify-content: center;
+  position: relative; margin: 6px auto;
+}
+.progress-ring::after {
+  content: ""; position: absolute; inset: 5px; background: #fff; border-radius: 50%;
+}
+.progress-ring span { position: relative; font-size: 14px; font-weight: 700; z-index: 1; }
+.weekly-stats { display: flex; justify-content: space-around; margin-top: 4px; }
+.weekly-stats .stat { text-align: center; font-size: 10px; color: var(--muted); }
+.weekly-stats .stat b { display: block; font-size: 13px; color: var(--ink); font-weight: 700; }
+
+.dock {
+  margin-top: auto; margin: 14px -4px 0;
+  background: rgba(255,255,255,0.2); backdrop-filter: blur(20px);
+  border-radius: 22px; padding: 10px;
+  display: flex; justify-content: space-around;
+}
+.dock-icon {
+  width: 44px; height: 44px; border-radius: 11px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+}
+.dock-icon.haru { background: linear-gradient(135deg, var(--accent), #FF8A5B); color: #fff; font-weight: 800; font-size: 20px; }
+.dock-icon.phone { background: #4CD964; }
+.dock-icon.msg { background: #34C759; }
+.dock-icon.safari { background: #3498db; }
+
+/* Web frame */
+.desktop {
+  width: 900px; max-width: calc(100vw - 48px);
+  height: 600px; background: var(--paper);
+  border-radius: 12px;
+  box-shadow: 0 28px 60px rgba(0,0,0,0.2);
+  overflow: hidden; display: flex; flex-direction: column;
+}
+.desktop-chrome {
+  height: 32px; background: #E9E8E2;
+  display: flex; align-items: center; padding: 0 12px; gap: 6px;
+  border-bottom: 1px solid var(--border);
+}
+.chrome-dot { width: 11px; height: 11px; border-radius: 50%; background: #d8d8d8; }
+.chrome-dot.r { background: #FF605C; }
+.chrome-dot.y { background: #FFBD44; }
+.chrome-dot.g { background: #00CA4E; }
+.chrome-url {
+  margin-left: 12px; font-size: 11px; color: var(--muted);
+  background: rgba(0,0,0,0.05); padding: 3px 10px; border-radius: 4px;
+}
+.desktop-body { flex: 1; display: flex; overflow: hidden; }
+.sidebar {
+  width: 220px; flex-shrink: 0;
+  border-right: 1px solid var(--border);
+  padding: 20px 12px; font-size: 13px; overflow-y: auto;
+}
+.sidebar .logo { font-size: 18px; font-weight: 700; padding: 4px 10px; margin-bottom: 18px; }
+.sidebar .nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 7px 10px; border-radius: 6px; color: var(--ink);
+}
+.sidebar .nav-item:hover { background: rgba(0,0,0,0.04); }
+.sidebar .nav-item.active { background: rgba(255,107,53,0.12); color: var(--accent); font-weight: 600; }
+.sidebar .nav-item .ico { width: 16px; text-align: center; color: var(--muted); }
+.sidebar .nav-item.active .ico { color: var(--accent); }
+.sidebar .group-title { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.15em; padding: 12px 10px 6px; margin-top: 8px; }
+.sidebar .area-color { width: 8px; height: 8px; border-radius: 2px; }
+.sidebar .count { margin-left: auto; font-size: 10px; color: var(--muted); }
+.main { flex: 1; padding: 32px 40px; overflow-y: auto; }
+.main h1 { font-size: 26px; font-weight: 700; letter-spacing: -0.02em; margin: 0 0 6px; }
+.main .sub { font-size: 13px; color: var(--muted); margin-bottom: 22px; }
+
+/* Web calendar */
+.cal-month {
+  display: grid; grid-template-columns: repeat(7, 1fr);
+  border-left: 1px solid var(--border);
+  border-top: 1px solid var(--border);
+}
+.cal-month .dow {
+  font-size: 11px; color: var(--muted); padding: 8px;
+  border-right: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  font-weight: 600;
+}
+.cal-month .dow.sun { color: var(--accent-2); }
+.cal-month .cell {
+  height: 82px; padding: 6px;
+  border-right: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  font-size: 11px; position: relative;
+}
+.cal-month .cell.other { background: rgba(0,0,0,0.015); color: var(--muted); }
+.cal-month .cell.today .date { background: var(--accent); color: #fff; }
+.cal-month .cell .date {
+  display: inline-flex; width: 20px; height: 20px; border-radius: 50%;
+  align-items: center; justify-content: center; font-weight: 600;
+}
+.cal-month .cell .holi { color: var(--accent-2); font-weight: 600; font-size: 9px; margin-left: 4px; }
+.cal-event {
+  background: var(--accent); color: #fff; font-size: 9px;
+  padding: 1px 4px; border-radius: 3px; margin-top: 3px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.cal-event.blue { background: #4C7AE8; }
+.cal-event.green { background: #39B27E; }
+.cal-event.ghost { background: rgba(0,0,0,0.05); color: var(--ink); }
+
+/* Web project detail */
+.proj-header {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: 14px;
+}
+.proj-stat {
+  display: flex; gap: 16px; margin-bottom: 18px;
+  background: #fff; border: 1px solid var(--border);
+  border-radius: 10px; padding: 14px;
+}
+.proj-stat .stat-col { flex: 1; }
+.proj-stat .stat-col label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
+.proj-stat .stat-col .val { font-size: 18px; font-weight: 700; margin-top: 4px; }
+.proj-stat .stat-col .val small { font-size: 11px; color: var(--muted); font-weight: 400; margin-left: 4px; }
+.progress { height: 4px; background: rgba(0,0,0,0.08); border-radius: 2px; overflow: hidden; }
+.progress > div { height: 100%; background: var(--accent); }
+
+footer {
+  text-align: center; padding: 80px 24px 100px;
+  color: var(--muted); font-size: 12px;
+}
+footer strong { color: var(--ink); }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <h1>하루 — 앱 화면 전체 가이드</h1>
+  <p>Things 3 철학 × 한국 문화 · iOS/Android/Web · 18개 화면</p>
+  <div class="tag-v">v2 · Extended Mockup</div>
+</header>
+
+<!-- ================== 온보딩 ================== -->
+<div class="section-title">Part 1 · 온보딩 & 첫 진입</div>
+<div class="section-desc">첫 실행부터 첫 할 일 입력까지 90초 이내</div>
+<div class="row">
+
+  <!-- Onboarding 1: Welcome -->
+  <div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="statusbar"><span>9:41</span><span>5G · 100%</span></div>
+      <div class="ob-illust">
+        <div class="ob-logo">ㅎ</div>
+        <h2 class="ob-title">오늘도 하루, 나답게</h2>
+        <p class="ob-desc">복잡한 할 일을 깔끔하게, 한국인의 일상에 딱 맞는 태스크 매니저</p>
+      </div>
+      <div class="ob-dots"><span class="active"></span><span></span><span></span></div>
+      <div class="ob-btn">시작하기</div>
+      <div class="ob-btn ghost">이미 계정이 있어요</div>
+    </div>
+    <div class="caption">① 웰컴 — <strong>로고는 "ㅎ"</strong> 하나로 브랜드화</div>
+  </div>
+
+  <!-- Onboarding 2: Login -->
+  <div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="statusbar"><span>9:41</span><span>5G · 100%</span></div>
+      <div class="screen-body">
+        <h2 class="ob-title" style="margin-top: 40px;">로그인</h2>
+        <p class="ob-desc" style="margin-bottom: 36px;">3초 만에 시작하세요. 데이터는 국내 서버에 안전하게 보관됩니다.</p>
+        <div class="ob-btn kakao">
+          💬 &nbsp; 카카오로 3초 만에 시작
+        </div>
+        <div class="ob-btn naver">
+          N &nbsp; 네이버로 시작
+        </div>
+        <div class="ob-btn apple">
+          🍎 &nbsp; Apple로 계속
+        </div>
+        <div class="ob-btn line">이메일로 가입</div>
+        <div style="flex: 1;"></div>
+        <p style="font-size: 10px; color: var(--muted); text-align: center; margin-bottom: 20px; line-height: 1.5;">
+          가입 시 <u>이용약관</u> 및 <u>개인정보 처리방침</u>에 동의합니다.<br>
+          🇰🇷 데이터는 네이버클라우드 한국 리전에 저장됩니다.
+        </p>
+      </div>
+    </div>
+    <div class="caption">② 로그인 — <strong>카카오 최우선</strong> · 국내 데이터 저장 명시</div>
+  </div>
+
+  <!-- Onboarding 3: Permissions -->
+  <div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="statusbar"><span>9:41</span><span>5G · 100%</span></div>
+      <div class="screen-body">
+        <div style="font-size: 11px; color: var(--muted); margin-top: 20px;">3/3 · 권한 설정</div>
+        <h2 style="font-size: 22px; font-weight: 700; margin: 4px 0 18px; letter-spacing: -0.02em;">마지막으로, 연동을 설정해요</h2>
+
+        <div class="perm-card">
+          <div class="icon">🔔</div>
+          <div style="flex:1;">
+            <h4>푸시 알림</h4>
+            <p>중요한 일정과 마감 시간 알림</p>
+          </div>
+          <div class="toggle"></div>
+        </div>
+
+        <div class="perm-card">
+          <div class="icon" style="background: rgba(3,199,90,0.12);">📅</div>
+          <div style="flex:1;">
+            <h4>네이버 캘린더 연동</h4>
+            <p>기존 일정을 하루로 가져오기</p>
+          </div>
+          <div class="toggle"></div>
+        </div>
+
+        <div class="perm-card">
+          <div class="icon" style="background: rgba(76,122,232,0.12);">📍</div>
+          <div style="flex:1;">
+            <h4>위치 기반 리마인더</h4>
+            <p>"GS25 가면 택배 찾기" 같은 기능</p>
+          </div>
+          <div class="toggle off"></div>
+        </div>
+
+        <div class="perm-card">
+          <div class="icon" style="background: rgba(255,180,0,0.15);">💳</div>
+          <div style="flex:1;">
+            <h4>토스 알림 연동</h4>
+            <p>카드대금·관리비 자동 할 일 추가</p>
+          </div>
+          <div class="toggle"></div>
+        </div>
+
+        <div class="ob-btn" style="margin-top: 14px;">하루 시작하기</div>
+      </div>
+    </div>
+    <div class="caption">③ 권한 — <strong>각 권한의 가치</strong>를 한 줄로 설명</div>
+  </div>
+
+</div>
+
+<!-- ================== 핵심 화면 ================== -->
+<div class="section-title">Part 2 · 핵심 4뷰</div>
+<div class="section-desc">오늘 · 이번주 · 예정 · 언젠가 — Things 3 + 한국화</div>
+<div class="row">
+
+  <!-- Today -->
+  <div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="statusbar"><span>9:41</span><span>5G · 100%</span></div>
+      <div class="screen-body">
+        <div class="screen-title">오늘</div>
+        <div class="screen-sub">4월 20일 월요일<span class="badge">오늘</span></div>
+        <div class="quick active">＋ 내일 오후 3시 팀 회의 #회의 !</div>
+        <div style="background: rgba(0,0,0,0.03); border-radius: 8px; padding: 7px 10px; font-size: 10px; color: var(--muted); margin-bottom: 14px;">
+          📝 팀 회의 <span style="background:rgba(255,107,53,0.12); color:var(--accent); padding:1px 6px; border-radius:4px; margin-left:4px;">📅 4/21 15:00</span>
+        </div>
+        <ul class="tasks">
+          <li><div class="check"></div><div>
+            <div class="task-title">주간보고 초안 작성</div>
+            <div class="task-meta"><span>📅 오전 10시</span><span class="tag">#보고</span></div>
+          </div></li>
+          <li><div class="check star">★</div><div>
+            <div class="task-title">치과 예약 확정 전화</div>
+            <div class="task-meta"><span>📅 오후 2시</span><span class="tag">#15분컷</span></div>
+          </div></li>
+          <li><div class="check"></div><div>
+            <div class="task-title">토스 카드대금 확인 <span class="priority">!!</span></div>
+            <div class="task-meta"><span class="deadline-badge">⏰ 오늘 마감</span></div>
+          </div></li>
+          <li><div class="check done">✓</div><div>
+            <div class="task-title done">아침 커피콩 주문</div>
+          </div></li>
+        </ul>
+      </div>
+      <div class="fab">＋</div>
+      <div class="tabbar">
+        <div class="tab active"><span class="ico">☀︎</span>오늘</div>
+        <div class="tab"><span class="ico">▦</span>이번주</div>
+        <div class="tab"><span class="ico">▷</span>예정</div>
+        <div class="tab"><span class="ico">∞</span>언제든지</div>
+        <div class="tab"><span class="ico">✧</span>언젠가</div>
+      </div>
+    </div>
+    <div class="caption">④ 오늘 — 자연어 Quick Entry</div>
+  </div>
+
+  <!-- Empty state -->
+  <div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="statusbar"><span>9:41</span><span>5G · 100%</span></div>
+      <div class="screen-body">
+        <div class="screen-title">오늘</div>
+        <div class="screen-sub">4월 20일 월요일<span class="badge">오늘</span></div>
+        <div class="empty">
+          <div class="empty-art">🌤️</div>
+          <h3>오늘은 비워둘까요?</h3>
+          <p>할 일이 없어요. 충분히 쉬어도 괜찮아요.<br>또는 언젠가 목록에서 하나 꺼내볼까요?</p>
+          <div class="empty-cta">＋ 새 할 일 추가</div>
+          <div style="margin-top: 12px; font-size: 11px; color: var(--accent); font-weight: 500;">
+            언젠가 목록 보기 →
+          </div>
+        </div>
+      </div>
+      <div class="tabbar">
+        <div class="tab active"><span class="ico">☀︎</span>오늘</div>
+        <div class="tab"><span class="ico">▦</span>이번주</div>
+        <div class="tab"><span class="ico">▷</span>예정</div>
+        <div class="tab"><span class="ico">∞</span>언제든지</div>
+        <div class="tab"><span class="ico">✧</span>언젠가</div>
+      </div>
+    </div>
+    <div class="caption">⑤ 빈 상태 — <strong>"쉬어도 괜찮다"</strong> 부담 없는 카피</div>
+  </div>
+
+  <!-- This week (recap) -->
+  <div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="statusbar"><span>9:41</span><span>5G · 100%</span></div>
+      <div class="screen-body">
+        <div class="screen-title">이번주</div>
+        <div class="screen-sub">4월 20일 — 26일 · 공휴일 없음</div>
+        <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; margin: 6px 0 12px;">
+          <div style="font-size:9px;color:var(--muted);text-align:center;padding-bottom:2px;">일</div>
+          <div style="font-size:9px;color:var(--muted);text-align:center;padding-bottom:2px;">월</div>
+          <div style="font-size:9px;color:var(--muted);text-align:center;padding-bottom:2px;">화</div>
+          <div style="font-size:9px;color:var(--muted);text-align:center;padding-bottom:2px;">수</div>
+          <div style="font-size:9px;color:var(--muted);text-align:center;padding-bottom:2px;">목</div>
+          <div style="font-size:9px;color:var(--muted);text-align:center;padding-bottom:2px;">금</div>
+          <div style="font-size:9px;color:var(--muted);text-align:center;padding-bottom:2px;">토</div>
+          <div style="aspect-ratio:1;font-size:10px;display:flex;align-items:center;justify-content:center;color:var(--accent-2);">19</div>
+          <div style="aspect-ratio:1;font-size:10px;display:flex;align-items:center;justify-content:center;background:var(--accent);color:#fff;border-radius:50%;font-weight:600;">20</div>
+          <div style="aspect-ratio:1;font-size:10px;display:flex;align-items:center;justify-content:center;">21</div>
+          <div style="aspect-ratio:1;font-size:10px;display:flex;align-items:center;justify-content:center;">22</div>
+          <div style="aspect-ratio:1;font-size:10px;display:flex;align-items:center;justify-content:center;">23</div>
+          <div style="aspect-ratio:1;font-size:10px;display:flex;align-items:center;justify-content:center;">24</div>
+          <div style="aspect-ratio:1;font-size:10px;display:flex;align-items:center;justify-content:center;">25</div>
+        </div>
+        <ul class="tasks">
+          <li><div class="check"></div><div><div class="task-title">주간 OKR 업데이트</div><div class="task-meta"><span>월요일 오전</span><span class="tag">#보고</span></div></div></li>
+          <li><div class="check"></div><div><div class="task-title">영어학원 등록 연장</div><div class="task-meta"><span>화요일</span><span class="deadline-badge">⏰ 이번주 마감</span></div></div></li>
+          <li><div class="check"></div><div><div class="task-title">정처기 실기 인강 2강</div><div class="task-meta"><span>수요일 저녁</span><span class="tag">#자격증</span></div></div></li>
+          <li><div class="check"></div><div><div class="task-title">장모님 생신 선물 주문</div><div class="task-meta"><span>금요일</span><span class="tag">#경조사</span></div></div></li>
+        </ul>
+      </div>
+      <div class="tabbar">
+        <div class="tab"><span class="ico">☀︎</span>오늘</div>
+        <div class="tab active"><span class="ico">▦</span>이번주</div>
+        <div class="tab"><span class="ico">▷</span>예정</div>
+        <div class="tab"><span class="ico">∞</span>언제든지</div>
+        <div class="tab"><span class="ico">✧</span>언젠가</div>
+      </div>
+    </div>
+    <div class="caption">⑥ 이번주 — 한국 직장인 전용 주간뷰</div>
+  </div>
+
+</div>
+
+<!-- ================== 인터랙션 & 상세 ================== -->
+<div class="section-title">Part 3 · 인터랙션 & 디테일</div>
+<div class="section-desc">스와이프·드래그·상세 정보 처리</div>
+<div class="row">
+
+  <!-- Task detail -->
+  <div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="statusbar"><span>9:41</span><span>5G · 100%</span></div>
+      <div class="screen-body" style="overflow-y: auto;">
+        <div class="back-row">
+          <span class="back">←</span>
+          <span>회사 · Q2 런칭 준비</span>
+        </div>
+        <h2 class="detail-title">PG사 계약서 검토</h2>
+        <div class="detail-sub">토스페이먼츠 vs 카카오페이 수수료 비교</div>
+
+        <div class="detail-chips">
+          <div class="detail-chip red">⏰ 금요일까지</div>
+          <div class="detail-chip accent">! 높음</div>
+          <div class="detail-chip">⏱️ 2시간</div>
+          <div class="detail-chip">🔁 매분기</div>
+        </div>
+
+        <div class="detail-section">
+          <h5>노트</h5>
+          <div class="notes">
+            <b>비교 기준</b><br>
+            • 결제 수수료율 (카드/간편결제별)<br>
+            • 정산 주기 (D+1 vs D+2)<br>
+            • API 연동 난이도<br>
+            • 해외카드 지원 범위
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <h5>체크리스트 (2/4)</h5>
+          <div class="subtask"><div class="sub-check done"></div><span style="text-decoration: line-through; color: var(--muted);">견적서 수령</span></div>
+          <div class="subtask"><div class="sub-check done"></div><span style="text-decoration: line-through; color: var(--muted);">수수료표 엑셀 정리</span></div>
+          <div class="subtask"><div class="sub-check"></div><span>법무팀 리뷰 요청</span></div>
+          <div class="subtask"><div class="sub-check"></div><span>대표님 최종 승인</span></div>
+        </div>
+
+        <div class="detail-section">
+          <h5>태그</h5>
+          <div class="detail-chips">
+            <div class="detail-chip">#계약</div>
+            <div class="detail-chip">#결재대기</div>
+            <div class="detail-chip">#PG</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="caption">⑦ 할 일 상세 — 노트·체크리스트·반복·태그</div>
+  </div>
+
+  <!-- Swipe demo -->
+  <div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="statusbar"><span>9:41</span><span>5G · 100%</span></div>
+      <div class="screen-body swipe-demo-wrap">
+        <div class="screen-title">스와이프</div>
+        <div class="screen-sub">왼쪽 → 미루기 · 오른쪽 → 완료</div>
+
+        <div class="swipe-hint">
+          <span>👉 오른쪽으로 밀어 완료</span>
+        </div>
+
+        <div class="swipe-row" style="height: 56px;">
+          <div class="swipe-bg swipe-bg-left">
+            <div class="done-bg">✓ 완료</div>
+            <span></span>
+          </div>
+          <div class="swipe-content slide-right">
+            <div class="check"></div>
+            <div>
+              <div class="task-title">아침 커피콩 주문</div>
+              <div class="task-meta"><span class="tag">#집</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="swipe-hint">
+          <span>👈 왼쪽으로 밀어 미루기</span>
+        </div>
+
+        <div class="swipe-row" style="height: 56px;">
+          <div class="swipe-bg swipe-bg-right">
+            <span></span>
+            <div class="post-bg">내일 →</div>
+          </div>
+          <div class="swipe-content slide-left">
+            <div class="check"></div>
+            <div>
+              <div class="task-title">주간보고 초안 작성</div>
+              <div class="task-meta"><span>📅 오전 10시</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div style="background: rgba(76,122,232,0.08); border-radius: 10px; padding: 12px; font-size: 11px; margin-top: 16px;">
+          <b style="color: #4C7AE8;">💡 꿀팁</b><br>
+          <span style="color: var(--muted); line-height: 1.5;">
+          오른쪽 길게 스와이프: 바로 완료<br>
+          왼쪽 길게 스와이프: 언젠가 목록으로<br>
+          두 손가락 탭: 별표 토글
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="caption">⑧ 제스처 힌트 — <strong>설명 없이도 발견</strong>되게</div>
+  </div>
+
+  <!-- Magic Plus drag -->
+  <div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="statusbar"><span>9:41</span><span>5G · 100%</span></div>
+      <div class="screen-body" style="position: relative;">
+        <div class="screen-title">예정</div>
+        <div class="screen-sub">＋ 버튼을 날짜로 드래그</div>
+
+        <div class="magic-cal">
+          <div class="d">일</div><div class="d">월</div><div class="d">화</div>
+          <div class="d">수</div><div class="d">목</div><div class="d">금</div><div class="d">토</div>
+          <div class="d today">20</div><div class="d">21</div><div class="d">22</div>
+          <div class="d target">23</div><div class="d">24</div><div class="d">25</div><div class="d">26</div>
+          <div class="d">27</div><div class="d">28</div><div class="d">29</div>
+          <div class="d">30</div><div class="d">1</div><div class="d">2</div><div class="d">3</div>
+        </div>
+
+        <div class="drag-trail" style="top: 260px; left: 100px; width: 140px; height: 40px;"></div>
+
+        <div class="drag-card" style="top: 280px; left: 80px;">
+          새 할 일
+          <div class="meta">📅 4월 23일 목요일로 놓기</div>
+        </div>
+
+        <div style="margin-top: auto; background: rgba(255,107,53,0.08); border-radius: 12px; padding: 14px; font-size: 11px; line-height: 1.5;">
+          <b style="color: var(--accent);">🪄 Magic Plus</b><br>
+          <span style="color: var(--muted);">＋ 버튼을 떼지 않고 드래그하면<br>원하는 날짜에 바로 할 일을 꽂을 수 있어요.<br>(Things 3의 시그니처 기능 계승)</span>
+        </div>
+      </div>
+      <div class="fab" style="bottom: 100px; animation: none;">＋</div>
+      <div class="tabbar">
+        <div class="tab"><span class="ico">☀︎</span>오늘</div>
+        <div class="tab"><span class="ico">▦</span>이번주</div>
+        <div class="tab active"><span class="ico">▷</span>예정</div>
+        <div class="tab"><span class="ico">∞</span>언제든지</div>
+        <div class="tab"><span class="ico">✧</span>언젠가</div>
+      </div>
+    </div>
+    <div class="caption">⑨ Magic Plus — <strong>드래그 드롭</strong>으로 날짜 지정</div>
+  </div>
+
+  <!-- Search -->
+  <div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="statusbar"><span>9:41</span><span>5G · 100%</span></div>
+      <div class="screen-body">
+        <div class="search-bar">
+          🔍 <input style="border: none; background: transparent; flex: 1; outline: none; font-family: inherit; font-size: 13px;" placeholder="할 일, 프로젝트, 태그 검색" value="회의">
+          <span class="cancel">취소</span>
+        </div>
+        <div class="filter-pills">
+          <div class="pill active">전체</div>
+          <div class="pill">할 일</div>
+          <div class="pill">프로젝트</div>
+          <div class="pill">태그</div>
+          <div class="pill">로그북</div>
+        </div>
+
+        <div class="search-group">할 일 · 3건</div>
+        <ul class="tasks">
+          <li><div class="check"></div><div>
+            <div class="task-title">팀 <mark style="background: rgba(255,220,0,0.5); padding: 0 2px;">회의</mark> 자료 준비</div>
+            <div class="task-meta"><span>오늘 오후 2시</span><span class="tag">#회의</span></div>
+          </div></li>
+          <li><div class="check"></div><div>
+            <div class="task-title">월간 <mark style="background: rgba(255,220,0,0.5); padding: 0 2px;">회의</mark>실 예약</div>
+            <div class="task-meta"><span>금요일</span></div>
+          </div></li>
+          <li><div class="check done">✓</div><div>
+            <div class="task-title done">기획 킥오프 <mark style="background: rgba(255,220,0,0.5); padding: 0 2px;">회의</mark></div>
+            <div class="task-meta">4/15 완료</div>
+          </div></li>
+        </ul>
+
+        <div class="search-group">태그 · 1건</div>
+        <ul class="tasks">
+          <li style="border: none;"><span style="background: var(--ink); color: #fff; padding: 3px 10px; border-radius: 20px; font-size: 11px;"># 회의</span><span style="margin-left: auto; font-size: 11px; color: var(--muted); align-self: center;">23개 할 일</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="caption">⑩ 검색 — <strong>하이라이트</strong> + 타입별 필터</div>
+  </div>
+
+</div>
+
+<!-- ================== 위젯 & 홈 ================== -->
+<div class="section-title">Part 4 · iOS 홈 스크린 위젯</div>
+<div class="section-desc">3가지 위젯: 오늘 할 일 · D-Day · 주간 진행률</div>
+<div class="row">
+
+  <div>
+    <div class="phone home-screen">
+      <div class="notch"></div>
+      <div class="statusbar"><span>9:41</span><span>5G · 100%</span></div>
+      <div style="text-align: center; font-size: 48px; font-weight: 200; margin: 18px 0 0; letter-spacing: -0.02em; color: #fff;">9:41</div>
+      <div style="text-align: center; font-size: 12px; color: rgba(255,255,255,0.9); margin-bottom: 8px;">4월 20일 월요일</div>
+
+      <div class="widget-grid" style="padding: 0 4px;">
+        <!-- Widget 1: Today's 3 tasks (span 2) -->
+        <div class="widget span-2">
+          <h5><span class="dot"></span>오늘 · 하루</h5>
+          <div class="widget-item">
+            <div class="mini-check star"></div>
+            <div style="flex: 1;">치과 예약 확정 전화</div>
+            <div style="font-size: 9px; color: var(--muted);">14:00</div>
+          </div>
+          <div class="widget-item">
+            <div class="mini-check"></div>
+            <div style="flex: 1;">주간보고 초안 작성</div>
+            <div style="font-size: 9px; color: var(--accent-2);">⏰ 10:00</div>
+          </div>
+          <div class="widget-item">
+            <div class="mini-check"></div>
+            <div style="flex: 1;">토스 카드대금 확인</div>
+            <div style="font-size: 9px; color: var(--accent-2);">⏰ 마감</div>
+          </div>
+        </div>
+
+        <!-- Widget 2: D-Day -->
+        <div class="widget">
+          <h5>🎯 정처기 실기</h5>
+          <div class="dday-num">D-21</div>
+          <div class="dday-label">5월 11일 토요일</div>
+          <div style="margin-top: 6px; height: 3px; background: rgba(0,0,0,0.08); border-radius: 2px;">
+            <div style="width: 45%; height: 100%; background: var(--accent); border-radius: 2px;"></div>
+          </div>
+          <div style="font-size: 9px; color: var(--muted); margin-top: 4px;">45% 준비 완료</div>
+        </div>
+
+        <!-- Widget 3: Weekly progress -->
+        <div class="widget">
+          <h5>📊 이번주</h5>
+          <div class="progress-ring"><span>72%</span></div>
+          <div class="weekly-stats">
+            <div class="stat"><b>13</b>완료</div>
+            <div class="stat"><b>5</b>남음</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Other app icons -->
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; padding: 22px 10px 0;">
+        <div style="width: 52px; height: 52px; border-radius: 13px; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 24px; justify-self: center;">📷</div>
+        <div style="width: 52px; height: 52px; border-radius: 13px; background: #007AFF; display: flex; align-items: center; justify-content: center; font-size: 22px; justify-self: center;">📩</div>
+        <div style="width: 52px; height: 52px; border-radius: 13px; background: var(--kakao); display: flex; align-items: center; justify-content: center; font-size: 22px; justify-self: center;">💬</div>
+        <div style="width: 52px; height: 52px; border-radius: 13px; background: var(--toss); display: flex; align-items: center; justify-content: center; font-size: 20px; color: #fff; font-weight: 800; justify-self: center;">T</div>
+      </div>
+
+      <div class="dock">
+        <div class="dock-icon haru">ㅎ</div>
+        <div class="dock-icon phone">📞</div>
+        <div class="dock-icon msg">💬</div>
+        <div class="dock-icon safari">🧭</div>
+      </div>
+    </div>
+    <div class="caption">⑪ iOS 홈 스크린 — 3종 위젯 (Medium / Small × 2)</div>
+  </div>
+
+  <!-- Lock screen widgets -->
+  <div>
+    <div class="phone" style="background: linear-gradient(180deg, #1a1a2e, #16213e);">
+      <div class="notch"></div>
+      <div class="statusbar" style="color: #fff;"><span>9:41</span><span>5G · 100%</span></div>
+
+      <div style="padding: 40px 20px 0; color: #fff; text-align: center;">
+        <div style="font-size: 14px; color: rgba(255,255,255,0.8); margin-bottom: 4px;">4월 20일 월요일</div>
+        <div style="font-size: 80px; font-weight: 200; letter-spacing: -0.04em; line-height: 1;">9:41</div>
+      </div>
+
+      <div style="padding: 20px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;">
+        <!-- Lock screen inline widgets -->
+        <div style="background: rgba(255,255,255,0.18); backdrop-filter: blur(20px); border-radius: 8px; padding: 6px; text-align: center; color: #fff;">
+          <div style="font-size: 9px; opacity: 0.7;">오늘</div>
+          <div style="font-size: 18px; font-weight: 700;">3</div>
+          <div style="font-size: 8px; opacity: 0.7;">할 일</div>
+        </div>
+        <div style="background: rgba(255,255,255,0.18); backdrop-filter: blur(20px); border-radius: 8px; padding: 6px; text-align: center; color: #fff; grid-column: span 2;">
+          <div style="font-size: 9px; opacity: 0.7;">다음 할 일</div>
+          <div style="font-size: 11px; font-weight: 600; margin: 2px 0;">치과 예약 전화</div>
+          <div style="font-size: 9px; opacity: 0.7;">14:00 · 30분 뒤</div>
+        </div>
+        <div style="background: rgba(255,255,255,0.18); backdrop-filter: blur(20px); border-radius: 8px; padding: 6px; text-align: center; color: #fff;">
+          <div style="font-size: 9px; opacity: 0.7;">D-Day</div>
+          <div style="font-size: 18px; font-weight: 700; color: #FF9A6B;">21</div>
+          <div style="font-size: 8px; opacity: 0.7;">정처기</div>
+        </div>
+      </div>
+
+      <div style="padding: 40px 20px; color: rgba(255,255,255,0.6); text-align: center; font-size: 11px;">
+        ↑ 위로 밀어 잠금 해제
+      </div>
+
+      <div style="margin-top: auto; padding: 20px; display: flex; justify-content: space-between;">
+        <div style="width: 40px; height: 40px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px;">🔦</div>
+        <div style="width: 40px; height: 40px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px;">📷</div>
+      </div>
+    </div>
+    <div class="caption">⑫ 잠금 화면 위젯 — iOS 16+ · 눈 뜨자마자 오늘 확인</div>
+  </div>
+
+  <!-- Apple Watch -->
+  <div>
+    <div style="width: 180px; height: 220px; background: #1a1a1a; border-radius: 40px; padding: 10px; margin: 20px auto; box-shadow: 0 20px 40px rgba(0,0,0,0.3); position: relative;">
+      <div style="width: 100%; height: 100%; background: #000; border-radius: 32px; padding: 14px; color: #fff; position: relative; overflow: hidden;">
+        <div style="font-size: 10px; color: var(--accent); font-weight: 600; margin-bottom: 4px;">하루 · 오늘</div>
+        <div style="font-size: 14px; font-weight: 700; line-height: 1.3; margin-bottom: 10px;">치과 예약 확정 전화</div>
+        <div style="font-size: 10px; color: rgba(255,255,255,0.6); margin-bottom: 12px;">⏰ 14:00 · 30분 뒤</div>
+
+        <div style="display: flex; gap: 4px; margin-bottom: 10px;">
+          <div style="flex: 1; padding: 6px; background: var(--accent); border-radius: 8px; text-align: center; font-size: 9px; font-weight: 600;">완료</div>
+          <div style="flex: 1; padding: 6px; background: rgba(255,255,255,0.15); border-radius: 8px; text-align: center; font-size: 9px;">미루기</div>
+        </div>
+
+        <div style="font-size: 9px; color: rgba(255,255,255,0.5); border-top: 1px solid rgba(255,255,255,0.1); padding-top: 6px;">
+          남은 할 일 3개<br>
+          • 주간보고 초안<br>
+          • 카드대금 확인
+        </div>
+      </div>
+      <!-- Crown -->
+      <div style="position: absolute; right: -3px; top: 60px; width: 6px; height: 30px; background: #333; border-radius: 2px;"></div>
+    </div>
+    <div class="caption" style="margin-top: 30px;">⑬ Apple Watch — 다음 할 일 + 1탭 완료</div>
+  </div>
+
+</div>
+
+<!-- ================== 설정 ================== -->
+<div class="section-title">Part 5 · 설정 & 계정</div>
+<div class="row">
+
+  <!-- Settings main -->
+  <div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="statusbar"><span>9:41</span><span>5G · 100%</span></div>
+      <div class="screen-body" style="overflow-y: auto;">
+        <div class="screen-title">설정</div>
+
+        <div class="profile-card" style="margin-top: 10px;">
+          <div class="avatar">박</div>
+          <div style="flex: 1;">
+            <h4>박영희 <span class="pro-badge">PRO</span></h4>
+            <p>younghee@kakao.com · 구독 갱신 5/20</p>
+          </div>
+          <span style="color: var(--muted); font-size: 18px;">›</span>
+        </div>
+
+        <div class="settings-header">연동</div>
+        <div class="settings-group">
+          <div class="settings-row">
+            <div class="icon" style="background: var(--kakao); color: #3C1E1E;">💬</div>
+            <div>카카오톡 공유</div>
+            <span class="value">연결됨</span>
+          </div>
+          <div class="settings-row">
+            <div class="icon" style="background: var(--naver);">N</div>
+            <div>네이버 캘린더</div>
+            <span class="value">동기화 중</span>
+          </div>
+          <div class="settings-row">
+            <div class="icon" style="background: #4285F4;">G</div>
+            <div>구글 캘린더</div>
+            <span class="value" style="color: var(--accent);">연결</span>
+          </div>
+          <div class="settings-row">
+            <div class="icon" style="background: var(--toss);">T</div>
+            <div>토스 알림</div>
+            <span class="value">연결됨</span>
+          </div>
+        </div>
+
+        <div class="settings-header">일반</div>
+        <div class="settings-group">
+          <div class="settings-row">
+            <div class="icon" style="background: #FF3B30;">🔔</div>
+            <div>알림</div>
+            <span class="chevron">›</span>
+          </div>
+          <div class="settings-row">
+            <div class="icon" style="background: #5856D6;">🌙</div>
+            <div>다크 모드</div>
+            <span class="value">시스템</span>
+          </div>
+          <div class="settings-row">
+            <div class="icon" style="background: #34C759;">📅</div>
+            <div>음력 표시</div>
+            <div class="toggle" style="margin-left: auto;"></div>
+          </div>
+          <div class="settings-row">
+            <div class="icon" style="background: #FF9500;">🇰🇷</div>
+            <div>공휴일 자동 반영</div>
+            <div class="toggle" style="margin-left: auto;"></div>
+          </div>
+        </div>
+
+        <div class="settings-header">기타</div>
+        <div class="settings-group">
+          <div class="settings-row"><div class="icon" style="background: #8E8E93;">⌨️</div>단축키<span class="chevron">›</span></div>
+          <div class="settings-row"><div class="icon" style="background: #8E8E93;">🔒</div>잠금·백업<span class="chevron">›</span></div>
+          <div class="settings-row"><div class="icon" style="background: #8E8E93;">❓</div>도움말<span class="chevron">›</span></div>
+        </div>
+      </div>
+      <div class="tabbar">
+        <div class="tab"><span class="ico">☀︎</span>오늘</div>
+        <div class="tab"><span class="ico">▦</span>이번주</div>
+        <div class="tab"><span class="ico">▷</span>예정</div>
+        <div class="tab"><span class="ico">∞</span>언제든지</div>
+        <div class="tab active"><span class="ico">⚙</span>설정</div>
+      </div>
+    </div>
+    <div class="caption">⑭ 설정 — <strong>연동 섹션</strong>을 맨 위에 배치</div>
+  </div>
+
+  <!-- Subscription -->
+  <div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="statusbar"><span>9:41</span><span>5G · 100%</span></div>
+      <div class="screen-body" style="overflow-y: auto;">
+        <div class="back-row"><span class="back">←</span><span>설정</span></div>
+        <div class="screen-title">하루 프로</div>
+        <div class="screen-sub">진짜 생산성은 여기서부터</div>
+
+        <div style="background: linear-gradient(135deg, #FF6B35, #FF8A5B); color: #fff; border-radius: 18px; padding: 20px; margin: 16px 0; box-shadow: 0 12px 32px rgba(255,107,53,0.3);">
+          <div style="font-size: 11px; opacity: 0.9; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px;">추천 · 연간</div>
+          <div style="font-size: 28px; font-weight: 800; letter-spacing: -0.02em;">₩39,000 <span style="font-size: 13px; font-weight: 400; opacity: 0.9;">/ 년</span></div>
+          <div style="font-size: 11px; opacity: 0.9; margin-top: 4px;">월 3,250원 · 33% 할인</div>
+        </div>
+
+        <div style="border: 1.5px solid var(--border-2); border-radius: 18px; padding: 16px; margin-bottom: 14px;">
+          <div style="font-size: 11px; color: var(--muted); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 4px;">월간</div>
+          <div style="font-size: 22px; font-weight: 800; letter-spacing: -0.02em;">₩4,900 <span style="font-size: 12px; font-weight: 400; color: var(--muted);">/ 월</span></div>
+        </div>
+
+        <div style="font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em; margin: 16px 0 8px;">포함 혜택</div>
+        <div style="font-size: 13px; line-height: 2;">
+          ✓ 영역·프로젝트 무제한<br>
+          ✓ 가족 공유 5명까지<br>
+          ✓ AI 주간 회고 자동 생성<br>
+          ✓ 카카오 알림톡 이중 발송<br>
+          ✓ 무제한 파일 첨부 (5GB)<br>
+          ✓ 테마 20종 커스터마이징
+        </div>
+
+        <div style="display: flex; gap: 8px; margin: 16px 0;">
+          <div style="flex: 1; padding: 10px; background: #fff; border: 1px solid var(--border); border-radius: 10px; text-align: center; font-size: 11px; font-weight: 600;">
+            💳 토스페이
+          </div>
+          <div style="flex: 1; padding: 10px; background: #fff; border: 1px solid var(--border); border-radius: 10px; text-align: center; font-size: 11px; font-weight: 600;">
+            💳 카카오페이
+          </div>
+        </div>
+
+        <div class="ob-btn" style="margin: 0;">7일 무료 체험 시작</div>
+        <p style="font-size: 10px; color: var(--muted); text-align: center; margin: 10px 0 20px;">
+          🎓 학생 인증 시 50% 할인 · 세금계산서 발행 가능
+        </p>
+      </div>
+    </div>
+    <div class="caption">⑮ 구독 — <strong>토스페이·카카오페이</strong> 원탭 결제</div>
+  </div>
+
+</div>
+
+<!-- ================== WEB ================== -->
+<div class="section-title">Part 6 · 웹 · 데스크톱</div>
+<div class="section-desc">사이드바 + 오늘뷰 · 월간 캘린더 · 프로젝트 상세</div>
+
+<div class="row">
+  <div>
+    <div class="desktop">
+      <div class="desktop-chrome">
+        <div class="chrome-dot r"></div><div class="chrome-dot y"></div><div class="chrome-dot g"></div>
+        <div class="chrome-url">haru.kr/calendar</div>
+      </div>
+      <div class="desktop-body">
+        <div class="sidebar">
+          <div class="logo">하루</div>
+          <div class="nav-item"><span class="ico">☀︎</span>오늘 <span class="count">5</span></div>
+          <div class="nav-item"><span class="ico">▦</span>이번주 <span class="count">12</span></div>
+          <div class="nav-item active"><span class="ico">📅</span>캘린더</div>
+          <div class="nav-item"><span class="ico">▷</span>예정</div>
+          <div class="nav-item"><span class="ico">∞</span>언제든지</div>
+          <div class="nav-item"><span class="ico">✧</span>언젠가</div>
+          <div class="nav-item"><span class="ico">✓</span>로그북</div>
+
+          <div class="group-title">영역</div>
+          <div class="nav-item"><span class="area-color" style="background:#4C7AE8"></span>회사 <span class="count">8</span></div>
+          <div class="nav-item"><span class="area-color" style="background:#39B27E"></span>자기계발 <span class="count">3</span></div>
+          <div class="nav-item"><span class="area-color" style="background:#E8794C"></span>가족 <span class="count">4</span> 👥</div>
+          <div class="nav-item"><span class="area-color" style="background:#9B4CE8"></span>개인</div>
+        </div>
+
+        <div class="main">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+            <div>
+              <h1 style="margin-bottom: 2px;">2026년 4월</h1>
+              <div class="sub" style="margin: 0;">월간 · 31건의 일정</div>
+            </div>
+            <div style="display: flex; gap: 4px;">
+              <div style="padding: 6px 10px; background: rgba(0,0,0,0.05); border-radius: 6px; font-size: 11px;">‹ 3월</div>
+              <div style="padding: 6px 10px; background: var(--accent); color: #fff; border-radius: 6px; font-size: 11px; font-weight: 600;">오늘</div>
+              <div style="padding: 6px 10px; background: rgba(0,0,0,0.05); border-radius: 6px; font-size: 11px;">5월 ›</div>
+            </div>
+          </div>
+
+          <div class="cal-month">
+            <div class="dow sun">일</div><div class="dow">월</div><div class="dow">화</div><div class="dow">수</div><div class="dow">목</div><div class="dow">금</div><div class="dow">토</div>
+
+            <div class="cell other"><span class="date">29</span></div>
+            <div class="cell other"><span class="date">30</span></div>
+            <div class="cell other"><span class="date">31</span></div>
+            <div class="cell"><span class="date">1</span><div class="cal-event blue">팀 스탠드업</div></div>
+            <div class="cell"><span class="date">2</span></div>
+            <div class="cell"><span class="date">3</span><div class="cal-event green">영어학원</div></div>
+            <div class="cell"><span class="date">4</span></div>
+
+            <div class="cell"><span style="color: var(--accent-2);" class="date">5</span></div>
+            <div class="cell"><span class="date">6</span><div class="cal-event blue">주간 OKR</div></div>
+            <div class="cell"><span class="date">7</span></div>
+            <div class="cell"><span class="date">8</span><div class="cal-event">정처기 인강</div></div>
+            <div class="cell"><span class="date">9</span><div class="cal-event blue">월간 결재</div></div>
+            <div class="cell"><span class="date">10</span><div class="cal-event green">가족 외식</div></div>
+            <div class="cell"><span class="date">11</span></div>
+
+            <div class="cell"><span style="color: var(--accent-2);" class="date">12</span></div>
+            <div class="cell"><span class="date">13</span><div class="cal-event blue">Q2 런칭 킥오프</div></div>
+            <div class="cell"><span class="date">14</span></div>
+            <div class="cell"><span class="date">15</span><div class="cal-event ghost">장모님 생신 🎂</div></div>
+            <div class="cell"><span class="date">16</span></div>
+            <div class="cell"><span class="date">17</span></div>
+            <div class="cell"><span class="date">18</span></div>
+
+            <div class="cell"><span style="color: var(--accent-2);" class="date">19</span></div>
+            <div class="cell today"><span class="date">20</span><div class="cal-event">치과 예약 📞</div><div class="cal-event blue">주간보고</div></div>
+            <div class="cell"><span class="date">21</span><div class="cal-event blue">팀 회의</div></div>
+            <div class="cell"><span class="date">22</span><div class="cal-event blue">월간 결재 마감</div></div>
+            <div class="cell"><span class="date">23</span></div>
+            <div class="cell"><span class="date">24</span></div>
+            <div class="cell"><span class="date">25</span></div>
+
+            <div class="cell"><span style="color: var(--accent-2);" class="date">26</span></div>
+            <div class="cell"><span class="date">27</span></div>
+            <div class="cell"><span class="date">28</span></div>
+            <div class="cell"><span class="date">29</span></div>
+            <div class="cell"><span class="date">30</span><div class="cal-event">월말 정산</div></div>
+            <div class="cell other"><span class="date">1</span><div class="cal-event ghost"><span style="color: var(--accent-2);">근로자의날</span></div></div>
+            <div class="cell other"><span class="date">2</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="caption" style="max-width:600px; margin: 14px auto 0;">
+      ⑯ 웹 캘린더 — <strong>일요일 빨강</strong> · 공휴일 자동 · 영역별 색상
+    </div>
+  </div>
+</div>
+
+<div class="row" style="margin-top: 40px;">
+  <div>
+    <div class="desktop">
+      <div class="desktop-chrome">
+        <div class="chrome-dot r"></div><div class="chrome-dot y"></div><div class="chrome-dot g"></div>
+        <div class="chrome-url">haru.kr/project/q2-launch</div>
+      </div>
+      <div class="desktop-body">
+        <div class="sidebar">
+          <div class="logo">하루</div>
+          <div class="nav-item"><span class="ico">☀︎</span>오늘</div>
+          <div class="nav-item"><span class="ico">▦</span>이번주</div>
+          <div class="nav-item"><span class="ico">📅</span>캘린더</div>
+          <div class="nav-item"><span class="ico">▷</span>예정</div>
+
+          <div class="group-title">회사</div>
+          <div class="nav-item active" style="margin-left: 8px;"><span class="ico">▣</span>Q2 런칭 준비</div>
+          <div class="nav-item" style="margin-left: 8px;"><span class="ico">▣</span>원가 절감 TF</div>
+          <div class="nav-item" style="margin-left: 8px;"><span class="ico">▣</span>신입 온보딩</div>
+
+          <div class="group-title">자기계발</div>
+          <div class="nav-item" style="margin-left: 8px;"><span class="ico">▣</span>정처기 실기</div>
+          <div class="nav-item" style="margin-left: 8px;"><span class="ico">▣</span>영어 회화</div>
+        </div>
+
+        <div class="main">
+          <div class="proj-header">
+            <div>
+              <div style="font-size: 11px; color: var(--muted); margin-bottom: 4px;">회사</div>
+              <h1>Q2 런칭 준비</h1>
+              <div class="sub">5월 31일 런칭 · 12/20 완료</div>
+            </div>
+            <div style="display: flex; gap: 6px;">
+              <div style="padding: 6px 10px; background: var(--kakao); color: #3C1E1E; border-radius: 6px; font-size: 11px; font-weight: 600;">💬 팀방 공유</div>
+              <div style="padding: 6px 10px; background: #fff; border: 1px solid var(--border); border-radius: 6px; font-size: 11px;">⋯</div>
+            </div>
+          </div>
+
+          <div class="proj-stat">
+            <div class="stat-col">
+              <label>진행률</label>
+              <div class="val">60<small>%</small></div>
+              <div class="progress" style="margin-top: 8px;"><div style="width: 60%;"></div></div>
+            </div>
+            <div class="stat-col">
+              <label>남은 일</label>
+              <div class="val">8<small>개</small></div>
+            </div>
+            <div class="stat-col">
+              <label>마감까지</label>
+              <div class="val" style="color: var(--accent-2);">D-41</div>
+            </div>
+            <div class="stat-col">
+              <label>참여자</label>
+              <div class="val">4<small>명</small></div>
+            </div>
+          </div>
+
+          <div style="font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em; margin: 18px 0 8px;">오늘</div>
+          <ul class="tasks">
+            <li><div class="check done">✓</div><div><div class="task-title done">마케팅 랜딩 카피 승인 요청</div><div class="task-meta">오전 9:24 완료 · 김대리</div></div></li>
+            <li><div class="check"></div><div><div class="task-title">QA 체크리스트 공유 <span class="priority">!</span></div><div class="task-meta"><span class="tag">#보고</span> · 내가 담당</div></div></li>
+          </ul>
+
+          <div style="font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em; margin: 18px 0 8px;">이번주</div>
+          <ul class="tasks">
+            <li><div class="check"></div><div>
+              <div class="task-title">PG사 계약서 검토 (토스 vs 카카오페이)</div>
+              <div class="task-meta"><span class="deadline-badge">⏰ 금요일까지</span> · 내가 담당</div>
+            </div></li>
+            <li><div class="check"></div><div>
+              <div class="task-title">개인정보 처리방침 변호사 피드백 반영</div>
+              <div class="task-meta">이과장 담당</div>
+            </div></li>
+            <li><div class="check star">★</div><div>
+              <div class="task-title">대표님 최종 승인 미팅</div>
+              <div class="task-meta"><span>목요일 16:00</span><span class="tag">#회의</span></div>
+            </div></li>
+          </ul>
+
+          <div style="font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em; margin: 18px 0 8px;">다음주 이후</div>
+          <ul class="tasks">
+            <li><div class="check"></div><div><div class="task-title">서버 부하 테스트</div><div class="task-meta">4월 30일 · 최실장 담당</div></div></li>
+            <li><div class="check"></div><div><div class="task-title">런칭 보도자료 초안</div><div class="task-meta">5월 15일</div></div></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="caption" style="max-width:600px; margin: 14px auto 0;">
+      ⑰ 웹 프로젝트 상세 — <strong>팀 공유 + 담당자</strong> · KPI 한눈에
+    </div>
+  </div>
+</div>
+
+<footer>
+  <strong>Haru · 한국형 To-Do · 2026 v2</strong><br>
+  18개 화면 · Things 3 철학 계승 · 한국 사용자 맞춤 완성<br>
+  <br>
+  <span style="font-size: 11px;">다음 단계: React Native 코드 작업 또는 Figma 파일 변환</span>
+</footer>
+
+</body>
+</html>
