@@ -18,3 +18,12 @@ android/.gradle/
 android/app/build/
 android/build/
 *.tsbuildinfo
+
+# Claude Code local settings
+.claude/
+
+# OS
+Thumbs.db
+
+# Temp files
+*.orig.*
