@@ -1,6 +1,6 @@
-import { Screen } from "@/../components/Screen";
-import { QuickEntry } from "@/../components/QuickEntry";
-import { TaskRow } from "@/../components/TaskRow";
+import { Screen } from "@/components/Screen";
+import { QuickEntry } from "@/components/QuickEntry";
+import { TaskRow } from "@/components/TaskRow";
 
 export default function ThisWeekScreen() {
   return (

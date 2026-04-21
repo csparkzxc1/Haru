@@ -1,6 +1,6 @@
-import { Screen } from "@/../components/Screen";
-import { QuickEntry } from "@/../components/QuickEntry";
-import { TaskRow } from "@/../components/TaskRow";
+import { Screen } from "@/components/Screen";
+import { QuickEntry } from "@/components/QuickEntry";
+import { TaskRow } from "@/components/TaskRow";
 import { isHoliday } from "@haru/shared/korean-calendar";
 
 export default function TodayScreen() {

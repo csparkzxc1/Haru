@@ -1,5 +1,5 @@
-import { Screen } from "@/../components/Screen";
-import { QuickEntry } from "@/../components/QuickEntry";
+import { Screen } from "@/components/Screen";
+import { QuickEntry } from "@/components/QuickEntry";
 
 export default function UpcomingScreen() {
   return (
