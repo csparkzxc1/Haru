@@ -10,7 +10,7 @@ export default function ThisWeekScreen() {
   const weekTasks = useMemo(() => filterThisWeek(tasks), [tasks]);
 
   return (
-    <Screen title="이번주" subtitle="한국 직장인 선호 뷰 · 월~일">
+    <Screen title="이번주" subtitle="한국 직장인 선호 뷰 · 월~일" count={weekTasks.length}>
       <QuickEntry />
       {weekTasks.map((task) => (
         <TaskRow key={task.id} task={task} />

@@ -10,7 +10,7 @@ export default function UpcomingScreen() {
   const upcomingTasks = useMemo(() => filterUpcoming(tasks), [tasks]);
 
   return (
-    <Screen title="예정" subtitle="앞으로의 할 일">
+    <Screen title="예정" subtitle="앞으로의 할 일" count={upcomingTasks.length}>
       <QuickEntry />
       {upcomingTasks.map((task) => (
         <TaskRow key={task.id} task={task} />

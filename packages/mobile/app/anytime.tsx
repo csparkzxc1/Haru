@@ -10,7 +10,7 @@ export default function AnytimeScreen() {
   const anytimeTasks = useMemo(() => filterAnytime(tasks), [tasks]);
 
   return (
-    <Screen title="언제든지" subtitle="시간 지정 없음 · 활성 할 일">
+    <Screen title="언제든지" subtitle="시간 지정 없음 · 활성 할 일" count={anytimeTasks.length}>
       <QuickEntry />
       {anytimeTasks.map((task) => (
         <TaskRow key={task.id} task={task} />

@@ -22,6 +22,7 @@ export default function TodayScreen() {
     <Screen
       title="오늘"
       subtitle={holiday ? `${dateLabel} · ${holiday.name}` : dateLabel}
+      count={todayTasks.length}
     >
       <QuickEntry />
       {todayTasks.map((task) => (

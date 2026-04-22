@@ -9,7 +9,7 @@ export default function SomedayScreen() {
   const somedayTasks = useMemo(() => filterSomeday(tasks), [tasks]);
 
   return (
-    <Screen title="언젠가" subtitle="보류 · 영감 보관함">
+    <Screen title="언젠가" subtitle="보류 · 영감 보관함" count={somedayTasks.length}>
       {somedayTasks.map((task) => (
         <TaskRow key={task.id} task={task} />
       ))}
