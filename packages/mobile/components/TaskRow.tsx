@@ -1,6 +1,6 @@
-import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
 import type { TaskItem } from "@/types/task";
+import { useTasksStore } from "@/store/tasks";
 
 function deadlineLabel(deadline: string): string {
   const d = new Date(deadline);
@@ -16,26 +16,33 @@ function deadlineLabel(deadline: string): string {
 }
 
 export function TaskRow({ task }: { task: TaskItem }) {
-  const [done, setDone] = useState(task.done ?? false);
+  const toggleDone = useTasksStore((s) => s.toggleDone);
+  const toggleStar = useTasksStore((s) => s.toggleStar);
+
+  const done = task.done ?? false;
   const starred = task.star ?? false;
 
   const checkboxStyle = done
     ? "bg-haru-accent border-haru-accent"
-    : starred
-    ? "bg-yellow-400 border-yellow-400"
     : "border-haru-muted";
 
   return (
-    <Pressable
-      onPress={() => setDone((d) => !d)}
-      className="flex-row items-start gap-3 py-3 border-b border-black/5"
-    >
-      <View
+    <View className="flex-row items-start gap-3 py-3 border-b border-black/5">
+      <Pressable
+        onPress={() => toggleDone(task.id)}
         className={`mt-0.5 h-5 w-5 rounded-full border items-center justify-center ${checkboxStyle}`}
       >
         {done && <Text className="text-white text-xs">✓</Text>}
-        {!done && starred && <Text className="text-white text-xs">★</Text>}
-      </View>
+      </Pressable>
+
+      <Pressable
+        onPress={() => toggleStar(task.id)}
+        className="mt-0.5 h-5 w-5 items-center justify-center"
+      >
+        <Text className={`text-sm ${starred ? "text-yellow-400" : "text-haru-muted"}`}>
+          {starred ? "★" : "☆"}
+        </Text>
+      </Pressable>
 
       <View className="flex-1">
         <View className="flex-row items-center gap-1">
@@ -73,6 +80,6 @@ export function TaskRow({ task }: { task: TaskItem }) {
           </View>
         )}
       </View>
-    </Pressable>
+    </View>
   );
 }
