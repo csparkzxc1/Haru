@@ -1,5 +1,6 @@
 import { Pressable, Text, View } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
+import { useRouter } from "expo-router";
 import type { TaskItem } from "@/types/task";
 import { useTasksStore } from "@/store/tasks";
 
@@ -36,6 +37,7 @@ export function TaskRow({ task }: { task: TaskItem }) {
   const toggleDone = useTasksStore((s) => s.toggleDone);
   const toggleStar = useTasksStore((s) => s.toggleStar);
   const deleteTask = useTasksStore((s) => s.deleteTask);
+  const router = useRouter();
 
   const done = task.done ?? false;
   const starred = task.star ?? false;
@@ -53,7 +55,10 @@ export function TaskRow({ task }: { task: TaskItem }) {
         else if (direction === "right") deleteTask(task.id);
       }}
     >
-      <View className="flex-row items-start gap-3 py-3 border-b border-black/5 bg-haru-paper dark:bg-haru-ink">
+      <Pressable
+        onPress={() => router.push(`/task/${task.id}` as any)}
+        className="flex-row items-start gap-3 py-3 border-b border-black/5 bg-haru-paper dark:bg-haru-ink"
+      >
         <Pressable
           onPress={() => toggleDone(task.id)}
           className={`mt-0.5 h-5 w-5 rounded-full border items-center justify-center ${checkboxStyle}`}
@@ -106,7 +111,7 @@ export function TaskRow({ task }: { task: TaskItem }) {
             </View>
           )}
         </View>
-      </View>
+      </Pressable>
     </Swipeable>
   );
 }

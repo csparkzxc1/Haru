@@ -17,6 +17,7 @@ const INITIAL_TASKS: TaskItem[] = [
     priority: "high",
     deadline: daysFromNow(0),
     tags: ["결재대기"],
+    note: "지난달 명세서 확인해야 함",
     createdAt: fmt(today),
   },
   {
@@ -42,6 +43,7 @@ const INITIAL_TASKS: TaskItem[] = [
     title: "팀 회의 자료 준비",
     when: daysFromNow(2),
     tags: ["회의"],
+    note: "작년 Q4 자료 참고",
     createdAt: fmt(today),
   },
   {
@@ -81,6 +83,7 @@ const INITIAL_TASKS: TaskItem[] = [
     star: true,
     deadline: daysFromNow(14),
     tags: ["가족", "여행"],
+    note: "호캉스 vs 펜션 비교",
     createdAt: fmt(today),
   },
   {
@@ -104,6 +107,7 @@ const INITIAL_TASKS: TaskItem[] = [
     title: "독서 — 디자인의 디자인",
     star: true,
     tags: ["성장"],
+    note: "2장까지 읽음",
     createdAt: fmt(today),
   },
   {
@@ -127,6 +131,7 @@ const INITIAL_TASKS: TaskItem[] = [
     someday: true,
     star: true,
     tags: ["여행", "가족"],
+    note: "6월 후반 노려봐야",
     createdAt: fmt(today),
   },
 
