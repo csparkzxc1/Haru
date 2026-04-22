@@ -1,10 +1,11 @@
 import "../global.css";
 import { Tabs } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export default function Layout() {
   return (
-    <>
+    <GestureHandlerRootView style={{ flex: 1 }}>
       <StatusBar style="auto" />
       <Tabs
         screenOptions={{
@@ -21,6 +22,6 @@ export default function Layout() {
         <Tabs.Screen name="anytime" options={{ title: "언제든지" }} />
         <Tabs.Screen name="someday" options={{ title: "언젠가" }} />
       </Tabs>
-    </>
+    </GestureHandlerRootView>
   );
 }
