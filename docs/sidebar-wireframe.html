@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Haru · 사이드바 와이어프레임</title>
+<style>
+  :root {
+    --haru-paper: #FAF8F3;
+    --haru-ink: #1C1C1E;
+    --haru-muted: #8E8E93;
+    --haru-accent: #E04E2A;
+    
+    /* Area colors */
+    --area-work: #4FB3BF;
+    --area-personal: #E04E2A;
+    --area-hobby: #5CB85C;
+    --area-finance: #9333EA;
+    --area-health: #F59E0B;
+  }
+  
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Pretendard', sans-serif;
+    background: #E5E7EB;
+    padding: 40px 20px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 48px;
+  }
+  
+  h1 { 
+    font-size: 22px; font-weight: 700; letter-spacing: -0.5px;
+    color: #1C1C1E; text-align: center;
+  }
+  .subtitle { 
+    font-size: 13px; color: #8E8E93; text-align: center;
+    margin-top: -40px;
+  }
+  
+  /* ===== Phone frame ===== */
+  .scene {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  
+  .phone {
+    width: 380px;
+    height: 760px;
+    background: var(--haru-paper);
+    border-radius: 42px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    border: 1px solid rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  
+  .phone-label {
+    position: absolute;
+    top: -28px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    color: #8E8E93;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  
+  /* Status bar (fake) */
+  .status-bar {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 24px 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--haru-ink);
+  }
+  
+  /* ===== Scene 1: Closed Sidebar ===== */
+  .main-content {
+    flex: 1;
+    padding: 16px 24px;
+    overflow: hidden;
+  }
+  
+  .top-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  
+  .menu-btn {
+    width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    color: var(--haru-ink);
+    cursor: pointer;
+    border-radius: 8px;
+  }
+  
+  .menu-btn:hover { background: rgba(0,0,0,0.05); }
+  
+  .page-title {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+  
+  .date-line {
+    font-size: 13px;
+    color: var(--haru-muted);
+    margin-bottom: 4px;
+  }
+  
+  .count-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 8px;
+    margin-bottom: 24px;
+  }
+  
+  .section-name {
+    font-size: 17px;
+    color: var(--haru-muted);
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+  
+  .count-num {
+    font-size: 17px;
+    color: var(--haru-muted);
+  }
+  
+  .holiday-pill {
+    background: rgba(224, 78, 42, 0.1);
+    color: var(--haru-accent);
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+  }
+  
+  .task-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    position: relative;
+  }
+  
+  .task-stripe {
+    position: absolute;
+    left: -24px;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+  }
+  
+  .stripe-work { background: var(--area-work); }
+  .stripe-personal { background: var(--area-personal); }
+  .stripe-hobby { background: var(--area-hobby); }
+  
+  .checkbox {
+    width: 20px; height: 20px;
+    border: 1.5px solid var(--haru-muted);
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  
+  .checkbox.done { 
+    background: var(--haru-accent); 
+    border-color: var(--haru-accent);
+  }
+  
+  .star {
+    width: 16px; height: 16px;
+    color: var(--haru-muted);
+    font-size: 14px;
+    margin-top: 2px;
+  }
+  
+  .star.active { color: #F59E0B; }
+  
+  .task-body {
+    flex: 1;
+  }
+  
+  .task-title {
+    font-size: 15px;
+    color: var(--haru-ink);
+    margin-bottom: 2px;
+  }
+  
+  .task-title.done {
+    text-decoration: line-through;
+    color: var(--haru-muted);
+  }
+  
+  .task-meta {
+    font-size: 11px;
+    color: var(--haru-muted);
+  }
+  
+  /* ===== Bottom Tab Bar ===== */
+  .tab-bar {
+    display: flex;
+    justify-content: space-around;
+    padding: 8px 12px 24px;
+    border-top: 1px solid rgba(0,0,0,0.08);
+    background: var(--haru-paper);
+  }
+  
+  .tab {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 2px;
+    font-size: 10px;
+    color: var(--haru-muted);
+    padding: 6px 8px;
+  }
+  
+  .tab.active { color: var(--haru-accent); font-weight: 600; }
+  
+  .tab-icon {
+    font-size: 18px;
+  }
+  
+  /* ===== Scene 2: Opened Sidebar ===== */
+  .sidebar-phone {
+    position: relative;
+  }
+  
+  .sidebar-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 1;
+  }
+  
+  .sidebar {
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    width: 300px;
+    background: var(--haru-paper);
+    z-index: 2;
+    box-shadow: 4px 0 20px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    padding-top: 54px;
+  }
+  
+  .sidebar-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 4px;
+  }
+  
+  .sidebar-section {
+    padding: 12px 20px 4px;
+  }
+  
+  .section-header {
+    font-size: 11px;
+    color: var(--haru-muted);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    padding: 4px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .section-count {
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  
+  .sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    margin: 1px 0;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--haru-ink);
+  }
+  
+  .sidebar-item:hover { background: rgba(0,0,0,0.04); }
+  
+  .sidebar-item.active {
+    background: rgba(224, 78, 42, 0.1);
+    color: var(--haru-accent);
+    font-weight: 600;
+  }
+  
+  .sidebar-item-icon {
+    font-size: 16px;
+    width: 22px; text-align: center;
+  }
+  
+  .sidebar-item-label {
+    flex: 1;
+  }
+  
+  .sidebar-item-count {
+    font-size: 12px;
+    color: var(--haru-muted);
+  }
+  
+  /* Area headers */
+  .area-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    margin: 8px 4px 2px;
+    cursor: pointer;
+  }
+  
+  .area-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+  }
+  
+  .area-name {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--haru-ink);
+  }
+  
+  .area-count {
+    font-size: 11px;
+    color: var(--haru-muted);
+    background: rgba(0,0,0,0.04);
+    padding: 2px 7px;
+    border-radius: 8px;
+  }
+  
+  .area-project-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 12px 6px 30px;
+    margin: 1px 4px;
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--haru-ink);
+    cursor: pointer;
+  }
+  
+  .area-project-item:hover { background: rgba(0,0,0,0.03); }
+  
+  .project-emoji {
+    width: 20px;
+  }
+  
+  .project-name {
+    flex: 1;
+  }
+  
+  .project-progress {
+    font-size: 10px;
+    color: var(--haru-muted);
+  }
+  
+  .sidebar-divider {
+    height: 1px;
+    background: rgba(0,0,0,0.06);
+    margin: 12px 20px;
+  }
+  
+  .sidebar-footer {
+    padding: 8px 20px 20px;
+  }
+  
+  .add-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    margin: 2px 0;
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--haru-muted);
+    border: 1px dashed rgba(0,0,0,0.15);
+    cursor: pointer;
+  }
+  
+  .add-btn:hover { 
+    color: var(--haru-accent);
+    border-color: var(--haru-accent);
+  }
+  
+  /* ===== Scene 3: Project Detail ===== */
+  .project-header {
+    margin-bottom: 20px;
+  }
+  
+  .project-crumb {
+    font-size: 12px;
+    color: var(--haru-muted);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  
+  .project-crumb .crumb-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--area-work);
+  }
+  
+  .project-title-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  
+  .project-emoji-big {
+    font-size: 28px;
+  }
+  
+  .project-title {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+  
+  .project-meta {
+    font-size: 12px;
+    color: var(--haru-muted);
+    margin-bottom: 14px;
+  }
+  
+  .progress-bar-container {
+    background: rgba(0,0,0,0.06);
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 4px;
+  }
+  
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--area-work);
+    width: 50%;
+    border-radius: 4px;
+  }
+  
+  .progress-text {
+    font-size: 11px;
+    color: var(--haru-muted);
+    margin-bottom: 20px;
+  }
+  
+  .quick-entry {
+    background: white;
+    border: 1px solid rgba(0,0,0,0.08);
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 13px;
+    color: var(--haru-muted);
+    margin-bottom: 16px;
+  }
+  
+  /* ===== Notes ===== */
+  .notes {
+    width: 380px;
+    background: white;
+    padding: 24px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  }
+  
+  .notes h2 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--haru-ink);
+  }
+  
+  .notes ul {
+    list-style: none;
+  }
+  
+  .notes li {
+    font-size: 13px;
+    color: var(--haru-ink);
+    padding: 6px 0;
+    padding-left: 18px;
+    position: relative;
+    line-height: 1.5;
+  }
+  
+  .notes li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: var(--haru-accent);
+    font-weight: 600;
+  }
+  
+  .notes code {
+    background: rgba(0,0,0,0.05);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-family: 'SF Mono', 'Monaco', monospace;
+  }
+</style>
+</head>
+<body>
+
+<div>
+  <h1>📐 Haru 사이드바 와이어프레임</h1>
+  <p class="subtitle">Phase 3 구현 참고용 · 3가지 상태</p>
+</div>
+
+<!-- Scene 1: Default (사이드바 닫힘) -->
+<div class="scene">
+  <div class="phone">
+    <div class="phone-label">① 기본 상태 · 오늘 탭</div>
+    <div class="status-bar">
+      <span>9:41</span>
+      <span>●●● ●●</span>
+    </div>
+    <div class="main-content">
+      <div class="top-bar">
+        <div class="menu-btn">☰</div>
+        <div style="font-size: 13px; color: var(--haru-muted);">Haru</div>
+      </div>
+      
+      <div class="page-title">4월 23일 목요일</div>
+      <div class="count-row">
+        <div class="section-name">오늘 <span class="count-num">5</span></div>
+      </div>
+      
+      <div class="task-row">
+        <div class="task-stripe stripe-work"></div>
+        <div class="checkbox"></div>
+        <div class="star">★</div>
+        <div class="task-body">
+          <div class="task-title">주간보고 초안 작성</div>
+          <div class="task-meta">#보고 · 오늘 마감</div>
+        </div>
+      </div>
+      
+      <div class="task-row">
+        <div class="task-stripe stripe-personal"></div>
+        <div class="checkbox"></div>
+        <div class="star">★</div>
+        <div class="task-body">
+          <div class="task-title">치과 예약 확인</div>
+          <div class="task-meta">#전화 · 15분컷</div>
+        </div>
+      </div>
+      
+      <div class="task-row">
+        <div class="task-stripe stripe-work"></div>
+        <div class="checkbox done"></div>
+        <div class="star active">★</div>
+        <div class="task-body">
+          <div class="task-title done">팀 회의 자료</div>
+          <div class="task-meta">#회의</div>
+        </div>
+      </div>
+      
+      <div class="task-row">
+        <div class="task-stripe stripe-hobby"></div>
+        <div class="checkbox"></div>
+        <div class="star">★</div>
+        <div class="task-body">
+          <div class="task-title">독서 30분</div>
+          <div class="task-meta">#성장</div>
+        </div>
+      </div>
+      
+      <div class="task-row">
+        <div class="task-stripe stripe-personal"></div>
+        <div class="checkbox"></div>
+        <div class="star">★</div>
+        <div class="task-body">
+          <div class="task-title">저녁 장보기</div>
+          <div class="task-meta">5:30 PM</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="tab-bar">
+      <div class="tab active">
+        <div class="tab-icon">☀</div>
+        <div>오늘</div>
+      </div>
+      <div class="tab">
+        <div class="tab-icon">🗓</div>
+        <div>이번주</div>
+      </div>
+      <div class="tab">
+        <div class="tab-icon">📆</div>
+        <div>예정</div>
+      </div>
+      <div class="tab">
+        <div class="tab-icon">🌊</div>
+        <div>언제든지</div>
+      </div>
+      <div class="tab">
+        <div class="tab-icon">✨</div>
+        <div>언젠가</div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="notes">
+    <h2>① 기본 상태 포인트</h2>
+    <ul>
+      <li>좌상단 <code>☰</code> 버튼으로 사이드바 오픈</li>
+      <li>할 일 왼쪽에 <strong>3px 영역 색띠</strong></li>
+      <li>하단 탭바는 시스템 뷰 5개 (오늘/이번주/예정/언제든지/언젠가)</li>
+      <li>프로젝트/영역은 사이드바에서만 접근</li>
+      <li>영역 색이 시각 힌트로만 작용 (큰 배경 색 X)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Scene 2: Sidebar Open -->
+<div class="scene">
+  <div class="phone sidebar-phone">
+    <div class="phone-label">② 사이드바 열림</div>
+    <div class="status-bar">
+      <span>9:41</span>
+      <span>●●● ●●</span>
+    </div>
+    <div class="main-content" style="opacity: 0.3;">
+      <div class="top-bar">
+        <div class="menu-btn">☰</div>
+      </div>
+      <div class="page-title">4월 23일 목요일</div>
+    </div>
+    
+    <div class="sidebar-overlay"></div>
+    
+    <div class="sidebar">
+      <div class="sidebar-content">
+        
+        <!-- 시스템 뷰 -->
+        <div class="sidebar-section">
+          <div class="section-header">
+            <span>시스템</span>
+          </div>
+          <div class="sidebar-item active">
+            <span class="sidebar-item-icon">☀</span>
+            <span class="sidebar-item-label">오늘</span>
+            <span class="sidebar-item-count">5</span>
+          </div>
+          <div class="sidebar-item">
+            <span class="sidebar-item-icon">🗓</span>
+            <span class="sidebar-item-label">이번주</span>
+            <span class="sidebar-item-count">8</span>
+          </div>
+          <div class="sidebar-item">
+            <span class="sidebar-item-icon">📆</span>
+            <span class="sidebar-item-label">예정</span>
+            <span class="sidebar-item-count">3</span>
+          </div>
+          <div class="sidebar-item">
+            <span class="sidebar-item-icon">🌊</span>
+            <span class="sidebar-item-label">언제든지</span>
+            <span class="sidebar-item-count">12</span>
+          </div>
+          <div class="sidebar-item">
+            <span class="sidebar-item-icon">✨</span>
+            <span class="sidebar-item-label">언젠가</span>
+            <span class="sidebar-item-count">7</span>
+          </div>
+        </div>
+        
+        <div class="sidebar-divider"></div>
+        
+        <!-- 회사 영역 -->
+        <div class="area-header">
+          <div class="area-dot" style="background: var(--area-work);"></div>
+          <div class="area-name">💼 회사</div>
+          <div class="area-count">14</div>
+        </div>
+        <div class="area-project-item">
+          <span class="project-emoji">📊</span>
+          <span class="project-name">Q2 보고서</span>
+          <span class="project-progress">5/10</span>
+        </div>
+        <div class="area-project-item">
+          <span class="project-emoji">📋</span>
+          <span class="project-name">신제품 출시</span>
+          <span class="project-progress">3/15</span>
+        </div>
+        
+        <!-- 개인 영역 -->
+        <div class="area-header">
+          <div class="area-dot" style="background: var(--area-personal);"></div>
+          <div class="area-name">🏠 개인</div>
+          <div class="area-count">8</div>
+        </div>
+        <div class="area-project-item">
+          <span class="project-emoji">💰</span>
+          <span class="project-name">재테크 관리</span>
+          <span class="project-progress">2/4</span>
+        </div>
+        <div class="area-project-item">
+          <span class="project-emoji">🎯</span>
+          <span class="project-name">2026 목표</span>
+          <span class="project-progress">0/7</span>
+        </div>
+        
+        <!-- 취미 영역 -->
+        <div class="area-header">
+          <div class="area-dot" style="background: var(--area-hobby);"></div>
+          <div class="area-name">🌱 취미</div>
+          <div class="area-count">3</div>
+        </div>
+        
+        <div class="sidebar-divider"></div>
+        
+        <!-- 아카이브 -->
+        <div class="sidebar-section">
+          <div class="sidebar-item">
+            <span class="sidebar-item-icon">📓</span>
+            <span class="sidebar-item-label">로그북</span>
+            <span class="sidebar-item-count">142</span>
+          </div>
+          <div class="sidebar-item">
+            <span class="sidebar-item-icon">🗑️</span>
+            <span class="sidebar-item-label">휴지통</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="sidebar-footer">
+        <div class="add-btn">
+          <span>+</span>
+          <span>새 영역</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="notes">
+    <h2>② 사이드바 오픈 포인트</h2>
+    <ul>
+      <li>좌에서 슬라이드 (width 300px / 전체 380px)</li>
+      <li>뒤 배경 <code>rgba(0,0,0,0.4)</code> 딤 처리</li>
+      <li>탭으로 오버레이 닫기</li>
+      <li><strong>섹션 3개</strong>: 시스템 · 영역별 · 아카이브</li>
+      <li>영역 헤더: 색점 + 이모지 + 이름 + 개수 뱃지</li>
+      <li>프로젝트: 들여쓰기 + 진행률 <code>5/10</code></li>
+      <li>현재 뷰 하이라이트 (오렌지 배경)</li>
+      <li>하단 <strong>"+ 새 영역"</strong> 점선 테두리</li>
+      <li>영역 헤더 롱프레스로 "새 프로젝트" 메뉴 (Phase 3 후반)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Scene 3: Project Detail -->
+<div class="scene">
+  <div class="phone">
+    <div class="phone-label">③ 프로젝트 상세 화면</div>
+    <div class="status-bar">
+      <span>9:41</span>
+      <span>●●● ●●</span>
+    </div>
+    <div class="main-content">
+      <div class="top-bar">
+        <div class="menu-btn" style="font-size: 22px;">←</div>
+      </div>
+      
+      <div class="project-header">
+        <div class="project-crumb">
+          <div class="crumb-dot"></div>
+          <span>회사</span>
+          <span>›</span>
+          <span>프로젝트</span>
+        </div>
+        
+        <div class="project-title-row">
+          <div class="project-emoji-big">📊</div>
+          <div class="project-title">Q2 보고서</div>
+        </div>
+        
+        <div class="project-meta">⏰ 5월 15일 마감 · 22일 남음</div>
+        
+        <div class="progress-bar-container">
+          <div class="progress-bar-fill"></div>
+        </div>
+        <div class="progress-text">10개 중 5개 완료 · 50%</div>
+      </div>
+      
+      <div class="quick-entry">+ 새로운 할 일...</div>
+      
+      <div class="task-row">
+        <div class="checkbox done"></div>
+        <div class="star">★</div>
+        <div class="task-body">
+          <div class="task-title done">경쟁사 분석</div>
+        </div>
+      </div>
+      
+      <div class="task-row">
+        <div class="checkbox done"></div>
+        <div class="star">★</div>
+        <div class="task-body">
+          <div class="task-title done">KPI 설정</div>
+        </div>
+      </div>
+      
+      <div class="task-row">
+        <div class="checkbox"></div>
+        <div class="star active">★</div>
+        <div class="task-body">
+          <div class="task-title">매출 데이터 분석</div>
+          <div class="task-meta">내일 마감</div>
+        </div>
+      </div>
+      
+      <div class="task-row">
+        <div class="checkbox"></div>
+        <div class="star">★</div>
+        <div class="task-body">
+          <div class="task-title">디자인 팀 미팅</div>
+          <div class="task-meta">4/25 오후 2시</div>
+        </div>
+      </div>
+      
+      <div class="task-row">
+        <div class="checkbox"></div>
+        <div class="star">★</div>
+        <div class="task-body">
+          <div class="task-title">슬라이드 초안</div>
+        </div>
+      </div>
+      
+      <div style="padding: 24px 0 16px; text-align: center; font-size: 11px; color: var(--haru-muted);">
+        4월 18일에 시작 · 5월 15일 마감
+      </div>
+      
+      <div style="text-align: center; margin-top: 8px;">
+        <span style="background: rgba(224, 78, 42, 0.08); color: var(--haru-accent); padding: 10px 20px; border-radius: 12px; font-size: 13px; font-weight: 500;">
+          🗑️ 프로젝트 삭제
+        </span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="notes">
+    <h2>③ 프로젝트 상세 포인트</h2>
+    <ul>
+      <li>상단 <strong>breadcrumb</strong>: 영역 색점 + 회사 › 프로젝트</li>
+      <li>제목 옆 이모지 편집 가능</li>
+      <li><strong>진행률 바</strong>: 영역 색 (회사=청록)</li>
+      <li>마감일 D-day 자동 계산</li>
+      <li>상단에 Quick Entry 고정</li>
+      <li>완료된 할 일은 <code>line-through</code> + 회색</li>
+      <li>하단에 메타 정보 (시작일 · 마감일)</li>
+      <li>삭제 버튼 하단 (할 일 처리 옵션 Alert 제공)</li>
+      <li>왼쪽 화살표로 뒤로 (또는 제스처)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- 전환 애니메이션 참고 -->
+<div class="notes" style="width: 760px; margin-top: 20px;">
+  <h2>🎬 애니메이션/제스처 참고</h2>
+  <ul>
+    <li><strong>사이드바 열기</strong>: <code>☰</code> 탭 or 왼쪽 엣지 스와이프 (둘 다 지원)</li>
+    <li><strong>사이드바 닫기</strong>: 오른쪽으로 스와이프 / 뒷배경 탭 / ESC 키</li>
+    <li><strong>애니메이션 타이밍</strong>: <code>250ms ease-out</code> (Things 3 참고)</li>
+    <li><strong>딤 효과</strong>: <code>rgba(0,0,0,0.4)</code> fade-in</li>
+    <li><strong>구현 도구</strong>: React Navigation Drawer + Reanimated 3 (이미 설치됨)</li>
+    <li><strong>Expo Router 연동</strong>: <code>app/(drawer)/</code> 그룹 레이아웃 사용</li>
+  </ul>
+</div>
+
+<!-- 색상 팔레트 -->
+<div class="notes" style="width: 760px;">
+  <h2>🎨 영역 색 팔레트 (AREA_COLORS)</h2>
+  <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 12px;">
+    <div style="padding: 16px; border-radius: 12px; background: #4FB3BF; color: white; font-size: 13px;">
+      <div style="font-weight: 600; margin-bottom: 4px;">teal</div>
+      <div style="font-size: 11px; opacity: 0.9;">#4FB3BF</div>
+      <div style="font-size: 11px; opacity: 0.9;">💼 회사</div>
+    </div>
+    <div style="padding: 16px; border-radius: 12px; background: #E04E2A; color: white; font-size: 13px;">
+      <div style="font-weight: 600; margin-bottom: 4px;">orange</div>
+      <div style="font-size: 11px; opacity: 0.9;">#E04E2A</div>
+      <div style="font-size: 11px; opacity: 0.9;">🏠 개인</div>
+    </div>
+    <div style="padding: 16px; border-radius: 12px; background: #5CB85C; color: white; font-size: 13px;">
+      <div style="font-weight: 600; margin-bottom: 4px;">green</div>
+      <div style="font-size: 11px; opacity: 0.9;">#5CB85C</div>
+      <div style="font-size: 11px; opacity: 0.9;">🌱 취미</div>
+    </div>
+    <div style="padding: 16px; border-radius: 12px; background: #9333EA; color: white; font-size: 13px;">
+      <div style="font-weight: 600; margin-bottom: 4px;">purple</div>
+      <div style="font-size: 11px; opacity: 0.9;">#9333EA</div>
+      <div style="font-size: 11px; opacity: 0.9;">📚 학습</div>
+    </div>
+    <div style="padding: 16px; border-radius: 12px; background: #F59E0B; color: white; font-size: 13px;">
+      <div style="font-weight: 600; margin-bottom: 4px;">amber</div>
+      <div style="font-size: 11px; opacity: 0.9;">#F59E0B</div>
+      <div style="font-size: 11px; opacity: 0.9;">💪 건강</div>
+    </div>
+    <div style="padding: 16px; border-radius: 12px; background: #E11D48; color: white; font-size: 13px;">
+      <div style="font-weight: 600; margin-bottom: 4px;">rose</div>
+      <div style="font-size: 11px; opacity: 0.9;">#E11D48</div>
+      <div style="font-size: 11px; opacity: 0.9;">❤️ 관계</div>
+    </div>
+    <div style="padding: 16px; border-radius: 12px; background: #64748B; color: white; font-size: 13px;">
+      <div style="font-weight: 600; margin-bottom: 4px;">slate</div>
+      <div style="font-size: 11px; opacity: 0.9;">#64748B</div>
+      <div style="font-size: 11px; opacity: 0.9;">📂 기타</div>
+    </div>
+    <div style="padding: 16px; border-radius: 12px; background: #FAF8F3; color: var(--haru-muted); border: 1px solid rgba(0,0,0,0.08); font-size: 13px;">
+      <div style="font-weight: 600; margin-bottom: 4px;">(none)</div>
+      <div style="font-size: 11px;">회색</div>
+      <div style="font-size: 11px;">기본 없음</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
