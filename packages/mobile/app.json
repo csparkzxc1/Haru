@@ -14,7 +14,8 @@
         "CFBundleLocalizations": [
           "ko"
         ],
-        "CFBundleDevelopmentRegion": "ko"
+        "CFBundleDevelopmentRegion": "ko",
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
