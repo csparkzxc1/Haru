@@ -18,6 +18,8 @@ const INITIAL_TASKS: TaskItem[] = [
     deadline: daysFromNow(0),
     tags: ["결재대기"],
     note: "지난달 명세서 확인해야 함",
+    areaId: "area_personal",
+    projectId: "project_finance",
     createdAt: fmt(today),
   },
   {
@@ -26,6 +28,8 @@ const INITIAL_TASKS: TaskItem[] = [
     priority: "high",
     deadline: daysFromNow(0),
     tags: ["보고"],
+    areaId: "area_work",
+    projectId: null,
     createdAt: fmt(today),
   },
   {
@@ -34,6 +38,8 @@ const INITIAL_TASKS: TaskItem[] = [
     star: true,
     deadline: daysFromNow(0),
     tags: ["전화", "15분컷"],
+    areaId: "area_personal",
+    projectId: null,
     createdAt: fmt(today),
   },
 
@@ -44,6 +50,8 @@ const INITIAL_TASKS: TaskItem[] = [
     when: daysFromNow(2),
     tags: ["회의"],
     note: "작년 Q4 자료 참고",
+    areaId: "area_work",
+    projectId: null,
     createdAt: fmt(today),
   },
   {
@@ -52,6 +60,8 @@ const INITIAL_TASKS: TaskItem[] = [
     priority: "high",
     when: daysFromNow(3),
     tags: ["가족", "결재대기"],
+    areaId: "area_personal",
+    projectId: "project_finance",
     createdAt: fmt(today),
   },
   {
@@ -59,6 +69,8 @@ const INITIAL_TASKS: TaskItem[] = [
     title: "주간보고 제출",
     when: daysFromNow(4),
     tags: ["보고"],
+    areaId: "area_work",
+    projectId: null,
     createdAt: fmt(today),
   },
   {
@@ -66,6 +78,8 @@ const INITIAL_TASKS: TaskItem[] = [
     title: "운동화 세탁",
     when: daysFromNow(5),
     tags: ["집"],
+    areaId: "area_personal",
+    projectId: null,
     createdAt: fmt(today),
   },
 
@@ -75,6 +89,8 @@ const INITIAL_TASKS: TaskItem[] = [
     title: "분기 OKR 점검",
     when: daysFromNow(10),
     tags: ["업무"],
+    areaId: "area_work",
+    projectId: null,
     createdAt: fmt(today),
   },
   {
@@ -84,6 +100,8 @@ const INITIAL_TASKS: TaskItem[] = [
     deadline: daysFromNow(14),
     tags: ["가족", "여행"],
     note: "호캉스 vs 펜션 비교",
+    areaId: "area_hobby",
+    projectId: null,
     createdAt: fmt(today),
   },
   {
@@ -92,6 +110,8 @@ const INITIAL_TASKS: TaskItem[] = [
     priority: "high",
     when: daysFromNow(20),
     tags: ["결재대기"],
+    areaId: "area_personal",
+    projectId: "project_finance",
     createdAt: fmt(today),
   },
 
@@ -100,6 +120,8 @@ const INITIAL_TASKS: TaskItem[] = [
     id: "t11",
     title: "아침 커피콩 주문",
     tags: ["집"],
+    areaId: "area_personal",
+    projectId: null,
     createdAt: fmt(today),
   },
   {
@@ -108,12 +130,16 @@ const INITIAL_TASKS: TaskItem[] = [
     star: true,
     tags: ["성장"],
     note: "2장까지 읽음",
+    areaId: "area_study",
+    projectId: null,
     createdAt: fmt(today),
   },
   {
     id: "t13",
     title: "냉장고 정리",
     tags: ["집"],
+    areaId: "area_personal",
+    projectId: null,
     createdAt: fmt(today),
   },
 
@@ -123,6 +149,8 @@ const INITIAL_TASKS: TaskItem[] = [
     title: "사이드 프로젝트 아이디어 정리",
     someday: true,
     tags: ["성장"],
+    areaId: "area_study",
+    projectId: null,
     createdAt: fmt(today),
   },
   {
@@ -132,6 +160,8 @@ const INITIAL_TASKS: TaskItem[] = [
     star: true,
     tags: ["여행", "가족"],
     note: "6월 후반 노려봐야",
+    areaId: "area_hobby",
+    projectId: null,
     createdAt: fmt(today),
   },
 
@@ -142,6 +172,8 @@ const INITIAL_TASKS: TaskItem[] = [
     done: true,
     doneAt: daysFromNow(-1),
     tags: ["업무"],
+    areaId: "area_work",
+    projectId: null,
     createdAt: fmt(today),
   },
   {
@@ -150,6 +182,8 @@ const INITIAL_TASKS: TaskItem[] = [
     done: true,
     doneAt: daysFromNow(-2),
     tags: ["집"],
+    areaId: "area_personal",
+    projectId: null,
     createdAt: fmt(today),
   },
   {
@@ -158,6 +192,8 @@ const INITIAL_TASKS: TaskItem[] = [
     done: true,
     doneAt: daysFromNow(-3),
     tags: ["건강"],
+    areaId: "area_personal",
+    projectId: "project_goals_2026",
     createdAt: fmt(today),
   },
 ];
