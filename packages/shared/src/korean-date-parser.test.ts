@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { parseKoreanEntry } from "./korean-date-parser.js";
+import { parseKoreanEntry } from "./korean-date-parser";
 
 const REF = new Date(2026, 3, 19, 10, 0, 0); // 2026-04-19(일) 10:00 KST
 

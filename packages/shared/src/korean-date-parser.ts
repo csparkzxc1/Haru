@@ -19,7 +19,7 @@
  *   - Asia/Seoul 고정 (시간대 라이브러리 미도입 단계).
  */
 
-import { getHolidayByName } from "./korean-calendar.js";
+import { getHolidayByName } from "./korean-calendar";
 
 export interface ParsedEntry {
   /** 정제된 제목 */
