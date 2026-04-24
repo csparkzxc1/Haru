@@ -34,30 +34,37 @@ export const RecurrenceRule = z.object({
 });
 export type RecurrenceRule = z.infer<typeof RecurrenceRule>;
 
+/** 영역 색상 토큰 */
+export const AreaColor = z.enum([
+  "teal", "orange", "green", "purple", "amber", "rose", "slate",
+]);
+export type AreaColor = z.infer<typeof AreaColor>;
+
 /** 영역 (Area) */
 export const Area = z.object({
   id: z.string().uuid(),
-  title: z.string().min(1).max(120),
-  colorHex: z.string().regex(/^#[0-9a-fA-F]{6}$/).default("#1C1C1E"),
-  icon: z.string().optional(),
-  /** 가족·팀 공유 여부 */
-  shared: z.boolean().default(false),
-  ownerId: z.string().uuid(),
+  name: z.string().min(1).max(20),
+  emoji: z.string().optional(),
+  color: AreaColor.default("orange"),
+  order: z.number().int(),
   createdAt: z.string().datetime(),
-  updatedAt: z.string().datetime(),
+  hidden: z.boolean().optional(),
 });
 export type Area = z.infer<typeof Area>;
 
 /** 프로젝트 */
 export const Project = z.object({
   id: z.string().uuid(),
+  name: z.string().min(1).max(200),
   areaId: z.string().uuid().nullable(),
-  title: z.string().min(1).max(200),
-  notes: z.string().max(50_000).optional(),
+  emoji: z.string().optional(),
+  when: z.string().datetime().nullable(),
   deadline: z.string().datetime().nullable(),
-  status: TaskStatus.default("open"),
+  note: z.string().optional(),
+  done: z.boolean().optional(),
+  doneAt: z.string().datetime().nullable(),
+  order: z.number().int(),
   createdAt: z.string().datetime(),
-  updatedAt: z.string().datetime(),
 });
 export type Project = z.infer<typeof Project>;
 
