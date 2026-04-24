@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Alert, Keyboard, Pressable, SafeAreaView, ScrollView, Text, TextInput, View } from "react-native";
+import { Alert, Keyboard, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useTasksStore } from "@/store/tasks";
 
@@ -33,22 +33,15 @@ export default function TaskDetailScreen() {
 
   if (!task) {
     return (
-      <SafeAreaView className="flex-1 bg-haru-paper dark:bg-haru-ink items-center justify-center">
+      <View className="flex-1 bg-haru-paper dark:bg-haru-ink items-center justify-center">
         <Text className="text-haru-muted">할 일을 찾을 수 없어요</Text>
-      </SafeAreaView>
+      </View>
     );
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-haru-paper dark:bg-haru-ink">
-      {/* 네비게이션 바 */}
-      <View className="flex-row items-center px-6 pt-4 pb-2">
-        <Pressable onPress={() => router.back()} className="mr-4 py-1">
-          <Text className="text-haru-accent text-base">← 뒤로</Text>
-        </Pressable>
-      </View>
-
-      <ScrollView contentContainerStyle={{ padding: 24, paddingTop: 8 }}>
+    <View className="flex-1 bg-haru-paper dark:bg-haru-ink">
+      <ScrollView contentContainerStyle={{ padding: 24, paddingTop: 16 }}>
         {/* 제목 */}
         <TextInput
           value={task.title}
@@ -240,6 +233,6 @@ export default function TaskDetailScreen() {
           <Text className="text-[#E04E2A] font-medium">🗑️ 할 일 삭제</Text>
         </Pressable>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
