@@ -1,11 +1,6 @@
 import { QuickEntry } from "@/components/quick-entry";
-import { TaskList, type TaskItem } from "@/components/task-list";
+import { TaskList } from "@/components/task-list";
 import { isHoliday } from "@haru/shared/korean-calendar";
-
-const sampleToday: TaskItem[] = [
-  { id: "1", title: "주간보고 초안 작성", when: new Date().toISOString(), tags: ["보고"] },
-  { id: "2", title: "치과 예약 확정 전화", when: new Date().toISOString(), tags: ["전화", "15분컷"] },
-];
 
 export default function TodayPage() {
   const now = new Date();
@@ -23,7 +18,7 @@ export default function TodayPage() {
         </p>
       </header>
       <QuickEntry />
-      <TaskList initial={sampleToday} />
+      <TaskList view="today" />
     </>
   );
 }

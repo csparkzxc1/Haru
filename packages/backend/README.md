@@ -7,9 +7,13 @@ NestJS + Prisma + PostgreSQL.
 ```bash
 cp .env.example .env
 pnpm install
-pnpm prisma:migrate
-pnpm dev
+pnpm --filter @haru/backend prisma:migrate
+pnpm --filter @haru/backend prisma:seed   # 데모 사용자(00000000-...-001) + 영역 2개
+pnpm --filter @haru/backend dev
 ```
+
+> 시드는 웹 클라이언트가 보내는 `x-user-id` 헤더(`00000000-0000-0000-0000-000000000001`)와
+> 매칭되는 데모 User 한 명을 보장합니다. 인증 도입 전 개발 단계에서만 사용합니다.
 
 ## API 개요
 

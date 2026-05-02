@@ -1,7 +1,5 @@
 import { QuickEntry } from "@/components/quick-entry";
-import { TaskList, type TaskItem } from "@/components/task-list";
-
-const sample: TaskItem[] = [];
+import { TaskList } from "@/components/task-list";
 
 export default function AnytimePage() {
   return (
@@ -11,7 +9,7 @@ export default function AnytimePage() {
         <p className="text-sm text-haru-muted mt-1">시간 지정 없음 · 활성 할 일</p>
       </header>
       <QuickEntry />
-      <TaskList initial={sample} />
+      <TaskList view="anytime" />
     </>
   );
 }
