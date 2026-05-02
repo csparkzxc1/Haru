@@ -1,0 +1,38 @@
+# Fly.io 대안 — Render free의 sleep을 피하려는 경우.
+#
+#   fly launch --copy-config --no-deploy
+#   fly secrets set DATABASE_URL="..." JWT_SECRET="..." CORS_ORIGIN="..."
+#   fly deploy
+#
+# 무료 한도: shared-cpu-1x VM 3개, 256 MB RAM 각, 합산 트래픽 160 GB/월.
+
+app = "haru-backend"
+primary_region = "nrt"            # Tokyo — 한국과 가장 가까움
+kill_signal = "SIGINT"
+kill_timeout = "5s"
+
+[build]
+  dockerfile = "packages/backend/Dockerfile"
+
+[env]
+  NODE_ENV = "production"
+  PORT = "3001"
+  JWT_ACCESS_TTL = "15m"
+
+[http_service]
+  internal_port = 3001
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0        # 트래픽 0일 땐 정지 → $0 청구
+
+  [[http_service.checks]]
+    interval = "30s"
+    timeout = "5s"
+    grace_period = "10s"
+    method = "GET"
+    path = "/api/health"
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "256mb"

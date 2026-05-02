@@ -10,6 +10,8 @@ Things 3의 미니멀한 철학을 계승하되, 한국인의 업무·생활·�
 - [`docs/PRD-SUPPLEMENT.md`](docs/PRD-SUPPLEMENT.md) — 개인정보보호법·접근성·앱스토어 심사 보완
 - [`docs/ROADMAP.md`](docs/ROADMAP.md) — 개발 로드맵 상세
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — 시스템 아키텍처
+- [`docs/DEPLOY.md`](docs/DEPLOY.md) — **0원 운영비 배포 가이드** (Vercel + Render + Neon)
+- [`docs/WIDGETS.md`](docs/WIDGETS.md) — iOS/Android 홈 위젯 가이드
 
 ## 모노레포 구조
 

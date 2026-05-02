@@ -1,0 +1,46 @@
+# Render Blueprint — https://render.com/docs/blueprint-spec
+#
+# 한 번의 import 로 백엔드 1대를 띄운다. DB 는 Render Postgres가 아닌
+# Neon 외부 DB (DATABASE_URL secret) 를 사용해 비용 0원을 유지한다.
+#
+# import 후 Dashboard 에서 다음 secret 만 직접 입력:
+#   - DATABASE_URL  (Neon connection string, ?sslmode=require 포함)
+#   - JWT_SECRET    (openssl rand -base64 48)
+
+services:
+  - type: web
+    name: haru-backend
+    runtime: docker
+    plan: free
+    rootDir: .
+    dockerfilePath: ./packages/backend/Dockerfile
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3001
+      - key: JWT_ACCESS_TTL
+        value: 15m
+      - key: CORS_ORIGIN
+        sync: false   # 대시보드에서 입력 (콤마 구분)
+      - key: PUBLIC_BASE_URL
+        sync: false
+      - key: WEB_AUTH_REDIRECT
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      # Optional integrations - leave empty unless registered
+      - key: KAKAO_CLIENT_ID
+        sync: false
+      - key: KAKAO_CLIENT_SECRET
+        sync: false
+      - key: KAKAO_CALLBACK_URL
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: NAVER_CLIENT_ID
+        sync: false
