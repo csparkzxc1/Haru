@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI 오늘 정리 · 하루</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="_shell.css" />
+  <script src="_shell.js" data-active="ai"></script>
+</head>
+<body class="min-h-screen">
+  <div class="flex min-h-screen">
+    <aside id="sidebar"></aside>
+
+    <main class="flex-1 px-8 py-10 max-w-3xl mx-auto">
+      <header class="mb-6">
+        <h1 class="text-3xl font-semibold tracking-tight">AI 오늘 정리</h1>
+        <p class="text-sm text-haru-muted mt-1">
+          Claude Sonnet 4.6 + prompt caching · 두 번째 호출부터 ~10% 비용
+        </p>
+      </header>
+
+      <div class="mb-6 flex gap-2">
+        <button class="rounded-xl bg-haru-accent text-white px-4 py-2 text-sm font-medium">오늘 정리</button>
+        <button class="rounded-xl border border-black/10 px-4 py-2 text-sm">주간 회고 생성</button>
+        <button class="rounded-xl border border-black/10 px-4 py-2 text-sm">프로젝트 분해</button>
+      </div>
+
+      <!-- Sonnet 4.6 응답 — JSON Schema 강제 -->
+      <div class="mb-4 px-4 py-3 rounded-lg bg-black/[.02] text-xs text-haru-muted flex flex-wrap gap-3">
+        <span>📊 입력 1,247 토큰 · 캐시 읽음 1,089 (87%) · 출력 412 토큰</span>
+        <span>⏱ 응답 시간 1.8s</span>
+        <span class="ml-auto">모델: claude-sonnet-4-6</span>
+      </div>
+
+      <section class="mb-6">
+        <div class="text-xs uppercase tracking-widest text-haru-muted mb-2">🌅 오전 (집중 시간대)</div>
+        <ul class="space-y-2">
+          <li class="rounded-lg border border-black/5 p-3">
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] uppercase tracking-wider text-haru-accent bg-haru-accent/10 px-1.5 py-0.5 rounded">DEEP_WORK</span>
+              <span class="text-[15px] flex-1">주간보고 초안 작성</span>
+              <span class="text-xs text-haru-muted">~90분</span>
+            </div>
+            <div class="text-xs text-haru-muted mt-1.5 ml-1">한국 직장인 평균 집중도가 가장 높은 오전 9~10시. 점심 전에 끝내면 오후 자투리 시간이 자유로워집니다.</div>
+          </li>
+          <li class="rounded-lg border border-black/5 p-3">
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] uppercase tracking-wider text-blue-500 bg-blue-500/10 px-1.5 py-0.5 rounded">MEETING</span>
+              <span class="text-[15px] flex-1">팀 회의 (정시 고정)</span>
+              <span class="text-xs text-haru-muted">11:00</span>
+            </div>
+          </li>
+        </ul>
+      </section>
+
+      <section class="mb-6">
+        <div class="text-xs uppercase tracking-widest text-haru-muted mb-2">🌞 오후</div>
+        <ul class="space-y-2">
+          <li class="rounded-lg border border-black/5 p-3">
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] uppercase tracking-wider text-amber-600 bg-amber-500/10 px-1.5 py-0.5 rounded">QUICK_WIN</span>
+              <span class="text-[15px] flex-1">치과 예약 확정 전화</span>
+              <span class="text-xs text-haru-muted">~10분</span>
+            </div>
+            <div class="text-xs text-haru-muted mt-1.5 ml-1">점심 직후 식곤증 시간대 — 짧은 통화로 워밍업.</div>
+          </li>
+          <li class="rounded-lg border border-black/5 p-3">
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] uppercase tracking-wider text-emerald-600 bg-emerald-500/10 px-1.5 py-0.5 rounded">ERRAND</span>
+              <span class="text-[15px] flex-1">김부장 자녀 결혼식 참석 (15만원)</span>
+              <span class="text-xs text-haru-muted">13:00</span>
+            </div>
+            <div class="text-xs text-haru-muted mt-1.5 ml-1">외근 일정. 봉투 미리 준비. 이동 시간 30분 가산 권장.</div>
+          </li>
+        </ul>
+      </section>
+
+      <section class="mb-6">
+        <div class="text-xs uppercase tracking-widest text-haru-muted mb-2">🌙 저녁</div>
+        <ul class="space-y-2">
+          <li class="rounded-lg border border-black/5 p-3">
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] uppercase tracking-wider text-purple-600 bg-purple-500/10 px-1.5 py-0.5 rounded">PERSONAL</span>
+              <span class="text-[15px] flex-1">자녀 어린이날 선물 사기</span>
+              <span class="text-xs text-haru-muted">~30분</span>
+            </div>
+            <div class="text-xs text-haru-muted mt-1.5 ml-1">퇴근 후 백화점 들러 처리. 어린이날 당일 매장이 더 붐비기 전 권장.</div>
+          </li>
+        </ul>
+      </section>
+
+      <section class="rounded-xl border border-black/5 p-4 bg-black/[.02]">
+        <div class="text-xs uppercase tracking-widest text-haru-muted mb-2">한 줄 요약</div>
+        <p class="text-[15px] leading-relaxed">오전엔 보고서에 집중해 마무리, 오후는 외근(결혼식)과 짧은 통화로 분산, 저녁엔 가족 시간 — 어린이날 분위기에 맞춘 따뜻한 하루입니다.</p>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>하루 — v3 코드 기반 목업</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ["Pretendard", "-apple-system", "BlinkMacSystemFont", "system-ui", "Apple SD Gothic Neo", "Noto Sans KR", "sans-serif"] },
+          colors: { haru: { ink: "#1C1C1E", paper: "#FAFAF7", accent: "#FF6B35", muted: "#8E8E93" } },
+          letterSpacing: { korean: "-0.01em" },
+        },
+      },
+    };
+  </script>
+  <style>
+    body { font-family: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; letter-spacing: -0.01em; }
+  </style>
+</head>
+<body class="bg-haru-paper text-haru-ink min-h-screen">
+  <div class="max-w-5xl mx-auto px-6 py-12">
+    <header class="mb-12">
+      <div class="text-4xl font-semibold tracking-tight">하루</div>
+      <p class="text-haru-muted mt-2">실제 구현된 React/Next.js 컴포넌트(sidebar, task-list, quick-entry 등)를 Tailwind 클래스 그대로 재현한 목업입니다. <code class="text-xs bg-black/5 px-1 rounded">packages/web/src/</code> 의 코드와 1:1 매칭.</p>
+    </header>
+
+    <section class="mb-12">
+      <h2 class="text-xs uppercase tracking-widest text-haru-muted mb-4">웹 (Next.js)</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <a href="web-login.html" class="card">
+          <div class="card-title">로그인 / 회원가입</div>
+          <div class="card-desc">데모 자격증명 프리필 + 카카오 버튼</div>
+        </a>
+        <a href="web-today.html" class="card">
+          <div class="card-title">오늘</div>
+          <div class="card-desc">QuickEntry 파싱 미리보기 + TaskList</div>
+        </a>
+        <a href="web-this-week.html" class="card">
+          <div class="card-title">이번주</div>
+          <div class="card-desc">한국 직장인 뷰 + 공휴일 표시</div>
+        </a>
+        <a href="web-areas.html" class="card">
+          <div class="card-title">영역 + 가족 공유</div>
+          <div class="card-desc">초대 토큰 발급 + 카카오톡 공유</div>
+        </a>
+        <a href="web-family-events.html" class="card">
+          <div class="card-title">경조사·축의금</div>
+          <div class="card-desc">연간 통계 3장 + 인라인 추가 폼</div>
+        </a>
+        <a href="web-ai-organize.html" class="card">
+          <div class="card-title">AI 오늘 정리</div>
+          <div class="card-desc">DEEP_WORK / QUICK_WIN / MEETING / ERRAND 분류</div>
+        </a>
+        <a href="web-settings.html" class="card">
+          <div class="card-title">설정</div>
+          <div class="card-desc">다크모드 + 시니어 모드 + 데이터 내보내기</div>
+        </a>
+      </div>
+    </section>
+
+    <section class="mb-12">
+      <h2 class="text-xs uppercase tracking-widest text-haru-muted mb-4">모바일 (Expo · React Native + NativeWind)</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <a href="mobile-today.html" class="card">
+          <div class="card-title">오늘 (모바일)</div>
+          <div class="card-desc">SQLite 캐시 + dirty 인디케이터 + 하단 탭</div>
+        </a>
+        <a href="mobile-quick-entry.html" class="card">
+          <div class="card-title">QuickEntry 파싱</div>
+          <div class="card-desc">"내일 오후 3시 팀 회의 #회의 !" 분해 결과</div>
+        </a>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="text-xs uppercase tracking-widest text-haru-muted mb-4">참고</h2>
+      <div class="text-sm text-haru-muted space-y-1">
+        <p><code class="bg-black/5 px-1 rounded">packages/web/tailwind.config.ts</code>의 색상 토큰을 inline으로 동일하게 정의했습니다.</p>
+        <p>QuickEntry 파싱 로직은 <code class="bg-black/5 px-1 rounded">packages/shared/src/korean-date-parser.ts</code> 와 동일한 동작 결과를 정적으로 표시한 것입니다.</p>
+        <p><a href="../v1.html" class="text-haru-accent hover:underline">v1 목업</a> · <a href="../haru-mockup-v2.html" class="text-haru-accent hover:underline">v2 목업</a> 도 참고하실 수 있습니다.</p>
+      </div>
+    </section>
+  </div>
+
+  <style>
+    .card { display: block; padding: 1.25rem 1rem; border-radius: 0.75rem; border: 1px solid rgba(0,0,0,0.06); transition: border-color 120ms; }
+    .card:hover { border-color: #FF6B35; }
+    .card-title { font-weight: 500; font-size: 1rem; }
+    .card-desc { font-size: 0.875rem; color: #8E8E93; margin-top: 0.25rem; }
+  </style>
+</body>
+</html>

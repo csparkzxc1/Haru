@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>오늘 · 하루</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="_shell.css" />
+  <script src="_shell.js" data-active="today"></script>
+</head>
+<body class="min-h-screen">
+  <div class="flex min-h-screen">
+    <aside id="sidebar"></aside>
+
+    <main class="flex-1 px-8 py-10 max-w-3xl mx-auto">
+      <header class="mb-8">
+        <h1 class="text-3xl font-semibold tracking-tight">오늘</h1>
+        <p class="text-sm text-haru-muted mt-1">5월 2일 금요일 <span class="ml-2 text-haru-accent">· 어린이날</span></p>
+      </header>
+
+      <form class="mb-8">
+        <div class="relative">
+          <input value="내일 오후 3시 팀 회의 #회의 !" class="w-full rounded-xl border border-black/10 bg-transparent px-4 py-3 text-[15px] outline-none focus:border-haru-accent transition-colors" />
+        </div>
+        <div class="mt-2 px-4 py-2 text-xs text-haru-muted bg-black/[.02] rounded-lg flex flex-wrap gap-3">
+          <span>📝 팀 회의</span>
+          <span>📅 2026. 5. 3. 오후 3:00</span>
+          <span>❗!</span>
+          <span>#회의</span>
+          <span class="ml-auto text-haru-muted/70">⏎ 추가</span>
+        </div>
+      </form>
+
+      <ul class="divide-y divide-black/5">
+        <li class="flex items-start gap-3 py-3">
+          <button class="mt-0.5 h-5 w-5 rounded-full border border-haru-muted/50 hover:border-haru-accent flex items-center justify-center"></button>
+          <div class="flex-1">
+            <div class="text-[15px]">주간보고 초안 작성</div>
+            <div class="mt-1 flex flex-wrap gap-2 text-xs text-haru-muted">
+              <span>📅 5월 2일 (금) 오전 9:00</span>
+              <span class="bg-black/5 px-1.5 py-0.5 rounded">#보고</span>
+            </div>
+          </div>
+        </li>
+        <li class="flex items-start gap-3 py-3 group bg-black/[.02]">
+          <button class="mt-0.5 h-5 w-5 rounded-full border border-haru-muted/50 hover:border-haru-accent flex items-center justify-center"></button>
+          <div class="flex-1">
+            <div class="text-[15px]">치과 예약 확정 전화</div>
+            <div class="mt-1 flex flex-wrap gap-2 text-xs text-haru-muted">
+              <span>📅 5월 2일 (금) 오후 1:00</span>
+              <span class="bg-black/5 px-1.5 py-0.5 rounded">#전화</span>
+              <span class="bg-black/5 px-1.5 py-0.5 rounded">#15분컷</span>
+            </div>
+          </div>
+          <button class="text-xs text-haru-muted hover:text-red-500 transition-colors px-2 py-1">삭제</button>
+        </li>
+        <li class="flex items-start gap-3 py-3">
+          <button class="mt-0.5 h-5 w-5 rounded-full bg-haru-accent border border-haru-accent text-white flex items-center justify-center text-[10px]">✓</button>
+          <div class="flex-1">
+            <div class="text-[15px] line-through text-haru-muted">자녀 어린이날 선물 사기</div>
+            <div class="mt-1 flex flex-wrap gap-2 text-xs text-haru-muted">
+              <span class="bg-black/5 px-1.5 py-0.5 rounded">#가족</span>
+            </div>
+          </div>
+        </li>
+        <li class="flex items-start gap-3 py-3">
+          <button class="mt-0.5 h-5 w-5 rounded-full border border-haru-muted/50 hover:border-haru-accent flex items-center justify-center"></button>
+          <div class="flex-1">
+            <div class="text-[15px]">김부장 자녀 결혼식 참석 (15만원)</div>
+            <div class="mt-1 flex flex-wrap gap-2 text-xs text-haru-muted">
+              <span>⏰ 마감 5월 2일 (금) 오후 1:00</span>
+              <span class="bg-black/5 px-1.5 py-0.5 rounded">#경조사</span>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </main>
+  </div>
+</body>
+</html>

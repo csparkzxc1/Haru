@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>경조사·축의금 · 하루</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="_shell.css" />
+  <script src="_shell.js" data-active="family-events"></script>
+</head>
+<body class="min-h-screen">
+  <div class="flex min-h-screen">
+    <aside id="sidebar"></aside>
+
+    <main class="flex-1 px-8 py-10 max-w-3xl mx-auto">
+      <header class="mb-6 flex items-end gap-3">
+        <div class="flex-1">
+          <h1 class="text-3xl font-semibold tracking-tight">경조사·축의금</h1>
+          <p class="text-sm text-haru-muted mt-1">관계·날짜·금액을 한 곳에. 연말 정산용 합계도 자동.</p>
+        </div>
+        <div class="flex gap-1">
+          <button class="px-2 py-1 rounded border border-black/10">◀</button>
+          <span class="px-3 py-1 text-sm">2026년</span>
+          <button class="px-2 py-1 rounded border border-black/10">▶</button>
+        </div>
+      </header>
+
+      <!-- 통계 카드 3장 -->
+      <div class="grid grid-cols-3 gap-3 mb-6 text-center">
+        <div class="rounded-xl border border-black/5 p-3">
+          <div class="text-xs text-haru-muted">보냄</div>
+          <div class="text-xl font-semibold mt-1">1,250,000원</div>
+        </div>
+        <div class="rounded-xl border border-black/5 p-3">
+          <div class="text-xs text-haru-muted">받음</div>
+          <div class="text-xl font-semibold mt-1">450,000원</div>
+        </div>
+        <div class="rounded-xl border border-black/5 p-3">
+          <div class="text-xs text-haru-muted">순지출</div>
+          <div class="text-xl font-semibold mt-1 text-haru-accent">800,000원</div>
+        </div>
+      </div>
+
+      <!-- 인라인 추가 폼 -->
+      <form class="grid grid-cols-12 gap-2 mb-4">
+        <select class="col-span-3 rounded-md border border-black/10 bg-transparent px-2 py-2 text-sm">
+          <option>결혼</option><option>장례</option><option>생일</option>
+          <option>기념일</option><option>백일</option><option>돌</option>
+          <option>집들이</option><option>승진</option><option>기타</option>
+        </select>
+        <input placeholder="대상 (예: 김부장 자녀)" class="col-span-4 rounded-md border border-black/10 bg-transparent px-3 py-2 text-sm" />
+        <input type="date" value="2026-05-01" class="col-span-3 rounded-md border border-black/10 bg-transparent px-2 py-2 text-sm" />
+        <input placeholder="금액" inputmode="numeric" class="col-span-2 rounded-md border border-black/10 bg-transparent px-2 py-2 text-sm" />
+        <button class="col-span-12 rounded-md bg-haru-accent text-white py-2 text-sm font-medium">추가</button>
+      </form>
+
+      <ul class="divide-y divide-black/5 mt-2">
+        <li class="py-3 flex items-start gap-3">
+          <div class="text-xs text-haru-muted w-16 mt-1 flex-shrink-0">3월 8일 (토)</div>
+          <div class="flex-1">
+            <div class="font-medium">결혼 · 박과장 본인 <span class="text-haru-muted text-sm ml-2">(회사 상사)</span></div>
+            <div class="text-xs text-haru-muted mt-0.5 flex flex-wrap gap-2">
+              <span>보냄 100,000원</span>
+              <span>📍 워커힐</span>
+              <span>· 참석</span>
+            </div>
+          </div>
+          <button class="text-xs text-haru-muted hover:text-red-500 px-2">삭제</button>
+        </li>
+        <li class="py-3 flex items-start gap-3">
+          <div class="text-xs text-haru-muted w-16 mt-1 flex-shrink-0">3월 22일 (토)</div>
+          <div class="flex-1">
+            <div class="font-medium">장례 · 김선배 부친상 <span class="text-haru-muted text-sm ml-2">(전 직장)</span></div>
+            <div class="text-xs text-haru-muted mt-0.5 flex flex-wrap gap-2">
+              <span>보냄 50,000원</span>
+              <span>📍 서울추모공원</span>
+            </div>
+          </div>
+          <button class="text-xs text-haru-muted hover:text-red-500 px-2">삭제</button>
+        </li>
+        <li class="py-3 flex items-start gap-3">
+          <div class="text-xs text-haru-muted w-16 mt-1 flex-shrink-0">4월 5일 (토)</div>
+          <div class="flex-1">
+            <div class="font-medium">돌 · 사촌동생 자녀 <span class="text-haru-muted text-sm ml-2">(가족)</span></div>
+            <div class="text-xs text-haru-muted mt-0.5 flex flex-wrap gap-2">
+              <span>보냄 200,000원</span>
+              <span>· 참석</span>
+            </div>
+          </div>
+          <button class="text-xs text-haru-muted hover:text-red-500 px-2">삭제</button>
+        </li>
+        <li class="py-3 flex items-start gap-3">
+          <div class="text-xs text-haru-muted w-16 mt-1 flex-shrink-0">5월 1일 (목)</div>
+          <div class="flex-1">
+            <div class="font-medium">결혼 · 친구 본인 <span class="text-haru-muted text-sm ml-2">(친구)</span></div>
+            <div class="text-xs text-haru-muted mt-0.5 flex flex-wrap gap-2">
+              <span>보냄 150,000원</span>
+              <span>받음 100,000원 (작년 본인 결혼)</span>
+              <span>📍 강남 컨벤션</span>
+              <span>· 참석</span>
+            </div>
+          </div>
+          <button class="text-xs text-haru-muted hover:text-red-500 px-2">삭제</button>
+        </li>
+      </ul>
+    </main>
+  </div>
+</body>
+</html>
