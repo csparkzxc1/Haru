@@ -50,6 +50,7 @@ model User {
   memberships   AreaMember[]
   sessions      Session[]
   pushTokens    PushToken[]
+  familyEvents  FamilyEvent[]
   notificationPreference NotificationPreference?
 }
 
@@ -96,6 +97,7 @@ model Area {
   projects  Project[]
   tasks     Task[]
   members   AreaMember[]
+  invites   AreaInvite[]
 
   @@index([ownerId])
 }
@@ -112,6 +114,23 @@ model AreaMember {
 
   @@unique([areaId, userId])
   @@index([userId])
+}
+
+/// Area 초대 코드. 공유 URL 또는 카카오톡 메시지로 전달.
+model AreaInvite {
+  id         String   @id @default(uuid())
+  areaId     String
+  area       Area     @relation(fields: [areaId], references: [id], onDelete: Cascade)
+  /// URL-safe 랜덤 토큰. 일회용.
+  token      String   @unique
+  invitedBy  String
+  /// 만료. 기본 7일.
+  expiresAt  DateTime
+  acceptedAt DateTime?
+  acceptedBy String?
+  createdAt  DateTime @default(now())
+
+  @@index([areaId])
 }
 
 model Project {
@@ -233,6 +252,43 @@ model NotificationPreference {
   quietEnd     String   @default("07:00")
   dailyDigest  Boolean  @default(true)
   digestHour   Int      @default(8)
+}
+
+enum FamilyEventKind {
+  WEDDING       // 결혼
+  FUNERAL       // 장례
+  BIRTHDAY      // 생일
+  ANNIVERSARY   // 기념일
+  BABY_100D     // 백일
+  BABY_DOL      // 돌
+  HOUSEWARMING  // 집들이
+  PROMOTION     // 승진
+  OTHER
+}
+
+/// 경조사 — 일정·축의금·축전 한 번에 관리. 한국 직장인의 빈번한 부담.
+model FamilyEvent {
+  id           String           @id @default(uuid())
+  ownerId      String
+  owner        User             @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  kind         FamilyEventKind
+  /// 누구의 (예: "김부장 자녀")
+  personLabel  String
+  /// 관계 (예: "회사 상사", "친구", "가족")
+  relation     String?
+  date         DateTime
+  venue        String?
+  /// 보낸 금액 (원). null = 미정 / 0 = 안 함
+  amountKrw    Int?
+  /// 받은 금액 (역경조사 추적)
+  receivedKrw  Int?
+  notes        String?          @db.Text
+  /// 참석 여부
+  attended     Boolean?
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  @@index([ownerId, date])
 }
 
 /** 감사 로그 — 개인정보보호법 대응 */

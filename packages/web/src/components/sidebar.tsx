@@ -13,6 +13,12 @@ const NAV = [
   { href: "/logbook", label: "로그북", icon: "✓" },
 ] as const;
 
+const EXTRA = [
+  { href: "/areas", label: "영역" },
+  { href: "/family-events", label: "경조사·축의금" },
+  { href: "/settings", label: "설정" },
+] as const;
+
 export function Sidebar() {
   const { user, logout } = useAuth();
 
@@ -33,15 +39,18 @@ export function Sidebar() {
       </nav>
 
       <div className="mt-10 text-xs text-haru-muted uppercase tracking-widest px-3 mb-2">
-        영역
+        한국 특화
       </div>
       <nav className="space-y-0.5">
-        <Link
-          href="/areas"
-          className="block px-3 py-2 rounded-md text-sm hover:bg-black/5 dark:hover:bg-white/5"
-        >
-          + 새 영역
-        </Link>
+        {EXTRA.map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            className="block px-3 py-2 rounded-md text-sm hover:bg-black/5 dark:hover:bg-white/5"
+          >
+            {item.label}
+          </Link>
+        ))}
       </nav>
 
       <div className="mt-auto pt-8">

@@ -43,6 +43,15 @@ pnpm --filter @haru/backend dev
 | POST | `/api/sync/push` | ✓ | 오프라인 변형 일괄 적용 |
 | POST | `/api/notifications/devices` | ✓ | Expo Push 토큰 등록 |
 | DELETE | `/api/notifications/devices` | ✓ | 토큰 해지 |
+| POST | `/api/areas/:id/invites` | ✓ | 영역 초대 토큰 발급 (7일) |
+| POST | `/api/areas/invites/accept` | ✓ | 초대 수락 (멤버 합류) |
+| GET | `/api/areas/:id/members` | ✓ | 멤버 목록 |
+| GET/POST/PATCH/DELETE | `/api/family-events` | ✓ | 경조사·축의금 매니저 |
+| GET | `/api/family-events/stats/:year` | ✓ | 연간 통계 (보냄/받음/순지출) |
+| GET | `/api/calendar/ics` | token | iCal 내보내기 (외부 캘린더 구독용) |
+| GET | `/api/calendar/subscribe-token` | ✓ | 1년짜리 long-lived 구독 토큰 |
+| GET | `/api/widgets/today` | ✓ | 홈 위젯 — 오늘 요약 |
+| GET | `/api/widgets/dday` | ✓ | 홈 위젯 — D-Day 3건 |
 
 ## 환경 변수
 

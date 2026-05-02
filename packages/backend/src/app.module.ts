@@ -10,6 +10,8 @@ import { QuickEntryModule } from "./quick-entry/quick-entry.module";
 import { CalendarModule } from "./calendar/calendar.module";
 import { SyncModule } from "./sync/sync.module";
 import { NotificationsModule } from "./notifications/notifications.module";
+import { FamilyEventsModule } from "./family-events/family-events.module";
+import { WidgetsModule } from "./widgets/widgets.module";
 
 @Module({
   imports: [
@@ -23,6 +25,8 @@ import { NotificationsModule } from "./notifications/notifications.module";
     CalendarModule,
     SyncModule,
     NotificationsModule,
+    FamilyEventsModule,
+    WidgetsModule,
   ],
   controllers: [HealthController],
 })

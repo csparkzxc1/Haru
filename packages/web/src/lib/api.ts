@@ -60,6 +60,45 @@ export interface ApiTask {
   taskTags: ApiTaskTag[];
 }
 
+export type FamilyEventKind =
+  | "WEDDING"
+  | "FUNERAL"
+  | "BIRTHDAY"
+  | "ANNIVERSARY"
+  | "BABY_100D"
+  | "BABY_DOL"
+  | "HOUSEWARMING"
+  | "PROMOTION"
+  | "OTHER";
+
+export interface ApiFamilyEvent {
+  id: string;
+  ownerId: string;
+  kind: FamilyEventKind;
+  personLabel: string;
+  relation: string | null;
+  date: string;
+  venue: string | null;
+  amountKrw: number | null;
+  receivedKrw: number | null;
+  notes: string | null;
+  attended: boolean | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateFamilyEventBody {
+  kind: FamilyEventKind;
+  personLabel: string;
+  relation?: string;
+  date: string;
+  venue?: string;
+  amountKrw?: number;
+  receivedKrw?: number;
+  notes?: string;
+  attended?: boolean;
+}
+
 export interface ApiArea {
   id: string;
   ownerId: string;
@@ -308,6 +347,81 @@ export const api = {
   areas: {
     list() {
       return request<ApiArea[]>("/areas");
+    },
+    create(body: { title: string; colorHex?: string; icon?: string }) {
+      return request<ApiArea>("/areas", {
+        method: "POST",
+        body: JSON.stringify(body),
+      });
+    },
+    invite(areaId: string) {
+      return request<{ token: string; expiresAt: string; areaTitle: string }>(
+        `/areas/${areaId}/invites`,
+        { method: "POST" },
+      );
+    },
+    accept(token: string) {
+      return request<{ areaId: string; userId: string; role: string }>(
+        "/areas/invites/accept",
+        { method: "POST", body: JSON.stringify({ token }) },
+      );
+    },
+    members(areaId: string) {
+      return request<
+        {
+          id: string;
+          role: string;
+          user: { id: string; nickname: string; email: string | null };
+        }[]
+      >(`/areas/${areaId}/members`);
+    },
+  },
+  familyEvents: {
+    list(year?: number) {
+      const qs = year ? `?year=${year}` : "";
+      return request<ApiFamilyEvent[]>(`/family-events${qs}`);
+    },
+    stats(year: number) {
+      return request<{
+        year: number;
+        sent: number;
+        received: number;
+        net: number;
+        byKind: Record<string, number>;
+        count: number;
+      }>(`/family-events/stats/${year}`);
+    },
+    create(body: CreateFamilyEventBody) {
+      return request<ApiFamilyEvent>("/family-events", {
+        method: "POST",
+        body: JSON.stringify(body),
+      });
+    },
+    update(id: string, body: Partial<CreateFamilyEventBody>) {
+      return request<ApiFamilyEvent>(`/family-events/${id}`, {
+        method: "PATCH",
+        body: JSON.stringify(body),
+      });
+    },
+    remove(id: string) {
+      return request<{ ok: true }>(`/family-events/${id}`, { method: "DELETE" });
+    },
+  },
+  calendar: {
+    subscribeToken() {
+      return request<{ ics: string; webcal: string }>("/calendar/subscribe-token");
+    },
+  },
+  widgets: {
+    today() {
+      return request<{
+        date: string;
+        holiday: string | null;
+        total: number;
+        done: number;
+        progress: number;
+        preview: { id: string; title: string; when: string | null; status: string }[];
+      }>("/widgets/today");
     },
   },
   quickEntry: {

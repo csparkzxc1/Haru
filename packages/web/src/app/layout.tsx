@@ -3,6 +3,7 @@ import "./globals.css";
 import { AppShell } from "@/components/app-shell";
 import { QueryProvider } from "@/lib/query-client";
 import { AuthProvider } from "@/lib/auth-context";
+import { ThemeProvider } from "@/lib/theme";
 
 export const metadata: Metadata = {
   title: "하루 — 한국형 To-Do",
@@ -14,11 +15,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ko">
       <body className="min-h-screen">
-        <QueryProvider>
-          <AuthProvider>
-            <AppShell>{children}</AppShell>
-          </AuthProvider>
-        </QueryProvider>
+        <ThemeProvider>
+          <QueryProvider>
+            <AuthProvider>
+              <AppShell>{children}</AppShell>
+            </AuthProvider>
+          </QueryProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

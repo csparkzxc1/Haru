@@ -35,6 +35,8 @@ const PUBLIC_PATHS = new Set([
   "/auth/callback",
 ]);
 
+const PUBLIC_PREFIXES = ["/invite/"];
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<SafeUser | null>(null);
   const [loading, setLoading] = useState(true);
@@ -102,5 +104,5 @@ export function useAuth(): AuthState {
 function isPublic(pathname: string | null): boolean {
   if (!pathname) return false;
   if (PUBLIC_PATHS.has(pathname)) return true;
-  return false;
+  return PUBLIC_PREFIXES.some((p) => pathname.startsWith(p));
 }

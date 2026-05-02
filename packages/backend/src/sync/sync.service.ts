@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
+import { resolveConflict } from "@haru/shared/sync-conflict";
 import type { TaskOpDto } from "./sync.dto";
 
 interface SyncTask {
@@ -85,18 +86,22 @@ export class SyncService {
       where: { id: op.id, ownerId },
     });
 
-    const clientUpdatedAt = new Date(op.clientUpdatedAt);
-
-    // LWW: 서버가 더 최신이면 무시하고 결과만 알려준다.
-    if (existing && existing.updatedAt > clientUpdatedAt) {
-      return {
-        id: op.id,
-        op: op.op,
-        status: "ignored",
-        serverVersion: existing.version,
-        serverUpdatedAt: existing.updatedAt.toISOString(),
-        reason: "server has newer version",
-      };
+    // LWW: 공통 resolver 사용 (skew 5초 허용).
+    if (existing) {
+      const decision = resolveConflict({
+        serverUpdatedAt: existing.updatedAt,
+        clientUpdatedAt: op.clientUpdatedAt,
+      });
+      if (decision === "ignore") {
+        return {
+          id: op.id,
+          op: op.op,
+          status: "ignored",
+          serverVersion: existing.version,
+          serverUpdatedAt: existing.updatedAt.toISOString(),
+          reason: "server has newer version",
+        };
+      }
     }
 
     if (op.op === "create") {

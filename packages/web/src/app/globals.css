@@ -31,4 +31,16 @@
       "Noto Sans KR",
       sans-serif;
   }
+
+  /* 시니어 모드: 글자 18%/줄간격 60% 증가, 터치 타겟 키움. */
+  html[data-font-scale="senior"] {
+    font-size: 18px;
+  }
+  html[data-font-scale="senior"] body {
+    line-height: 1.6;
+  }
+  html[data-font-scale="senior"] button,
+  html[data-font-scale="senior"] input {
+    min-height: 48px;
+  }
 }

@@ -225,6 +225,25 @@ export const api = {
       return request<{ ok: true }>(`/tasks/${id}`, { method: "DELETE" });
     },
   },
+  areas: {
+    list() {
+      return request<
+        { id: string; title: string; colorHex: string; shared: boolean }[]
+      >("/areas");
+    },
+    invite(areaId: string) {
+      return request<{ token: string; expiresAt: string; areaTitle: string }>(
+        `/areas/${areaId}/invites`,
+        { method: "POST" },
+      );
+    },
+    accept(token: string) {
+      return request("/areas/invites/accept", {
+        method: "POST",
+        body: JSON.stringify({ token }),
+      });
+    },
+  },
   quickEntry: {
     create(raw: string) {
       return request<ApiTask>("/quick-entry", {
