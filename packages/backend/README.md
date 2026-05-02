@@ -52,6 +52,15 @@ pnpm --filter @haru/backend dev
 | GET | `/api/calendar/subscribe-token` | ✓ | 1년짜리 long-lived 구독 토큰 |
 | GET | `/api/widgets/today` | ✓ | 홈 위젯 — 오늘 요약 |
 | GET | `/api/widgets/dday` | ✓ | 홈 위젯 — D-Day 3건 |
+| GET | `/api/data/export` | ✓ | 전체 사용자 데이터 JSON 다운로드 (개인정보보호법 35조) |
+| DELETE | `/api/data/account` | ✓ | 회원 탈퇴 (소프트 삭제, 7일 유예) |
+| POST | `/api/ai/today/organize` | ✓ | AI — 오늘 할 일 자동 정리 |
+| POST | `/api/ai/weekly-review` | ✓ | AI — 주간 회고 생성 |
+| POST | `/api/ai/decompose` | ✓ | AI — 자연어 → sub-task 분해 |
+| GET/POST | `/api/workspaces` | ✓ | B2B 팀 워크스페이스 |
+| GET/POST/DELETE | `/api/workspaces/:id/members` | ✓ | 멤버 관리 (이메일 기반 추가) |
+| GET | `/api/workspaces/:id/invoices` | ✓ | 세금계산서 조회 |
+| GET/POST/DELETE | `/api/api-keys` | ✓ | 외부 API 키 발급/해지 (Bearer haru_ak_…) |
 
 ## 환경 변수
 

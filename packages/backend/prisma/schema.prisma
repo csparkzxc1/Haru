@@ -51,7 +51,79 @@ model User {
   sessions      Session[]
   pushTokens    PushToken[]
   familyEvents  FamilyEvent[]
+  workspaceMemberships WorkspaceMember[]
+  apiKeys       ApiKey[]
   notificationPreference NotificationPreference?
+}
+
+/// B2B 팀 플랜의 기본 단위. 사업자 1개 = 워크스페이스 1개.
+model Workspace {
+  id          String   @id @default(uuid())
+  name        String
+  /// 사업자등록번호 (10자리, 하이픈 제외). 세금계산서 발행에 필요.
+  bizRegNo    String?
+  /// "team" | "business" — 가격 등급
+  plan        String   @default("team")
+  /// 좌석 수 (정원). 멤버 수가 이를 초과하면 추가가 거부됨.
+  seats       Int      @default(5)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  archivedAt  DateTime?
+
+  members     WorkspaceMember[]
+  invoices    WorkspaceInvoice[]
+}
+
+model WorkspaceMember {
+  id          String    @id @default(uuid())
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// "owner" | "admin" | "member"
+  role        String    @default("member")
+  joinedAt    DateTime  @default(now())
+
+  @@unique([workspaceId, userId])
+  @@index([userId])
+}
+
+/// 세금계산서 / 거래명세 — 회계 부서에 그대로 전달 가능한 최소 정보.
+model WorkspaceInvoice {
+  id          String    @id @default(uuid())
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  /// 발행 연월 (YYYY-MM)
+  period      String
+  /// 합계 (원)
+  totalKrw    Int
+  /// "issued" | "paid" | "overdue"
+  status      String    @default("issued")
+  /// PDF 또는 외부 인보이스 시스템 URL
+  documentUrl String?
+  issuedAt    DateTime  @default(now())
+
+  @@index([workspaceId, period])
+}
+
+/// 외부 통합용 long-lived API 키. 평문은 한 번만 보여주고 hash 만 저장.
+model ApiKey {
+  id          String    @id @default(uuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// 사람이 읽을 수 있는 라벨 (예: "Zapier · Slack 알림")
+  label       String
+  /// SHA-256 hash 의 hex. 평문은 저장하지 않음.
+  keyHash     String    @unique
+  /// 키 prefix 8글자 (목록에서 식별용). 예: "haru_ak_a1b2c3d4"
+  keyPrefix   String
+  /// 권한 스코프. 콤마 구분: "tasks:read,tasks:write,quick-entry:write"
+  scopes      String    @default("tasks:read")
+  lastUsedAt  DateTime?
+  createdAt   DateTime  @default(now())
+  revokedAt   DateTime?
+
+  @@index([userId])
 }
 
 model SocialAccount {

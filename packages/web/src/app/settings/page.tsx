@@ -1,6 +1,5 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { api } from "@/lib/api";
 import { useAuth } from "@/lib/auth-context";
@@ -55,6 +54,10 @@ export default function SettingsPage() {
         </Group>
       </Section>
 
+      <Section title="내 데이터">
+        <DataActions />
+      </Section>
+
       <Section title="외부 캘린더 구독">
         <p className="text-sm text-haru-muted mb-3">
           아이폰/안드로이드 캘린더, 구글 캘린더, 네이버 캘린더에서 하루의 할 일을
@@ -89,6 +92,75 @@ export default function SettingsPage() {
         )}
       </Section>
     </>
+  );
+}
+
+function DataActions() {
+  const { logout } = useAuth();
+  const [busy, setBusy] = useState<"export" | "delete" | null>(null);
+  const [msg, setMsg] = useState<string | null>(null);
+
+  async function onExport() {
+    setBusy("export");
+    setMsg(null);
+    try {
+      const blob = await api.data.exportAll();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `haru-data-${new Date().toISOString().slice(0, 10)}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      setMsg("다운로드를 시작했습니다.");
+    } catch (e) {
+      setMsg((e as Error).message);
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  async function onDelete() {
+    const ok = window.confirm(
+      "정말 탈퇴하시겠습니까?\n\n개인정보보호법에 따라 7일 동안 복구 가능 상태로 보관 후 영구 파기됩니다. 모든 기기에서 즉시 로그아웃됩니다.",
+    );
+    if (!ok) return;
+    const ok2 = window.prompt("탈퇴 확인을 위해 '탈퇴'를 입력해 주세요");
+    if (ok2 !== "탈퇴") return;
+    setBusy("delete");
+    setMsg(null);
+    try {
+      await api.data.deleteAccount();
+      await logout();
+    } catch (e) {
+      setMsg((e as Error).message);
+      setBusy(null);
+    }
+  }
+
+  return (
+    <div className="space-y-3">
+      <p className="text-sm text-haru-muted">
+        모든 데이터를 단일 JSON 파일로 다운로드하거나 계정을 탈퇴할 수 있습니다.
+        개인정보보호법 제35·36조에 근거합니다.
+      </p>
+      <div className="flex flex-wrap gap-2">
+        <button
+          onClick={onExport}
+          disabled={busy !== null}
+          className="text-sm px-4 py-2 rounded-md border border-black/10 dark:border-white/15 hover:border-haru-accent disabled:opacity-50"
+        >
+          {busy === "export" ? "준비 중…" : "데이터 내보내기 (JSON)"}
+        </button>
+        <button
+          onClick={onDelete}
+          disabled={busy !== null}
+          className="text-sm px-4 py-2 rounded-md border border-red-500/40 text-red-500 hover:bg-red-500/5 disabled:opacity-50"
+        >
+          {busy === "delete" ? "처리 중…" : "회원 탈퇴"}
+        </button>
+      </div>
+      {msg && <div className="text-xs text-haru-muted">{msg}</div>}
+    </div>
   );
 }
 

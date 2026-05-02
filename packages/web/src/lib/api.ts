@@ -412,6 +412,28 @@ export const api = {
       return request<{ ics: string; webcal: string }>("/calendar/subscribe-token");
     },
   },
+  data: {
+    /** 브라우저에서 즉시 다운로드. token을 query 로 넘기는 대신 fetch + Blob. */
+    async exportAll(): Promise<Blob> {
+      const access = tokenStore.getAccess();
+      const res = await fetch(`${API_BASE}/data/export`, {
+        headers: access ? { authorization: `Bearer ${access}` } : {},
+      });
+      if (!res.ok) {
+        if (res.status === 401) {
+          await tryRefresh();
+          return api.data.exportAll();
+        }
+        throw new ApiError(res.status, "데이터 내보내기 실패");
+      }
+      return res.blob();
+    },
+    deleteAccount() {
+      return request<{ ok: true; scheduledFor: string }>("/data/account", {
+        method: "DELETE",
+      });
+    },
+  },
   widgets: {
     today() {
       return request<{

@@ -1,0 +1,18 @@
+User-agent: *
+Allow: /
+Disallow: /login
+Disallow: /register
+Disallow: /auth/
+Disallow: /invite/
+Disallow: /settings
+Disallow: /inbox
+Disallow: /today
+Disallow: /this-week
+Disallow: /upcoming
+Disallow: /anytime
+Disallow: /someday
+Disallow: /logbook
+Disallow: /areas
+Disallow: /family-events
+
+Sitemap: https://haru.app/sitemap.xml

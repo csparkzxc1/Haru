@@ -10,6 +10,7 @@
     "./korean-date": "./src/korean-date-parser.ts",
     "./korean-calendar": "./src/korean-calendar.ts",
     "./sync-conflict": "./src/sync-conflict.ts",
+    "./everytime": "./src/everytime-parser.ts",
     "./types": "./src/types.ts"
   },
   "scripts": {

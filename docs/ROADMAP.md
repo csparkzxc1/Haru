@@ -27,15 +27,15 @@
 
 ## Phase 3: 확장 (M6 ~ M9)
 
-- [ ] AI 어시스턴트 (Claude Opus 4.7)
-  - 오늘 할 일 자동 정리
-  - 주간 회고 생성
-  - 자연어 → 프로젝트 분해
-- [ ] B2B 팀 플랜 (세금계산서 · 권한 관리)
-- [ ] 에브리타임 시간표 임포트
+- [x] AI 어시스턴트 (Claude Sonnet 4.6 + prompt caching)
+  - [x] 오늘 할 일 자동 정리 (DEEP_WORK / QUICK_WIN / MEETING / ERRAND / PERSONAL 분류)
+  - [x] 주간 회고 생성
+  - [x] 자연어 → 프로젝트 분해
+- [x] B2B 팀 플랜 (Workspace + 좌석 한도 + 세금계산서 모델)
+- [x] 에브리타임 시간표 임포트 (텍스트 파서 + 8 단위 테스트)
 - [ ] 인강 플랫폼 북마크 확장 (크롬)
-- [ ] 웹앱 정식 출시
-- [ ] 공개 API + Zapier/Make 커넥터
+- [~] 웹앱 정식 출시 (manifest, robots, sitemap, OG 메타 완료 — 도메인 연결 TODO)
+- [x] 공개 API 키 발급 + OpenAPI 3.1 스펙 (`docs/api/openapi.yaml`)
 
 ## Phase 4: 플랫폼 (M9 ~ M12)
 

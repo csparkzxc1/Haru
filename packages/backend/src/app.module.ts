@@ -12,6 +12,10 @@ import { SyncModule } from "./sync/sync.module";
 import { NotificationsModule } from "./notifications/notifications.module";
 import { FamilyEventsModule } from "./family-events/family-events.module";
 import { WidgetsModule } from "./widgets/widgets.module";
+import { DataPortabilityModule } from "./data-portability/data-portability.module";
+import { AiModule } from "./ai/ai.module";
+import { WorkspacesModule } from "./workspaces/workspaces.module";
+import { ApiKeysModule } from "./api-keys/api-keys.module";
 
 @Module({
   imports: [
@@ -27,6 +31,10 @@ import { WidgetsModule } from "./widgets/widgets.module";
     NotificationsModule,
     FamilyEventsModule,
     WidgetsModule,
+    DataPortabilityModule,
+    AiModule,
+    WorkspacesModule,
+    ApiKeysModule,
   ],
   controllers: [HealthController],
 })
