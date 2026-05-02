@@ -1,7 +1,9 @@
-import { Screen } from "@/../components/Screen";
-import { QuickEntry } from "@/../components/QuickEntry";
-import { TaskRow } from "@/../components/TaskRow";
+import { Pressable, Text, View } from "react-native";
+import { Screen } from "../components/Screen";
+import { QuickEntry } from "../components/QuickEntry";
+import { TaskListView } from "../components/TaskListView";
 import { isHoliday } from "@haru/shared/korean-calendar";
+import { useAuth } from "../lib/auth";
 
 export default function TodayScreen() {
   const now = new Date();
@@ -11,6 +13,7 @@ export default function TodayScreen() {
     day: "numeric",
     weekday: "long",
   }).format(now);
+  const { user, logout } = useAuth();
 
   return (
     <Screen
@@ -18,8 +21,15 @@ export default function TodayScreen() {
       subtitle={holiday ? `${dateLabel} · ${holiday.name}` : dateLabel}
     >
       <QuickEntry />
-      <TaskRow task={{ id: "1", title: "주간보고 초안 작성", tags: ["보고"] }} />
-      <TaskRow task={{ id: "2", title: "치과 예약 확정 전화", tags: ["전화", "15분컷"] }} />
+      <TaskListView view="today" />
+      <View className="mt-10 pt-4 border-t border-black/5">
+        <Text className="text-xs text-haru-muted">
+          로그인됨 · {user?.nickname}
+        </Text>
+        <Pressable onPress={() => logout()} className="mt-2">
+          <Text className="text-xs text-haru-accent">로그아웃</Text>
+        </Pressable>
+      </View>
     </Screen>
   );
 }

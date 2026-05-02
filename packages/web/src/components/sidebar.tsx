@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useAuth } from "@/lib/auth-context";
 
 const NAV = [
   { href: "/inbox", label: "수신함", icon: "✉︎" },
@@ -11,6 +14,8 @@ const NAV = [
 ] as const;
 
 export function Sidebar() {
+  const { user, logout } = useAuth();
+
   return (
     <aside className="w-60 shrink-0 border-r border-black/5 dark:border-white/10 px-4 py-8 flex flex-col">
       <div className="text-xl font-semibold mb-8 tracking-tight">하루</div>
@@ -26,7 +31,10 @@ export function Sidebar() {
           </Link>
         ))}
       </nav>
-      <div className="mt-10 text-xs text-haru-muted uppercase tracking-widest px-3 mb-2">영역</div>
+
+      <div className="mt-10 text-xs text-haru-muted uppercase tracking-widest px-3 mb-2">
+        영역
+      </div>
       <nav className="space-y-0.5">
         <Link
           href="/areas"
@@ -35,9 +43,28 @@ export function Sidebar() {
           + 새 영역
         </Link>
       </nav>
-      <div className="mt-auto pt-8 px-3 text-xs text-haru-muted/80 space-x-3">
-        <Link href="/privacy" className="hover:text-haru-accent">개인정보처리방침</Link>
-        <Link href="/terms" className="hover:text-haru-accent">이용약관</Link>
+
+      <div className="mt-auto pt-8">
+        {user && (
+          <div className="px-3 py-2 mb-2 text-xs">
+            <div className="text-haru-muted">로그인됨</div>
+            <div className="truncate">{user.nickname}</div>
+            <button
+              onClick={() => logout()}
+              className="mt-2 text-haru-muted hover:text-haru-accent"
+            >
+              로그아웃
+            </button>
+          </div>
+        )}
+        <div className="px-3 text-xs text-haru-muted/80 space-x-3">
+          <Link href="/privacy" className="hover:text-haru-accent">
+            개인정보처리방침
+          </Link>
+          <Link href="/terms" className="hover:text-haru-accent">
+            이용약관
+          </Link>
+        </div>
       </div>
     </aside>
   );

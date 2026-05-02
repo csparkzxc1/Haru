@@ -1,42 +1,55 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Headers } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  UseGuards,
+} from "@nestjs/common";
 import { TasksService } from "./tasks.service";
 import { CreateTaskDto, ListTasksQuery, UpdateTaskDto } from "./tasks.dto";
+import { CurrentUser, JwtAuthGuard } from "../auth/jwt-auth.guard";
+import type { AuthenticatedUser } from "../auth/jwt.strategy";
 
-/**
- * v1 단계: 인증 미들웨어 미도입. 헤더 `x-user-id`로 사용자 식별.
- * Phase 1 후반부 Passport JWT + Kakao OAuth 장착 시 Guard로 교체.
- */
 @Controller("tasks")
+@UseGuards(JwtAuthGuard)
 export class TasksController {
   constructor(private readonly tasks: TasksService) {}
 
   @Get()
-  list(@Headers("x-user-id") userId: string, @Query() query: ListTasksQuery) {
-    return this.tasks.list(userId, query);
+  list(@CurrentUser() user: AuthenticatedUser, @Query() query: ListTasksQuery) {
+    return this.tasks.list(user.id, query);
   }
 
   @Get(":id")
-  get(@Headers("x-user-id") userId: string, @Param("id") id: string) {
-    return this.tasks.get(userId, id);
+  get(@CurrentUser() user: AuthenticatedUser, @Param("id") id: string) {
+    return this.tasks.get(user.id, id);
   }
 
   @Post()
-  create(@Headers("x-user-id") userId: string, @Body() dto: CreateTaskDto) {
-    return this.tasks.create(userId, dto);
+  create(@CurrentUser() user: AuthenticatedUser, @Body() dto: CreateTaskDto) {
+    return this.tasks.create(user.id, dto);
   }
 
   @Patch(":id")
-  update(@Headers("x-user-id") userId: string, @Param("id") id: string, @Body() dto: UpdateTaskDto) {
-    return this.tasks.update(userId, id, dto);
+  update(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param("id") id: string,
+    @Body() dto: UpdateTaskDto,
+  ) {
+    return this.tasks.update(user.id, id, dto);
   }
 
   @Post(":id/complete")
-  complete(@Headers("x-user-id") userId: string, @Param("id") id: string) {
-    return this.tasks.complete(userId, id);
+  complete(@CurrentUser() user: AuthenticatedUser, @Param("id") id: string) {
+    return this.tasks.complete(user.id, id);
   }
 
   @Delete(":id")
-  remove(@Headers("x-user-id") userId: string, @Param("id") id: string) {
-    return this.tasks.remove(userId, id);
+  remove(@CurrentUser() user: AuthenticatedUser, @Param("id") id: string) {
+    return this.tasks.remove(user.id, id);
   }
 }

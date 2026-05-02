@@ -1,7 +1,9 @@
-import { Body, Controller, Headers, Post } from "@nestjs/common";
+import { Body, Controller, Post, UseGuards } from "@nestjs/common";
 import { parseKoreanEntry } from "@haru/shared/korean-date";
 import { TasksService } from "../tasks/tasks.service";
 import { IsOptional, IsString } from "class-validator";
+import { CurrentUser, JwtAuthGuard } from "../auth/jwt-auth.guard";
+import type { AuthenticatedUser } from "../auth/jwt.strategy";
 
 class QuickEntryDto {
   @IsString() raw!: string;
@@ -23,9 +25,10 @@ export class QuickEntryController {
   }
 
   @Post()
-  create(@Headers("x-user-id") userId: string, @Body() dto: QuickEntryDto) {
+  @UseGuards(JwtAuthGuard)
+  create(@CurrentUser() user: AuthenticatedUser, @Body() dto: QuickEntryDto) {
     const parsed = parseKoreanEntry(dto.raw);
-    return this.tasks.create(userId, {
+    return this.tasks.create(user.id, {
       title: parsed.title,
       when: parsed.when ?? undefined,
       deadline: parsed.deadline ?? undefined,

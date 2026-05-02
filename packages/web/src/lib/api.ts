@@ -1,8 +1,10 @@
 /**
  * 하루 백엔드 REST 클라이언트.
  *
- * v1: 인증 미도입 — `x-user-id` 헤더로 로컬 데모 사용자 식별.
- *     Phase 1 후반부 JWT/카카오 OAuth 도입 시 토큰 헤더로 교체.
+ * 인증: Bearer JWT.
+ *   - 액세스 토큰은 메모리에만 보관(XSS 노출 최소화)
+ *   - 리프레시 토큰은 localStorage('haru.refresh') 에 보관
+ *   - 401 발생 시 자동으로 /auth/refresh 호출 후 한 번 재시도
  */
 
 import type { ParsedEntry } from "@haru/shared/korean-date";
@@ -97,18 +99,30 @@ export interface UpdateTaskBody {
   sortOrder?: number;
 }
 
+export interface SafeUser {
+  id: string;
+  email: string | null;
+  nickname: string;
+  timezone: string;
+  locale: string;
+  avatarUrl: string | null;
+  plan: string;
+}
+
+export interface AuthTokens {
+  accessToken: string;
+  refreshToken: string;
+}
+
+export interface AuthResult {
+  user: SafeUser;
+  tokens: AuthTokens;
+}
+
 const API_BASE =
   process.env.NEXT_PUBLIC_API_BASE ?? "http://localhost:3001/api";
 
-const DEMO_USER_ID = "00000000-0000-0000-0000-000000000001";
-
-function userId(): string {
-  if (typeof window === "undefined") return DEMO_USER_ID;
-  const stored = window.localStorage.getItem("haru.userId");
-  if (stored) return stored;
-  window.localStorage.setItem("haru.userId", DEMO_USER_ID);
-  return DEMO_USER_ID;
-}
+const REFRESH_KEY = "haru.refresh";
 
 export class ApiError extends Error {
   constructor(public status: number, message: string, public payload?: unknown) {
@@ -116,19 +130,91 @@ export class ApiError extends Error {
   }
 }
 
+class TokenStore {
+  private accessToken: string | null = null;
+  private listeners = new Set<(tok: string | null) => void>();
+
+  setAccess(token: string | null) {
+    this.accessToken = token;
+    for (const l of this.listeners) l(token);
+  }
+
+  getAccess(): string | null {
+    return this.accessToken;
+  }
+
+  subscribe(fn: (tok: string | null) => void) {
+    this.listeners.add(fn);
+    return () => this.listeners.delete(fn);
+  }
+
+  setRefresh(token: string | null) {
+    if (typeof window === "undefined") return;
+    if (token) window.localStorage.setItem(REFRESH_KEY, token);
+    else window.localStorage.removeItem(REFRESH_KEY);
+  }
+
+  getRefresh(): string | null {
+    if (typeof window === "undefined") return null;
+    return window.localStorage.getItem(REFRESH_KEY);
+  }
+
+  clear() {
+    this.setAccess(null);
+    this.setRefresh(null);
+  }
+}
+
+export const tokenStore = new TokenStore();
+
+let refreshPromise: Promise<AuthTokens> | null = null;
+
+async function tryRefresh(): Promise<AuthTokens | null> {
+  const refresh = tokenStore.getRefresh();
+  if (!refresh) return null;
+  if (!refreshPromise) {
+    refreshPromise = fetch(`${API_BASE}/auth/refresh`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ refreshToken: refresh }),
+    }).then(async (res) => {
+      if (!res.ok) {
+        tokenStore.clear();
+        throw new ApiError(res.status, "세션이 만료되었습니다");
+      }
+      return (await res.json()) as AuthTokens;
+    });
+  }
+  try {
+    const tokens = await refreshPromise;
+    tokenStore.setAccess(tokens.accessToken);
+    tokenStore.setRefresh(tokens.refreshToken);
+    return tokens;
+  } finally {
+    refreshPromise = null;
+  }
+}
+
 async function request<T>(
   path: string,
   init: RequestInit = {},
+  retryOn401 = true,
 ): Promise<T> {
+  const access = tokenStore.getAccess();
+  const headers = new Headers(init.headers);
+  headers.set("content-type", "application/json");
+  if (access) headers.set("authorization", `Bearer ${access}`);
+
   const res = await fetch(`${API_BASE}${path}`, {
     ...init,
-    headers: {
-      "content-type": "application/json",
-      "x-user-id": userId(),
-      ...(init.headers ?? {}),
-    },
+    headers,
     cache: "no-store",
   });
+
+  if (res.status === 401 && retryOn401) {
+    const refreshed = await tryRefresh();
+    if (refreshed) return request<T>(path, init, false);
+  }
 
   if (!res.ok) {
     let payload: unknown;
@@ -149,6 +235,50 @@ async function request<T>(
 }
 
 export const api = {
+  auth: {
+    async register(body: {
+      email: string;
+      password: string;
+      nickname: string;
+      privacyAgreed: boolean;
+      termsAgreed: boolean;
+      marketingOptIn?: boolean;
+    }): Promise<AuthResult> {
+      const result = await request<AuthResult>("/auth/register", {
+        method: "POST",
+        body: JSON.stringify(body),
+      });
+      tokenStore.setAccess(result.tokens.accessToken);
+      tokenStore.setRefresh(result.tokens.refreshToken);
+      return result;
+    },
+    async login(email: string, password: string): Promise<AuthResult> {
+      const result = await request<AuthResult>("/auth/login", {
+        method: "POST",
+        body: JSON.stringify({ email, password }),
+      });
+      tokenStore.setAccess(result.tokens.accessToken);
+      tokenStore.setRefresh(result.tokens.refreshToken);
+      return result;
+    },
+    async logout(): Promise<void> {
+      const refreshToken = tokenStore.getRefresh();
+      if (refreshToken) {
+        await request("/auth/logout", {
+          method: "POST",
+          body: JSON.stringify({ refreshToken }),
+        }).catch(() => undefined);
+      }
+      tokenStore.clear();
+    },
+    me() {
+      return request<SafeUser>("/auth/me");
+    },
+    /** 카카오 로그인 시작. 백엔드가 카카오 인가 페이지로 리디렉트한다. */
+    kakaoUrl(): string {
+      return `${API_BASE}/auth/kakao`;
+    },
+  },
   tasks: {
     list(view: ViewKind, params: { areaId?: string; projectId?: string } = {}) {
       const qs = new URLSearchParams({ view });

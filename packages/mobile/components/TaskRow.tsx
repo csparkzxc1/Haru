@@ -1,18 +1,18 @@
-import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
+import type { ApiTask } from "../lib/api";
 
-export interface TaskItem {
-  id: string;
-  title: string;
-  when?: string | null;
-  tags?: string[];
-}
-
-export function TaskRow({ task }: { task: TaskItem }) {
-  const [done, setDone] = useState(false);
+export function TaskRow({
+  task,
+  onToggle,
+}: {
+  task: ApiTask;
+  onToggle: (task: ApiTask) => void;
+}) {
+  const done = task.status !== "OPEN";
+  const tags = task.taskTags.map((tt) => tt.tag.name);
   return (
     <Pressable
-      onPress={() => setDone((d) => !d)}
+      onPress={() => onToggle(task)}
       className="flex-row items-start gap-3 py-3 border-b border-black/5"
     >
       <View
@@ -30,14 +30,19 @@ export function TaskRow({ task }: { task: TaskItem }) {
         >
           {task.title}
         </Text>
-        {(task.when || task.tags?.length) && (
+        {(task.when || task.deadline || tags.length > 0) && (
           <View className="flex-row flex-wrap gap-2 mt-1">
             {task.when && (
               <Text className="text-xs text-haru-muted">
                 📅 {new Date(task.when).toLocaleDateString("ko-KR")}
               </Text>
             )}
-            {task.tags?.map((t) => (
+            {task.deadline && (
+              <Text className="text-xs text-haru-muted">
+                ⏰ {new Date(task.deadline).toLocaleDateString("ko-KR")}
+              </Text>
+            )}
+            {tags.map((t) => (
               <Text key={t} className="text-xs text-haru-muted">
                 #{t}
               </Text>

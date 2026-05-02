@@ -8,7 +8,7 @@
 - [x] 한국어 자연어 날짜 파서
 - [x] 한국 공휴일 + 음력 모듈
 - [x] 데이터 모델: User, Area, Project, Task, Tag, Checklist (Prisma)
-- [ ] 인증: 이메일 + 카카오 로그인 *(스캐폴딩만 — `x-user-id` 헤더 임시)*
+- [x] 인증: 이메일/JWT (액세스 + 리프레시 회전) · 카카오 OAuth 스캐폴딩
 - [x] 4단 뷰 UI (Today / This Week / Upcoming / Anytime / Someday / Logbook / Inbox)
 - [x] Quick Entry (자연어 파싱 입력) — 백엔드 연동 완료
 - [ ] 오프라인 동기화 (SQLite + Push-Pull)
