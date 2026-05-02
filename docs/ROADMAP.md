@@ -11,8 +11,8 @@
 - [x] 인증: 이메일/JWT (액세스 + 리프레시 회전) · 카카오 OAuth 스캐폴딩
 - [x] 4단 뷰 UI (Today / This Week / Upcoming / Anytime / Someday / Logbook / Inbox)
 - [x] Quick Entry (자연어 파싱 입력) — 백엔드 연동 완료
-- [ ] 오프라인 동기화 (SQLite + Push-Pull)
-- [ ] 푸시 알림 (FCM/APNs)
+- [x] 오프라인 동기화 (SQLite + Push-Pull) — 모바일 LWW · outbox · 워터마크
+- [x] 푸시 알림 (Expo Push 토큰 등록 + 로컬 알림 스케줄링)
 - [x] 개인정보 처리방침 · 약관 페이지 (웹)
 
 ## Phase 2: 성장 (M3 ~ M6)

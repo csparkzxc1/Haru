@@ -8,6 +8,8 @@ import { AreasModule } from "./areas/areas.module";
 import { ProjectsModule } from "./projects/projects.module";
 import { QuickEntryModule } from "./quick-entry/quick-entry.module";
 import { CalendarModule } from "./calendar/calendar.module";
+import { SyncModule } from "./sync/sync.module";
+import { NotificationsModule } from "./notifications/notifications.module";
 
 @Module({
   imports: [
@@ -19,6 +21,8 @@ import { CalendarModule } from "./calendar/calendar.module";
     ProjectsModule,
     QuickEntryModule,
     CalendarModule,
+    SyncModule,
+    NotificationsModule,
   ],
   controllers: [HealthController],
 })

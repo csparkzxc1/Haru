@@ -1,11 +1,49 @@
 import "../global.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Tabs } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider, useQueryClient } from "@tanstack/react-query";
 import { AuthProvider, useAuth } from "../lib/auth";
 import { LoginScreen } from "../components/LoginScreen";
-import { ActivityIndicator, View } from "react-native";
+import { ActivityIndicator, AppState, View } from "react-native";
+import { initDb } from "../lib/db";
+import { syncNow, clearAfterLogout } from "../lib/sync";
+import {
+  registerPushTokenWithBackend,
+  syncLocalNotifications,
+} from "../lib/notifications";
+
+function AuthedShell({ children }: { children: React.ReactNode }) {
+  const qc = useQueryClient();
+
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      await initDb();
+      await syncNow();
+      await syncLocalNotifications();
+      if (active) qc.invalidateQueries({ queryKey: ["local-tasks"] });
+      // 푸시 토큰 등록은 권한 요청이 따르므로 비동기·실패 허용.
+      void registerPushTokenWithBackend();
+    })();
+
+    const sub = AppState.addEventListener("change", (state) => {
+      if (state === "active") {
+        void syncNow().then(() => {
+          qc.invalidateQueries({ queryKey: ["local-tasks"] });
+          void syncLocalNotifications();
+        });
+      }
+    });
+
+    return () => {
+      active = false;
+      sub.remove();
+    };
+  }, [qc]);
+
+  return <>{children}</>;
+}
 
 function AuthGate({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
@@ -17,20 +55,20 @@ function AuthGate({ children }: { children: React.ReactNode }) {
     );
   }
   if (!user) return <LoginScreen />;
-  return <>{children}</>;
+  return <AuthedShell>{children}</AuthedShell>;
 }
 
 export default function Layout() {
   const [qc] = useState(
     () =>
       new QueryClient({
-        defaultOptions: { queries: { staleTime: 30_000, retry: 1 } },
+        defaultOptions: { queries: { staleTime: 5_000, retry: 1 } },
       }),
   );
 
   return (
     <QueryClientProvider client={qc}>
-      <AuthProvider>
+      <AuthProvider onLogout={clearAfterLogout}>
         <StatusBar style="auto" />
         <AuthGate>
           <Tabs

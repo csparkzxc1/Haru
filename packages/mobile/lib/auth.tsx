@@ -24,7 +24,13 @@ interface AuthState {
 
 const AuthCtx = createContext<AuthState | null>(null);
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
+export function AuthProvider({
+  children,
+  onLogout,
+}: {
+  children: React.ReactNode;
+  onLogout?: () => Promise<void> | void;
+}) {
   const [user, setUser] = useState<SafeUser | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -56,8 +62,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = useCallback(async () => {
     await api.auth.logout();
+    if (onLogout) await onLogout();
     setUser(null);
-  }, []);
+  }, [onLogout]);
 
   return (
     <AuthCtx.Provider value={{ user, loading, login, register, logout }}>

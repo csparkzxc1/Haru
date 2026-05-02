@@ -131,7 +131,7 @@ async function tryRefresh(): Promise<AuthTokens | null> {
   }
 }
 
-async function request<T>(
+export async function request<T>(
   path: string,
   init: RequestInit = {},
   retryOn401 = true,

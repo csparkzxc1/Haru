@@ -1,15 +1,14 @@
 import { Pressable, Text, View } from "react-native";
-import type { ApiTask } from "../lib/api";
+import type { LocalTask } from "../lib/db";
 
 export function TaskRow({
   task,
   onToggle,
 }: {
-  task: ApiTask;
-  onToggle: (task: ApiTask) => void;
+  task: LocalTask;
+  onToggle: (task: LocalTask) => void;
 }) {
   const done = task.status !== "OPEN";
-  const tags = task.taskTags.map((tt) => tt.tag.name);
   return (
     <Pressable
       onPress={() => onToggle(task)}
@@ -23,14 +22,19 @@ export function TaskRow({
         {done && <Text className="text-white text-xs">✓</Text>}
       </View>
       <View className="flex-1">
-        <Text
-          className={`text-[15px] text-haru-ink dark:text-haru-paper ${
-            done ? "line-through text-haru-muted" : ""
-          }`}
-        >
-          {task.title}
-        </Text>
-        {(task.when || task.deadline || tags.length > 0) && (
+        <View className="flex-row items-center gap-2">
+          <Text
+            className={`text-[15px] flex-1 text-haru-ink dark:text-haru-paper ${
+              done ? "line-through text-haru-muted" : ""
+            }`}
+          >
+            {task.title}
+          </Text>
+          {task.dirty && (
+            <Text className="text-[10px] text-haru-muted">⏳</Text>
+          )}
+        </View>
+        {(task.when || task.deadline || task.tags.length > 0) && (
           <View className="flex-row flex-wrap gap-2 mt-1">
             {task.when && (
               <Text className="text-xs text-haru-muted">
@@ -42,7 +46,7 @@ export function TaskRow({
                 ⏰ {new Date(task.deadline).toLocaleDateString("ko-KR")}
               </Text>
             )}
-            {tags.map((t) => (
+            {task.tags.map((t) => (
               <Text key={t} className="text-xs text-haru-muted">
                 #{t}
               </Text>

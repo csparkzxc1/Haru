@@ -49,6 +49,7 @@ model User {
   tags          Tag[]
   memberships   AreaMember[]
   sessions      Session[]
+  pushTokens    PushToken[]
   notificationPreference NotificationPreference?
 }
 
@@ -160,12 +161,34 @@ model Task {
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
 
+  /// 동기화용 단조 증가 버전. update 시 +1. 클라이언트는 LWW 판정에 활용.
+  version     Int         @default(1)
+  /// 소프트 삭제 — 다른 기기가 변경 피드로 삭제 사실을 받을 수 있어야 함.
+  deletedAt   DateTime?
+
   checklistItems ChecklistItem[]
   taskTags       TaskTag[]
 
   @@index([ownerId, status, when])
+  @@index([ownerId, updatedAt])
   @@index([projectId])
   @@index([areaId])
+}
+
+/// Expo Push 등록 토큰. 사용자 1명이 여러 기기를 가질 수 있다.
+model PushToken {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// "expo" | "fcm" | "apns" — v1은 expo만 지원.
+  platform   String   @default("expo")
+  token      String   @unique
+  deviceLabel String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  lastUsedAt DateTime?
+
+  @@index([userId])
 }
 
 model ChecklistItem {

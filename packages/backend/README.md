@@ -39,6 +39,10 @@ pnpm --filter @haru/backend dev
 | POST | `/api/quick-entry/preview` | — | 자연어 파싱 미리보기 |
 | POST | `/api/quick-entry` | ✓ | 자연어로 할 일 생성 |
 | GET | `/api/calendar/holidays/:year` | — | 공휴일 조회 |
+| GET | `/api/sync/pull?since=<iso>` | ✓ | 변경 피드 (since 이후 변경된 task) |
+| POST | `/api/sync/push` | ✓ | 오프라인 변형 일괄 적용 |
+| POST | `/api/notifications/devices` | ✓ | Expo Push 토큰 등록 |
+| DELETE | `/api/notifications/devices` | ✓ | 토큰 해지 |
 
 ## 환경 변수
 

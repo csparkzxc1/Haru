@@ -1,5 +1,6 @@
 import { ActivityIndicator, Text, View } from "react-native";
-import type { ApiTask, ViewKind } from "../lib/api";
+import type { ViewKind } from "../lib/api";
+import type { LocalTask } from "../lib/db";
 import {
   useCompleteTask,
   useTasks,
@@ -24,7 +25,7 @@ export function TaskListView({ view }: { view: ViewKind }) {
     return (
       <View className="py-6 px-4 rounded-lg bg-red-50">
         <Text className="text-sm text-red-700">
-          백엔드 연결 실패: {(error as Error).message}
+          로컬 DB 오류: {(error as Error).message}
         </Text>
       </View>
     );
@@ -39,7 +40,7 @@ export function TaskListView({ view }: { view: ViewKind }) {
     );
   }
 
-  function onToggle(t: ApiTask) {
+  function onToggle(t: LocalTask) {
     if (t.status === "OPEN") complete.mutate(t.id);
     else uncomplete.mutate(t.id);
   }

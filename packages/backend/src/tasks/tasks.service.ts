@@ -8,7 +8,7 @@ export class TasksService {
   constructor(private readonly prisma: PrismaService) {}
 
   async list(ownerId: string, query: ListTasksQuery) {
-    const where: Prisma.TaskWhereInput = { ownerId };
+    const where: Prisma.TaskWhereInput = { ownerId, deletedAt: null };
 
     switch (query.view) {
       case "today": {
@@ -71,7 +71,7 @@ export class TasksService {
 
   async get(ownerId: string, id: string) {
     const task = await this.prisma.task.findFirst({
-      where: { id, ownerId },
+      where: { id, ownerId, deletedAt: null },
       include: { checklistItems: true, taskTags: { include: { tag: true } } },
     });
     if (!task) throw new NotFoundException("Task not found");
@@ -98,6 +98,7 @@ export class TasksService {
       where: { id },
       data: {
         ...rest,
+        version: { increment: 1 },
         taskTags: tags ? await this.resetTags(ownerId, id, tags) : undefined,
       },
       include: { checklistItems: true, taskTags: { include: { tag: true } } },
@@ -108,13 +109,21 @@ export class TasksService {
     await this.get(ownerId, id);
     return this.prisma.task.update({
       where: { id },
-      data: { status: "COMPLETED", completedAt: new Date() },
+      data: {
+        status: "COMPLETED",
+        completedAt: new Date(),
+        version: { increment: 1 },
+      },
     });
   }
 
+  /** 소프트 삭제. 다른 기기가 sync/pull 로 삭제 이벤트를 받을 수 있도록. */
   async remove(ownerId: string, id: string) {
     await this.get(ownerId, id);
-    await this.prisma.task.delete({ where: { id } });
+    await this.prisma.task.update({
+      where: { id },
+      data: { deletedAt: new Date(), version: { increment: 1 } },
+    });
     return { ok: true };
   }
 
