@@ -16,6 +16,7 @@ import { DataPortabilityModule } from "./data-portability/data-portability.modul
 import { AiModule } from "./ai/ai.module";
 import { WorkspacesModule } from "./workspaces/workspaces.module";
 import { ApiKeysModule } from "./api-keys/api-keys.module";
+import { WatchModule } from "./watch/watch.module";
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { ApiKeysModule } from "./api-keys/api-keys.module";
     AiModule,
     WorkspacesModule,
     ApiKeysModule,
+    WatchModule,
   ],
   controllers: [HealthController],
 })

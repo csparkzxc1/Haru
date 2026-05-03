@@ -1,0 +1,17 @@
+{
+  "$schema": "https://schema.tauri.app/config/2.0.0/capabilities",
+  "identifier": "default",
+  "description": "기본 권한 — 웹뷰가 호스트 OS 기능에 접근하는 최소 권한 세트",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "core:window:allow-show",
+    "core:window:allow-hide",
+    "core:window:allow-close",
+    "core:window:allow-set-focus",
+    "core:event:default",
+    "shell:allow-open",
+    "notification:default",
+    "deep-link:default"
+  ]
+}

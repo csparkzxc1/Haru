@@ -13,6 +13,25 @@ import {
   registerPushTokenWithBackend,
   syncLocalNotifications,
 } from "../lib/notifications";
+import { useIsTablet } from "../lib/responsive";
+import { TabletSidebar } from "../components/SplitView";
+import * as Linking from "expo-linking";
+import { handleDeepLink } from "../lib/deep-link";
+
+/**
+ * 태블릿(>= 768pt 가로)이면 사이드바 옆에 콘텐츠. 폰이면 그대로 통과 →
+ * 하단 탭바가 따로 깔린다.
+ */
+function MaybeSplitView({ children }: { children: React.ReactNode }) {
+  const isTablet = useIsTablet();
+  if (!isTablet) return <>{children}</>;
+  return (
+    <View style={{ flex: 1, flexDirection: "row" }}>
+      <TabletSidebar />
+      <View style={{ flex: 1 }}>{children}</View>
+    </View>
+  );
+}
 
 function AuthedShell({ children }: { children: React.ReactNode }) {
   const qc = useQueryClient();
@@ -37,13 +56,24 @@ function AuthedShell({ children }: { children: React.ReactNode }) {
       }
     });
 
+    // Deep link (haru://add?title=...) — Shortcuts/Tauri/타 앱에서 호출
+    const linkSub = Linking.addEventListener("url", (event) => {
+      void handleDeepLink({ url: event.url }).then(() =>
+        qc.invalidateQueries({ queryKey: ["local-tasks"] }),
+      );
+    });
+    Linking.getInitialURL().then((url) => {
+      if (url) void handleDeepLink({ url });
+    });
+
     return () => {
       active = false;
       sub.remove();
+      linkSub.remove();
     };
   }, [qc]);
 
-  return <>{children}</>;
+  return <MaybeSplitView>{children}</MaybeSplitView>;
 }
 
 function AuthGate({ children }: { children: React.ReactNode }) {
@@ -57,6 +87,30 @@ function AuthGate({ children }: { children: React.ReactNode }) {
   }
   if (!user) return <LoginScreen />;
   return <AuthedShell>{children}</AuthedShell>;
+}
+
+function AppTabs() {
+  const isTablet = useIsTablet();
+  return (
+    <Tabs
+      screenOptions={{
+        headerShown: false,
+        tabBarActiveTintColor: "#FF6B35",
+        tabBarInactiveTintColor: "#8E8E93",
+        tabBarStyle: isTablet
+          ? { display: "none" }
+          : { borderTopColor: "rgba(0,0,0,0.05)" },
+        tabBarLabelStyle: { fontSize: 11, letterSpacing: -0.2 },
+      }}
+    >
+      <Tabs.Screen name="index" options={{ title: "오늘" }} />
+      <Tabs.Screen name="this-week" options={{ title: "이번주" }} />
+      <Tabs.Screen name="upcoming" options={{ title: "예정" }} />
+      <Tabs.Screen name="anytime" options={{ title: "언제든지" }} />
+      <Tabs.Screen name="someday" options={{ title: "언젠가" }} />
+      <Tabs.Screen name="settings" options={{ title: "설정" }} />
+    </Tabs>
+  );
 }
 
 export default function Layout() {
@@ -73,22 +127,7 @@ export default function Layout() {
         <AuthProvider onLogout={clearAfterLogout}>
           <StatusBar style="auto" />
           <AuthGate>
-            <Tabs
-              screenOptions={{
-                headerShown: false,
-                tabBarActiveTintColor: "#FF6B35",
-                tabBarInactiveTintColor: "#8E8E93",
-                tabBarStyle: { borderTopColor: "rgba(0,0,0,0.05)" },
-                tabBarLabelStyle: { fontSize: 11, letterSpacing: -0.2 },
-              }}
-            >
-              <Tabs.Screen name="index" options={{ title: "오늘" }} />
-              <Tabs.Screen name="this-week" options={{ title: "이번주" }} />
-              <Tabs.Screen name="upcoming" options={{ title: "예정" }} />
-              <Tabs.Screen name="anytime" options={{ title: "언제든지" }} />
-              <Tabs.Screen name="someday" options={{ title: "언젠가" }} />
-              <Tabs.Screen name="settings" options={{ title: "설정" }} />
-            </Tabs>
+            <AppTabs />
           </AuthGate>
         </AuthProvider>
       </ThemeProvider>

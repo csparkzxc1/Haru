@@ -39,12 +39,12 @@
 
 ## Phase 4: 플랫폼 (M9 ~ M12)
 
-- [ ] Apple Watch · Wear OS 앱
-- [ ] iPad · 갤럭시 탭 최적화 (Split View)
-- [ ] macOS · Windows 네이티브 데스크톱 (Tauri)
-- [ ] Shortcuts / 빠른 명령 연동
-- [ ] Siri · 빅스비 연동 검토
-- [ ] 국외 확장: 일본 (재일동포 수요)
+- [~] Apple Watch · Wear OS 앱 *(백엔드 경량 endpoint `/api/watch/*` 구현, native UI 는 별도 PR)*
+- [x] iPad · 갤럭시 탭 최적화 (Split View — 768pt 기준 자동 분기, 사이드바 + 콘텐츠)
+- [x] macOS · Windows · Linux 네이티브 데스크톱 (Tauri 2.0 — webview wrapper + 트레이 + 메뉴 + deep link)
+- [x] Shortcuts / 빠른 명령 연동 (URL scheme `haru://` + iOS App Intents 가이드)
+- [~] Siri · 빅스비 연동 검토 *(Siri = App Intents 한 번에 노출, Bixby Capsules 는 ROI 검토 후 보류 결정)*
+- [x] 국외 확장: 일본 (i18n 인프라 + 일본 공휴일 모듈 + ja-JP 메타데이터)
 
 ## 지속 운영 트랙
 

@@ -12,15 +12,22 @@ Things 3의 미니멀한 철학을 계승하되, 한국인의 업무·생활·�
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — 시스템 아키텍처
 - [`docs/DEPLOY.md`](docs/DEPLOY.md) — **0원 운영비 배포 가이드** (Vercel + Render + Neon)
 - [`docs/WIDGETS.md`](docs/WIDGETS.md) — iOS/Android 홈 위젯 가이드
+- [`docs/DESKTOP.md`](docs/DESKTOP.md) — macOS · Windows · Linux 데스크톱 (Tauri 2.0)
+- [`docs/WATCH.md`](docs/WATCH.md) — Apple Watch · Wear OS 가이드
+- [`docs/SHORTCUTS.md`](docs/SHORTCUTS.md) — iOS Shortcuts · Siri · 빅스비 연동
+- [`docs/I18N.md`](docs/I18N.md) — 국제화 (ko/ja) + 일본 공휴일 모듈
+- [`docs/STORE.md`](docs/STORE.md) — 앱스토어 메타데이터 (한국/일본)
+- [`docs/api/openapi.yaml`](docs/api/openapi.yaml) — 공개 API OpenAPI 3.1 스펙
 
 ## 모노레포 구조
 
 ```
 packages/
-├─ shared/     공용 타입, 한국어 자연어 날짜 파서, 공휴일·음력 모듈
-├─ backend/    NestJS + Prisma + PostgreSQL
-├─ web/        Next.js 14 App Router
-└─ mobile/     Expo (React Native) + TypeScript
+├─ shared/     공용 타입, 자연어 파서, 한국·일본 공휴일, sync resolver, i18n
+├─ backend/    NestJS + Prisma + PostgreSQL (15개 모듈)
+├─ web/        Next.js 14 App Router (Vercel)
+├─ mobile/     Expo (React Native) — iOS / Android / iPad / 갤탭 split view
+└─ desktop/    Tauri 2.0 — macOS / Windows / Linux (web webview wrapper)
 ```
 
 ## 빠른 시작

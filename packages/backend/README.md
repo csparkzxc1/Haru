@@ -61,6 +61,8 @@ pnpm --filter @haru/backend dev
 | GET/POST/DELETE | `/api/workspaces/:id/members` | ✓ | 멤버 관리 (이메일 기반 추가) |
 | GET | `/api/workspaces/:id/invoices` | ✓ | 세금계산서 조회 |
 | GET/POST/DELETE | `/api/api-keys` | ✓ | 외부 API 키 발급/해지 (Bearer haru_ak_…) |
+| GET | `/api/watch/today` | ✓ | Apple Watch / Wear OS — 오늘 요약 (< 1KB, 단축 키) |
+| POST | `/api/watch/complete` | ✓ | Watch — 단일 task 완료 (low-latency) |
 
 ## 환경 변수
 

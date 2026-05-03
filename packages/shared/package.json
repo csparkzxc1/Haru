@@ -9,8 +9,10 @@
     ".": "./src/index.ts",
     "./korean-date": "./src/korean-date-parser.ts",
     "./korean-calendar": "./src/korean-calendar.ts",
+    "./japan-calendar": "./src/japan-calendar.ts",
     "./sync-conflict": "./src/sync-conflict.ts",
     "./everytime": "./src/everytime-parser.ts",
+    "./i18n": "./src/i18n.ts",
     "./types": "./src/types.ts"
   },
   "scripts": {

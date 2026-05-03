@@ -10,16 +10,30 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "kr.haru.app",
+      "requireFullScreen": false,
       "infoPlist": {
-        "CFBundleLocalizations": ["ko"],
-        "CFBundleDevelopmentRegion": "ko"
+        "CFBundleLocalizations": ["ko", "ja"],
+        "CFBundleDevelopmentRegion": "ko",
+        "UISupportedInterfaceOrientations~ipad": [
+          "UIInterfaceOrientationPortrait",
+          "UIInterfaceOrientationPortraitUpsideDown",
+          "UIInterfaceOrientationLandscapeLeft",
+          "UIInterfaceOrientationLandscapeRight"
+        ]
       }
     },
     "android": {
       "package": "kr.haru.app",
       "adaptiveIcon": {
         "backgroundColor": "#1C1C1E"
-      }
+      },
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "data": [{ "scheme": "haru" }],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
     },
     "web": {
       "bundler": "metro"
