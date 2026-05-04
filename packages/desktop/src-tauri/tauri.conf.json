@@ -47,5 +47,14 @@
     "shortDescription": "한국형 To-Do",
     "longDescription": "Things의 미니멀 철학에 한국 문화(음력·공휴일·경조사)를 더한 할 일 관리 앱"
   },
-  "plugins": {}
+  "plugins": {
+    "updater": {
+      "active": true,
+      "dialog": true,
+      "endpoints": [
+        "https://github.com/csparkzxc1/Haru/releases/latest/download/latest.json"
+      ],
+      "pubkey": "REPLACE_ME_WITH_TAURI_KEY_GENERATE_OUTPUT"
+    }
+  }
 }

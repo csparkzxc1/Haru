@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22">
+  <!-- macOS 메뉴바용 monochrome template (22x22). Tauri tray 가 자동으로
+       라이트/다크 색상에 맞춰 반전. 단색 마스크 형태로 그린다. -->
+  <g fill="black">
+    <!-- 떠오르는 해 -->
+    <circle cx="11" cy="9" r="3.5" />
+    <!-- 빗금 (광선) — 4방향 -->
+    <rect x="10" y="2"  width="2" height="2" rx="1"/>
+    <rect x="10" y="14" width="2" height="2" rx="1"/>
+    <rect x="2"  y="8"  width="2" height="2" rx="1"/>
+    <rect x="18" y="8"  width="2" height="2" rx="1"/>
+    <!-- 지평선 + 체크 표시 -->
+    <rect x="3" y="17" width="16" height="1.5" rx="0.5"/>
+    <path d="M14 18 L16 20 L20 16" stroke="black" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

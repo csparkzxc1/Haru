@@ -1,0 +1,48 @@
+name: 스크린샷 자동 캡처
+
+# 수동 실행 + main push 시 변경된 UI 가 있으면 자동 갱신.
+# 산출물은 artifact 로 30일 보관, 별도 `screenshots` 브랜치에도 push 하지 않음
+# (커밋 노이즈 방지 — 필요 시 다운로드).
+
+on:
+  workflow_dispatch:
+    inputs:
+      base_url:
+        description: "캡처 대상 URL (기본: 프로덕션 Vercel)"
+        required: false
+        default: "https://haru.vercel.app"
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.12.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: 의존성 설치
+        run: pnpm install --frozen-lockfile
+
+      - name: Playwright 브라우저 설치
+        run: pnpm --filter @haru/screenshots exec playwright install --with-deps chromium webkit
+
+      - name: 스크린샷 캡처
+        env:
+          BASE_URL: ${{ github.event.inputs.base_url }}
+        run: pnpm --filter @haru/screenshots test
+
+      - name: 결과물 업로드
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots-${{ github.run_id }}
+          path: scripts/screenshots/output/
+          retention-days: 30
