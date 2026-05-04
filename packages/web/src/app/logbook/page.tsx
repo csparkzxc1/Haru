@@ -1,8 +1,4 @@
-import { TaskList, type TaskItem } from "@/components/task-list";
-
-const sample: TaskItem[] = [
-  { id: "c", title: "사분기 회고 제출", completed: true },
-];
+import { TaskList } from "@/components/task-list";
 
 export default function LogbookPage() {
   return (
@@ -11,7 +7,7 @@ export default function LogbookPage() {
         <h1 className="text-3xl font-semibold tracking-tight">로그북</h1>
         <p className="text-sm text-haru-muted mt-1">완료한 할 일 · 최근순</p>
       </header>
-      <TaskList initial={sample} />
+      <TaskList view="logbook" />
     </>
   );
 }

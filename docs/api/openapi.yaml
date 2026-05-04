@@ -1,0 +1,224 @@
+openapi: 3.1.0
+info:
+  title: 하루 (Haru) Public API
+  version: 0.1.0
+  description: |
+    한국형 To-Do 앱 하루의 공개 API. Zapier/Make 같은 자동화 플랫폼과
+    개인 스크립트가 사용할 수 있습니다.
+
+    ## 인증
+    Bearer 토큰 — 평문 API 키를 그대로 `Authorization: Bearer haru_ak_…`
+    헤더로 전송합니다. 키는 발급 시 한 번만 노출되며, 손실 시 재발급해야
+    합니다. 평문은 서버에 저장되지 않으며 SHA-256 해시만 보관됩니다.
+
+    ## 스코프
+    | scope | 설명 |
+    |---|---|
+    | `tasks:read` | 할 일 조회 |
+    | `tasks:write` | 할 일 생성·수정·완료·삭제 |
+    | `quick-entry:write` | 자연어 한 줄 → 할 일 |
+    | `areas:read` | 영역 목록 |
+    | `calendar:read` | 공휴일 조회 |
+
+    ## 발급
+    `https://haru.app/settings` → "외부 API 키 발급". 라벨과 스코프를 선택하면 평문 1회 노출.
+
+servers:
+  - url: https://haru-backend.onrender.com/api
+    description: Production (베타)
+  - url: http://localhost:3001/api
+    description: Local
+
+components:
+  securitySchemes:
+    apiKey:
+      type: http
+      scheme: bearer
+      bearerFormat: haru_ak
+
+  schemas:
+    Task:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        title: { type: string }
+        notes: { type: string, nullable: true }
+        status: { type: string, enum: [OPEN, COMPLETED, CANCELED] }
+        when: { type: string, format: date-time, nullable: true }
+        deadline: { type: string, format: date-time, nullable: true }
+        allDay: { type: boolean }
+        tags:
+          type: array
+          items: { type: string }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+
+    CreateTaskBody:
+      type: object
+      required: [title]
+      properties:
+        title: { type: string, maxLength: 500 }
+        notes: { type: string }
+        when: { type: string, format: date-time }
+        deadline: { type: string, format: date-time }
+        allDay: { type: boolean, default: true }
+        tags:
+          type: array
+          items: { type: string }
+
+    QuickEntryBody:
+      type: object
+      required: [raw]
+      properties:
+        raw:
+          type: string
+          example: "내일 오후 3시 팀 회의 #회의"
+
+security:
+  - apiKey: []
+
+paths:
+  /tasks:
+    get:
+      summary: 4단 뷰별 할 일 조회
+      parameters:
+        - in: query
+          name: view
+          schema:
+            type: string
+            enum: [inbox, today, thisWeek, upcoming, anytime, someday, logbook]
+          required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Task" }
+    post:
+      summary: 할 일 생성
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CreateTaskBody" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Task" }
+
+  /tasks/{id}:
+    patch:
+      summary: 할 일 수정
+      parameters:
+        - in: path
+          name: id
+          schema: { type: string, format: uuid }
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title: { type: string }
+                notes: { type: string }
+                status: { type: string, enum: [OPEN, COMPLETED, CANCELED] }
+                when: { type: string, format: date-time, nullable: true }
+                deadline: { type: string, format: date-time, nullable: true }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Task" }
+    delete:
+      summary: 할 일 삭제 (soft)
+      parameters:
+        - in: path
+          name: id
+          schema: { type: string, format: uuid }
+          required: true
+      responses:
+        "200":
+          description: OK
+
+  /tasks/{id}/complete:
+    post:
+      summary: 완료 처리
+      parameters:
+        - in: path
+          name: id
+          schema: { type: string, format: uuid }
+          required: true
+      responses:
+        "200":
+          description: OK
+
+  /quick-entry:
+    post:
+      summary: 자연어 한 줄 → 할 일
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/QuickEntryBody" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Task" }
+
+  /quick-entry/preview:
+    post:
+      summary: 자연어 파싱 미리보기 (저장하지 않음, 인증 불필요)
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/QuickEntryBody" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  title: { type: string }
+                  when: { type: string, nullable: true }
+                  deadline: { type: string, nullable: true }
+                  allDay: { type: boolean }
+                  tags:
+                    type: array
+                    items: { type: string }
+                  priority: { type: integer }
+
+  /calendar/holidays/{year}:
+    get:
+      summary: 한국 공휴일 조회 (인증 불필요)
+      security: []
+      parameters:
+        - in: path
+          name: year
+          schema: { type: integer, minimum: 2000, maximum: 2100 }
+          required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name: { type: string }
+                    date: { type: string, format: date-time }
+                    substitute: { type: boolean }

@@ -1,0 +1,51 @@
+{
+  "name": "하루 — 한국형 To-Do",
+  "short_name": "하루",
+  "description": "Things의 미니멀 철학, 한국의 문화. 자연어 입력 + 음력 + 공휴일 + 경조사 매니저.",
+  "start_url": "/today",
+  "display": "standalone",
+  "background_color": "#FAFAF7",
+  "theme_color": "#FF6B35",
+  "orientation": "portrait",
+  "lang": "ko-KR",
+  "dir": "ltr",
+  "categories": ["productivity", "lifestyle"],
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "오늘",
+      "short_name": "오늘",
+      "url": "/today",
+      "description": "오늘 할 일 보기"
+    },
+    {
+      "name": "이번주",
+      "short_name": "이번주",
+      "url": "/this-week"
+    },
+    {
+      "name": "경조사",
+      "short_name": "경조사",
+      "url": "/family-events"
+    }
+  ]
+}

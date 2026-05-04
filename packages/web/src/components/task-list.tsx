@@ -1,6 +1,14 @@
 "use client";
-import { useState } from "react";
+
 import clsx from "clsx";
+import { useState } from "react";
+import type { ApiTask, ViewKind } from "@/lib/api";
+import {
+  useCompleteTask,
+  useDeleteTask,
+  useTasks,
+  useUncompleteTask,
+} from "@/lib/hooks";
 
 export interface TaskItem {
   id: string;
@@ -11,19 +19,47 @@ export interface TaskItem {
   completed?: boolean;
 }
 
-export function TaskList({ initial }: { initial: TaskItem[] }) {
-  const [tasks, setTasks] = useState(initial);
-
-  const toggle = (id: string) => {
-    setTasks((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t)),
-    );
+function toItem(t: ApiTask): TaskItem {
+  return {
+    id: t.id,
+    title: t.title,
+    when: t.when,
+    deadline: t.deadline,
+    tags: t.taskTags.map((tt) => tt.tag.name),
+    completed: t.status === "COMPLETED" || t.status === "CANCELED",
   };
+}
+
+export function TaskList({ view }: { view: ViewKind }) {
+  const { data, isLoading, error } = useTasks(view);
+  const complete = useCompleteTask();
+  const uncomplete = useUncompleteTask();
+  const remove = useDeleteTask();
+  const [hovered, setHovered] = useState<string | null>(null);
+
+  if (isLoading) {
+    return (
+      <div className="text-haru-muted text-sm py-12 text-center" role="status">
+        불러오는 중…
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-sm py-6 px-4 rounded-lg bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-300">
+        백엔드에 연결할 수 없습니다. <code className="font-mono">pnpm --filter @haru/backend dev</code>를 실행해 주세요.
+        <div className="mt-1 text-xs opacity-70">{(error as Error).message}</div>
+      </div>
+    );
+  }
+
+  const tasks = (data ?? []).map(toItem);
 
   if (!tasks.length) {
     return (
       <div className="text-haru-muted text-sm py-12 text-center">
-        할 일이 없습니다. 아래 빠른 입력으로 새 할 일을 추가해 보세요.
+        할 일이 없습니다. 위 빠른 입력으로 새 할 일을 추가해 보세요.
       </div>
     );
   }
@@ -31,10 +67,19 @@ export function TaskList({ initial }: { initial: TaskItem[] }) {
   return (
     <ul className="divide-y divide-black/5 dark:divide-white/10">
       {tasks.map((task) => (
-        <li key={task.id} className="flex items-start gap-3 py-3">
+        <li
+          key={task.id}
+          className="flex items-start gap-3 py-3 group"
+          onMouseEnter={() => setHovered(task.id)}
+          onMouseLeave={() => setHovered((cur) => (cur === task.id ? null : cur))}
+        >
           <button
             aria-label={task.completed ? "완료 취소" : "완료"}
-            onClick={() => toggle(task.id)}
+            onClick={() =>
+              task.completed
+                ? uncomplete.mutate(task.id)
+                : complete.mutate(task.id)
+            }
             className={clsx(
               "mt-0.5 h-5 w-5 rounded-full border flex items-center justify-center transition-colors",
               task.completed
@@ -58,13 +103,27 @@ export function TaskList({ initial }: { initial: TaskItem[] }) {
                 {task.when && <span>📅 {formatKst(task.when)}</span>}
                 {task.deadline && <span>⏰ 마감 {formatKst(task.deadline)}</span>}
                 {task.tags?.map((t) => (
-                  <span key={t} className="bg-black/5 dark:bg-white/10 px-1.5 py-0.5 rounded">
+                  <span
+                    key={t}
+                    className="bg-black/5 dark:bg-white/10 px-1.5 py-0.5 rounded"
+                  >
                     #{t}
                   </span>
                 ))}
               </div>
             )}
           </div>
+          {hovered === task.id && (
+            <button
+              aria-label="삭제"
+              onClick={() => {
+                if (confirm("이 할 일을 삭제할까요?")) remove.mutate(task.id);
+              }}
+              className="text-xs text-haru-muted hover:text-red-500 transition-colors px-2 py-1"
+            >
+              삭제
+            </button>
+          )}
         </li>
       ))}
     </ul>

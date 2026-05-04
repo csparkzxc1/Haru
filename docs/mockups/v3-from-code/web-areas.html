@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>영역 · 하루</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="_shell.css" />
+  <script src="_shell.js" data-active="areas"></script>
+</head>
+<body class="min-h-screen">
+  <div class="flex min-h-screen">
+    <aside id="sidebar"></aside>
+
+    <main class="flex-1 px-8 py-10 max-w-3xl mx-auto">
+      <header class="mb-8">
+        <h1 class="text-3xl font-semibold tracking-tight">영역</h1>
+        <p class="text-sm text-haru-muted mt-1">가족·팀과 공유하거나 개인 분류로 사용</p>
+      </header>
+
+      <form class="mb-8 flex gap-2">
+        <input placeholder="새 영역 이름 (예: 가족, 회사)" class="flex-1 rounded-xl border border-black/10 bg-transparent px-4 py-3 outline-none focus:border-haru-accent" />
+        <button class="px-4 rounded-xl bg-haru-accent text-white text-sm font-medium">추가</button>
+      </form>
+
+      <ul class="divide-y divide-black/5">
+        <li class="py-4">
+          <div class="flex items-center gap-3">
+            <span class="h-3 w-3 rounded-full" style="background-color:#FF6B35"></span>
+            <div class="flex-1">
+              <div class="font-medium">💼 회사</div>
+              <div class="text-xs text-haru-muted mt-0.5">할 일 24개 · 멤버 1명</div>
+            </div>
+            <button class="text-xs px-3 py-1.5 rounded-md border border-black/10 hover:border-haru-accent">초대</button>
+          </div>
+        </li>
+
+        <li class="py-4">
+          <div class="flex items-center gap-3">
+            <span class="h-3 w-3 rounded-full" style="background-color:#4A90E2"></span>
+            <div class="flex-1">
+              <div class="font-medium">🏠 가족 <span class="ml-2 text-xs text-haru-muted">· 공유</span></div>
+              <div class="text-xs text-haru-muted mt-0.5">할 일 8개 · 멤버 3명</div>
+            </div>
+            <button class="text-xs px-3 py-1.5 rounded-md border border-haru-accent text-haru-accent">초대됨</button>
+          </div>
+          <!-- 초대 토큰 발급 결과 -->
+          <div class="mt-3 ml-6 p-3 rounded-lg bg-black/[.02] text-xs">
+            <div class="text-haru-muted mb-1">초대 링크 (2026. 5. 9. 까지)</div>
+            <code class="break-all">https://haru.app/invite/aZ8x_n3kQ-vM2pL9wT-RmHbF1cE6dJyGsKuV4oN0</code>
+            <div class="mt-2 flex gap-2">
+              <button class="text-haru-accent hover:underline">복사</button>
+              <button class="text-haru-accent hover:underline">카카오톡으로 공유</button>
+            </div>
+          </div>
+        </li>
+
+        <li class="py-4">
+          <div class="flex items-center gap-3">
+            <span class="h-3 w-3 rounded-full" style="background-color:#27AE60"></span>
+            <div class="flex-1">
+              <div class="font-medium">📚 학습</div>
+              <div class="text-xs text-haru-muted mt-0.5">할 일 5개</div>
+            </div>
+            <button class="text-xs px-3 py-1.5 rounded-md border border-black/10 hover:border-haru-accent">초대</button>
+          </div>
+        </li>
+      </ul>
+    </main>
+  </div>
+</body>
+</html>

@@ -49,7 +49,81 @@ model User {
   tags          Tag[]
   memberships   AreaMember[]
   sessions      Session[]
+  pushTokens    PushToken[]
+  familyEvents  FamilyEvent[]
+  workspaceMemberships WorkspaceMember[]
+  apiKeys       ApiKey[]
   notificationPreference NotificationPreference?
+}
+
+/// B2B 팀 플랜의 기본 단위. 사업자 1개 = 워크스페이스 1개.
+model Workspace {
+  id          String   @id @default(uuid())
+  name        String
+  /// 사업자등록번호 (10자리, 하이픈 제외). 세금계산서 발행에 필요.
+  bizRegNo    String?
+  /// "team" | "business" — 가격 등급
+  plan        String   @default("team")
+  /// 좌석 수 (정원). 멤버 수가 이를 초과하면 추가가 거부됨.
+  seats       Int      @default(5)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  archivedAt  DateTime?
+
+  members     WorkspaceMember[]
+  invoices    WorkspaceInvoice[]
+}
+
+model WorkspaceMember {
+  id          String    @id @default(uuid())
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// "owner" | "admin" | "member"
+  role        String    @default("member")
+  joinedAt    DateTime  @default(now())
+
+  @@unique([workspaceId, userId])
+  @@index([userId])
+}
+
+/// 세금계산서 / 거래명세 — 회계 부서에 그대로 전달 가능한 최소 정보.
+model WorkspaceInvoice {
+  id          String    @id @default(uuid())
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  /// 발행 연월 (YYYY-MM)
+  period      String
+  /// 합계 (원)
+  totalKrw    Int
+  /// "issued" | "paid" | "overdue"
+  status      String    @default("issued")
+  /// PDF 또는 외부 인보이스 시스템 URL
+  documentUrl String?
+  issuedAt    DateTime  @default(now())
+
+  @@index([workspaceId, period])
+}
+
+/// 외부 통합용 long-lived API 키. 평문은 한 번만 보여주고 hash 만 저장.
+model ApiKey {
+  id          String    @id @default(uuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// 사람이 읽을 수 있는 라벨 (예: "Zapier · Slack 알림")
+  label       String
+  /// SHA-256 hash 의 hex. 평문은 저장하지 않음.
+  keyHash     String    @unique
+  /// 키 prefix 8글자 (목록에서 식별용). 예: "haru_ak_a1b2c3d4"
+  keyPrefix   String
+  /// 권한 스코프. 콤마 구분: "tasks:read,tasks:write,quick-entry:write"
+  scopes      String    @default("tasks:read")
+  lastUsedAt  DateTime?
+  createdAt   DateTime  @default(now())
+  revokedAt   DateTime?
+
+  @@index([userId])
 }
 
 model SocialAccount {
@@ -95,6 +169,7 @@ model Area {
   projects  Project[]
   tasks     Task[]
   members   AreaMember[]
+  invites   AreaInvite[]
 
   @@index([ownerId])
 }
@@ -111,6 +186,23 @@ model AreaMember {
 
   @@unique([areaId, userId])
   @@index([userId])
+}
+
+/// Area 초대 코드. 공유 URL 또는 카카오톡 메시지로 전달.
+model AreaInvite {
+  id         String   @id @default(uuid())
+  areaId     String
+  area       Area     @relation(fields: [areaId], references: [id], onDelete: Cascade)
+  /// URL-safe 랜덤 토큰. 일회용.
+  token      String   @unique
+  invitedBy  String
+  /// 만료. 기본 7일.
+  expiresAt  DateTime
+  acceptedAt DateTime?
+  acceptedBy String?
+  createdAt  DateTime @default(now())
+
+  @@index([areaId])
 }
 
 model Project {
@@ -160,12 +252,34 @@ model Task {
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
 
+  /// 동기화용 단조 증가 버전. update 시 +1. 클라이언트는 LWW 판정에 활용.
+  version     Int         @default(1)
+  /// 소프트 삭제 — 다른 기기가 변경 피드로 삭제 사실을 받을 수 있어야 함.
+  deletedAt   DateTime?
+
   checklistItems ChecklistItem[]
   taskTags       TaskTag[]
 
   @@index([ownerId, status, when])
+  @@index([ownerId, updatedAt])
   @@index([projectId])
   @@index([areaId])
+}
+
+/// Expo Push 등록 토큰. 사용자 1명이 여러 기기를 가질 수 있다.
+model PushToken {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// "expo" | "fcm" | "apns" — v1은 expo만 지원.
+  platform   String   @default("expo")
+  token      String   @unique
+  deviceLabel String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  lastUsedAt DateTime?
+
+  @@index([userId])
 }
 
 model ChecklistItem {
@@ -210,6 +324,43 @@ model NotificationPreference {
   quietEnd     String   @default("07:00")
   dailyDigest  Boolean  @default(true)
   digestHour   Int      @default(8)
+}
+
+enum FamilyEventKind {
+  WEDDING       // 결혼
+  FUNERAL       // 장례
+  BIRTHDAY      // 생일
+  ANNIVERSARY   // 기념일
+  BABY_100D     // 백일
+  BABY_DOL      // 돌
+  HOUSEWARMING  // 집들이
+  PROMOTION     // 승진
+  OTHER
+}
+
+/// 경조사 — 일정·축의금·축전 한 번에 관리. 한국 직장인의 빈번한 부담.
+model FamilyEvent {
+  id           String           @id @default(uuid())
+  ownerId      String
+  owner        User             @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  kind         FamilyEventKind
+  /// 누구의 (예: "김부장 자녀")
+  personLabel  String
+  /// 관계 (예: "회사 상사", "친구", "가족")
+  relation     String?
+  date         DateTime
+  venue        String?
+  /// 보낸 금액 (원). null = 미정 / 0 = 안 함
+  amountKrw    Int?
+  /// 받은 금액 (역경조사 추적)
+  receivedKrw  Int?
+  notes        String?          @db.Text
+  /// 참석 여부
+  attended     Boolean?
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  @@index([ownerId, date])
 }
 
 /** 감사 로그 — 개인정보보호법 대응 */

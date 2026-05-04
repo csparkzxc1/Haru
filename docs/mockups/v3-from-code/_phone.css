@@ -1,0 +1,76 @@
+/*
+ * 아이폰 14 Pro 프레임 (390 × 844 logical, Dynamic Island).
+ * Tailwind 클래스만으로는 표현 불가능한 디테일을 inline CSS 로.
+ */
+
+.phone-frame {
+  width: 390px;
+  min-height: 844px;
+  background: #FAFAF7;
+  border: 14px solid #1C1C1E;
+  border-radius: 56px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.25);
+}
+
+.phone-island {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 32px;
+  background: #1C1C1E;
+  border-radius: 100px;
+  z-index: 10;
+}
+
+.phone-status {
+  position: absolute;
+  top: 18px;
+  left: 28px;
+  right: 28px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1C1C1E;
+  z-index: 9;
+  pointer-events: none;
+}
+
+.phone-status .signal {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.phone-content {
+  padding-top: 60px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.phone-tabbar {
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  padding: 8px 0 24px;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0;
+  background: #FAFAF7;
+}
+
+.tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  letter-spacing: -0.2px;
+  color: #8E8E93;
+}
+
+.tab.active { color: #FF6B35; }
+.tab .ico { font-size: 18px; line-height: 1; }

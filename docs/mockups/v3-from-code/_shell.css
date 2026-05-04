@@ -1,0 +1,34 @@
+/*
+ * 공통 스타일 — packages/web/src/app/globals.css 와 동일한 토큰.
+ * 각 목업 HTML이 import 한다.
+ */
+:root {
+  --haru-bg: #FAFAF7;
+  --haru-fg: #1C1C1E;
+  --haru-accent: #FF6B35;
+  --haru-muted: #8E8E93;
+}
+
+html, body {
+  background: var(--haru-bg);
+  color: var(--haru-fg);
+  letter-spacing: -0.01em;
+  font-feature-settings: "tnum" 1, "ss02" 1;
+}
+
+body {
+  font-family:
+    Pretendard,
+    -apple-system,
+    BlinkMacSystemFont,
+    system-ui,
+    "Apple SD Gothic Neo",
+    "Noto Sans KR",
+    sans-serif;
+}
+
+/* 시니어 모드 데모용 */
+html[data-font-scale="senior"] { font-size: 18px; }
+html[data-font-scale="senior"] body { line-height: 1.6; }
+html[data-font-scale="senior"] button,
+html[data-font-scale="senior"] input { min-height: 48px; }

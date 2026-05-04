@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>설정 · 하루</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="_shell.css" />
+  <script src="_shell.js" data-active="settings"></script>
+</head>
+<body class="min-h-screen">
+  <div class="flex min-h-screen">
+    <aside id="sidebar"></aside>
+
+    <main class="flex-1 px-8 py-10 max-w-3xl mx-auto">
+      <header class="mb-8">
+        <h1 class="text-3xl font-semibold tracking-tight">설정</h1>
+      </header>
+
+      <!-- 계정 -->
+      <section class="mb-8">
+        <h2 class="text-xs uppercase tracking-widest text-haru-muted mb-3">계정</h2>
+        <div class="rounded-xl border border-black/5 p-4">
+          <div class="text-sm">
+            <div class="text-haru-muted">로그인됨</div>
+            <div class="mt-1">데모 사용자</div>
+            <div class="text-xs text-haru-muted mt-0.5">demo@haru.app</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 화면 -->
+      <section class="mb-8">
+        <h2 class="text-xs uppercase tracking-widest text-haru-muted mb-3">화면</h2>
+        <div class="rounded-xl border border-black/5 p-4">
+          <div class="mb-4">
+            <div class="text-sm mb-2">색 모드</div>
+            <div class="flex gap-2 flex-wrap">
+              <button class="px-3 py-1.5 rounded-md text-sm border border-black/10">시스템</button>
+              <button class="px-3 py-1.5 rounded-md text-sm border border-haru-accent text-haru-accent">라이트</button>
+              <button class="px-3 py-1.5 rounded-md text-sm border border-black/10">다크</button>
+            </div>
+          </div>
+          <div>
+            <div class="text-sm mb-2">글자 크기 · 시니어 모드</div>
+            <div class="flex gap-2 flex-wrap">
+              <button class="px-3 py-1.5 rounded-md text-sm border border-haru-accent text-haru-accent">기본</button>
+              <button class="px-3 py-1.5 rounded-md text-sm border border-black/10">큰 글자 · 큰 버튼</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 내 데이터 -->
+      <section class="mb-8">
+        <h2 class="text-xs uppercase tracking-widest text-haru-muted mb-3">내 데이터</h2>
+        <div class="rounded-xl border border-black/5 p-4">
+          <p class="text-sm text-haru-muted mb-3">
+            모든 데이터를 단일 JSON 파일로 다운로드하거나 계정을 탈퇴할 수
+            있습니다. 개인정보보호법 제35·36조에 근거합니다.
+          </p>
+          <div class="flex flex-wrap gap-2">
+            <button class="text-sm px-4 py-2 rounded-md border border-black/10 hover:border-haru-accent">데이터 내보내기 (JSON)</button>
+            <button class="text-sm px-4 py-2 rounded-md border border-red-500/40 text-red-500 hover:bg-red-500/5">회원 탈퇴</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 외부 캘린더 구독 -->
+      <section class="mb-8">
+        <h2 class="text-xs uppercase tracking-widest text-haru-muted mb-3">외부 캘린더 구독</h2>
+        <div class="rounded-xl border border-black/5 p-4">
+          <p class="text-sm text-haru-muted mb-3">
+            아이폰/안드로이드 캘린더, 구글 캘린더, 네이버 캘린더에서 하루의
+            할 일을 읽기 전용으로 구독할 수 있습니다.
+          </p>
+          <button class="text-sm px-4 py-2 rounded-md border border-black/10 hover:border-haru-accent">구독 링크 발급</button>
+          <div class="mt-3 text-xs space-y-2">
+            <div>
+              <div class="text-haru-muted">웹 (Google/Naver):</div>
+              <code class="break-all">https://haru-backend.onrender.com/api/calendar/ics?token=eyJhbGciOiJIUzI1NiJ9...</code>
+            </div>
+            <div>
+              <div class="text-haru-muted">iOS/macOS:</div>
+              <code class="break-all">webcal://haru-backend.onrender.com/api/calendar/ics?token=eyJhbGciOiJIUzI1NiJ9...</code>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 외부 API 키 -->
+      <section class="mb-8">
+        <h2 class="text-xs uppercase tracking-widest text-haru-muted mb-3">외부 API 키 (Zapier · Make 연동)</h2>
+        <div class="rounded-xl border border-black/5 p-4">
+          <ul class="divide-y divide-black/5">
+            <li class="py-3 flex items-center gap-3">
+              <div class="flex-1">
+                <div class="text-sm">Zapier · Slack 알림</div>
+                <div class="text-xs text-haru-muted mt-0.5">
+                  <code>haru_ak_a1b2c3d4</code> · 마지막 사용 2시간 전 ·
+                  <span class="text-haru-muted/80">tasks:read · tasks:write</span>
+                </div>
+              </div>
+              <button class="text-xs text-haru-muted hover:text-red-500 px-2">해지</button>
+            </li>
+            <li class="py-3 flex items-center gap-3">
+              <div class="flex-1">
+                <div class="text-sm">개인 스크립트 (백업)</div>
+                <div class="text-xs text-haru-muted mt-0.5">
+                  <code>haru_ak_x9y8z7w6</code> · 사용 기록 없음 ·
+                  <span class="text-haru-muted/80">tasks:read</span>
+                </div>
+              </div>
+              <button class="text-xs text-haru-muted hover:text-red-500 px-2">해지</button>
+            </li>
+          </ul>
+          <button class="mt-4 text-sm px-4 py-2 rounded-md bg-haru-accent text-white">+ 새 API 키 발급</button>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

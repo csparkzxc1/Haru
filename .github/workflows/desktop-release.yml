@@ -1,0 +1,94 @@
+name: 데스크톱 릴리즈
+
+# 태그 push (v*) 시 macOS / Windows / Linux 빌드 → GitHub Releases.
+# Tauri updater 가 latest.json 을 polling 해 자동 업데이트 알림.
+#
+# 필수 secrets (Settings → Secrets and variables → Actions):
+#   TAURI_SIGNING_PRIVATE_KEY        — `tauri signature generate-key` 결과
+#   TAURI_SIGNING_PRIVATE_KEY_PASSWORD
+#   APPLE_CERTIFICATE                 (선택, .p12 base64)
+#   APPLE_CERTIFICATE_PASSWORD        (선택)
+#   APPLE_SIGNING_IDENTITY            (선택, "Developer ID Application: ...")
+#   APPLE_ID                          (선택, 공증용)
+#   APPLE_PASSWORD                    (선택, app-specific password)
+#   APPLE_TEAM_ID                     (선택)
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+jobs:
+  release:
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: macos-latest
+            args: "--target universal-apple-darwin"
+          - platform: ubuntu-22.04
+            args: ""
+          - platform: windows-latest
+            args: ""
+    runs-on: ${{ matrix.platform }}
+    timeout-minutes: 60
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+
+      - name: Linux 시스템 의존성
+        if: matrix.platform == 'ubuntu-22.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev \
+            librsvg2-dev patchelf
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.12.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: 의존성 설치
+        run: pnpm install --frozen-lockfile
+
+      - name: Tauri 빌드 + 릴리즈
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+          # macOS 코드 서명 + 공증 (선택)
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        with:
+          projectPath: packages/desktop
+          tagName: ${{ github.ref_name }}
+          releaseName: "하루 ${{ github.ref_name }}"
+          releaseBody: |
+            데스크톱 빌드 — macOS · Windows · Linux
+
+            기존 사용자는 앱이 실행되어 있으면 자동 업데이트 알림이 뜹니다.
+            새 설치는 아래 산출물을 다운로드해 주세요.
+
+            🍎 macOS Universal: `*.dmg`
+            🪟 Windows x64:     `*.msi`
+            🐧 Linux:           `*.deb` / `*.AppImage`
+          releaseDraft: false
+          prerelease: false
+          args: ${{ matrix.args }}

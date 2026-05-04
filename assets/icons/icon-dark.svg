@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <!-- 다크 변형 — 다크모드 / Android adaptive icon foreground -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1C1C1E" />
+      <stop offset="100%" stop-color="#0F0F11" />
+    </linearGradient>
+    <radialGradient id="sun" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#FF8551" />
+      <stop offset="100%" stop-color="#FF6B35" />
+    </radialGradient>
+  </defs>
+
+  <rect width="1024" height="1024" rx="184" fill="url(#bg)" />
+  <circle cx="512" cy="392" r="148" fill="url(#sun)" />
+
+  <g transform="translate(512 700)" fill="#FAFAF7">
+    <text x="0" y="0" text-anchor="middle"
+          font-family="-apple-system, Apple SD Gothic Neo, Pretendard, Noto Sans KR, sans-serif"
+          font-size="280" font-weight="700"
+          letter-spacing="-8" dominant-baseline="middle">하</text>
+  </g>
+</svg>

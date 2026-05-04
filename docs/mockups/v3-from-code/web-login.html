@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>로그인 · 하루</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="_shell.css" />
+  <script>
+    tailwind.config = {
+      theme: { extend: { colors: { haru: { ink: "#1C1C1E", paper: "#FAFAF7", accent: "#FF6B35", muted: "#8E8E93" } } } },
+    };
+  </script>
+</head>
+<body class="min-h-screen">
+  <main class="min-h-screen flex items-center justify-center px-6">
+    <div class="w-full max-w-sm">
+      <div class="text-3xl font-semibold tracking-tight mb-2">하루</div>
+      <p class="text-sm text-haru-muted mb-8">로그인하고 오늘을 시작하세요.</p>
+
+      <form class="space-y-3">
+        <label class="block">
+          <span class="text-xs text-haru-muted">이메일</span>
+          <input type="email" value="demo@haru.app" autocomplete="email" class="mt-1 w-full rounded-xl border border-black/10 bg-transparent px-4 py-3 outline-none focus:border-haru-accent" />
+        </label>
+        <label class="block">
+          <span class="text-xs text-haru-muted">비밀번호</span>
+          <input type="password" value="demo1234!" autocomplete="current-password" class="mt-1 w-full rounded-xl border border-black/10 bg-transparent px-4 py-3 outline-none focus:border-haru-accent" />
+        </label>
+        <button type="submit" class="w-full rounded-xl bg-haru-accent text-white py-3 font-medium hover:opacity-95">이메일로 로그인</button>
+      </form>
+
+      <div class="my-6 flex items-center gap-3 text-xs text-haru-muted">
+        <span class="flex-1 h-px bg-black/10"></span>또는<span class="flex-1 h-px bg-black/10"></span>
+      </div>
+
+      <a class="w-full inline-flex items-center justify-center rounded-xl bg-[#FEE500] text-[#191919] py-3 font-medium hover:opacity-95">카카오로 시작하기</a>
+
+      <p class="mt-8 text-xs text-haru-muted">
+        아직 계정이 없으신가요? <a href="#" class="text-haru-accent hover:underline">회원가입</a>
+      </p>
+
+      <p class="mt-2 text-[11px] text-haru-muted/70">
+        로그인 시 <a href="#" class="underline">이용약관</a>과
+        <a href="#" class="underline">개인정보처리방침</a>에 동의한 것으로 간주합니다.
+      </p>
+
+      <div class="mt-12 text-center">
+        <a href="index.html" class="text-xs text-haru-muted hover:text-haru-accent">← 목업 허브로</a>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <!-- OG / Twitter card 용. og-image.png 로 export 권장. -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FAFAF7" />
+      <stop offset="100%" stop-color="#F0EEE7" />
+    </linearGradient>
+    <radialGradient id="sun" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#FF8551" />
+      <stop offset="100%" stop-color="#FF6B35" />
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)" />
+
+  <!-- 좌측: 큰 "하루" 워드마크 -->
+  <g transform="translate(100 0)">
+    <text x="0" y="295"
+          font-family="-apple-system, Apple SD Gothic Neo, Pretendard, Noto Sans KR, sans-serif"
+          font-size="180" font-weight="700"
+          letter-spacing="-8" fill="#1C1C1E">하루</text>
+    <text x="6" y="370"
+          font-family="-apple-system, Apple SD Gothic Neo, Pretendard, Noto Sans KR, sans-serif"
+          font-size="34" font-weight="500"
+          letter-spacing="-1" fill="#8E8E93">한국형 To-Do</text>
+
+    <!-- 태그라인 -->
+    <text x="6" y="450"
+          font-family="-apple-system, Apple SD Gothic Neo, Pretendard, Noto Sans KR, sans-serif"
+          font-size="26" font-weight="400"
+          letter-spacing="-0.5" fill="#1C1C1E">Things의 미니멀 철학,</text>
+    <text x="6" y="488"
+          font-family="-apple-system, Apple SD Gothic Neo, Pretendard, Noto Sans KR, sans-serif"
+          font-size="26" font-weight="400"
+          letter-spacing="-0.5" fill="#1C1C1E">한국의 문화로.</text>
+  </g>
+
+  <!-- 우측: 큰 해 + 체크리스트 그래픽 -->
+  <g transform="translate(820 110)">
+    <circle cx="160" cy="160" r="160" fill="url(#sun)" opacity="0.18" />
+    <circle cx="160" cy="160" r="100" fill="url(#sun)" />
+
+    <!-- 자연어 입력 미리보기 -->
+    <g transform="translate(-380 360)">
+      <rect x="0" y="0" width="720" height="60" rx="14" fill="#FFFFFF" stroke="#1C1C1E" stroke-opacity="0.08"/>
+      <text x="22" y="38"
+            font-family="-apple-system, Apple SD Gothic Neo, Pretendard, Noto Sans KR, sans-serif"
+            font-size="22" fill="#1C1C1E">내일 오후 3시 팀 회의 #회의 !</text>
+    </g>
+  </g>
+</svg>

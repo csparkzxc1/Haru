@@ -1,0 +1,15 @@
+{
+  "name": "@haru/screenshots",
+  "version": "0.1.0",
+  "private": true,
+  "description": "앱스토어 / 구글플레이 / 원스토어용 스크린샷 자동 캡처",
+  "scripts": {
+    "test": "playwright test",
+    "update": "playwright test --update-snapshots",
+    "show-report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.48.0",
+    "@types/node": "^20.16.5"
+  }
+}

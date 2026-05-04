@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>QuickEntry 파싱 (모바일) · 하루</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="_shell.css" />
+  <link rel="stylesheet" href="_phone.css" />
+  <script>
+    tailwind.config = {
+      theme: { extend: { colors: { haru: { ink: "#1C1C1E", paper: "#FAFAF7", accent: "#FF6B35", muted: "#8E8E93" } } } },
+    };
+  </script>
+</head>
+<body class="min-h-screen flex items-start justify-center gap-8 py-12 bg-neutral-100">
+
+  <!-- 1) 입력 중 — 파싱 미리보기 동시 표시 -->
+  <div class="phone-frame">
+    <div class="phone-island"></div>
+    <div class="phone-status">
+      <span>9:41</span>
+      <span class="signal">●●●● 5G ▮</span>
+    </div>
+
+    <div class="phone-content">
+      <div class="flex-1 overflow-auto px-6 pt-6">
+        <h1 class="text-3xl font-semibold tracking-tight text-haru-ink">오늘</h1>
+        <p class="mt-1 text-sm text-haru-muted">5월 2일 금요일 · 어린이날</p>
+
+        <div class="mt-6 mb-2">
+          <div class="flex items-center gap-2">
+            <input value="다음주 화요일 오후 3시 김부장 자녀 결혼식 ~까지 #경조사 !!" class="flex-1 px-4 py-3 rounded-xl border border-haru-accent text-[14px] text-haru-ink" />
+          </div>
+          <!-- 파싱 결과 — packages/shared/src/korean-date-parser.ts -->
+          <div class="mt-2 p-3 rounded-lg bg-black/5">
+            <div class="text-xs text-haru-muted">📝 김부장 자녀 결혼식</div>
+            <div class="text-xs text-haru-muted mt-0.5">⏰ 마감: 2026. 5. 5. 오후 3:00</div>
+            <div class="text-xs text-haru-muted mt-0.5">❗❗</div>
+            <div class="text-xs text-haru-muted mt-0.5">#경조사</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="phone-tabbar">
+        <div class="tab active"><span class="ico">☀︎</span><span>오늘</span></div>
+        <div class="tab"><span class="ico">▦</span><span>이번주</span></div>
+        <div class="tab"><span class="ico">▷</span><span>예정</span></div>
+        <div class="tab"><span class="ico">∞</span><span>언제든지</span></div>
+        <div class="tab"><span class="ico">✧</span><span>언젠가</span></div>
+        <div class="tab"><span class="ico">⚙</span><span>설정</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2) 음력 생일 입력 -->
+  <div class="phone-frame">
+    <div class="phone-island"></div>
+    <div class="phone-status">
+      <span>9:41</span>
+      <span class="signal">●●●● 5G ▮</span>
+    </div>
+
+    <div class="phone-content">
+      <div class="flex-1 overflow-auto px-6 pt-6">
+        <h1 class="text-3xl font-semibold tracking-tight text-haru-ink">오늘</h1>
+        <p class="mt-1 text-sm text-haru-muted">5월 2일 금요일 · 어린이날</p>
+
+        <div class="mt-6 mb-2">
+          <div class="flex items-center gap-2">
+            <input value="추석 연휴 첫날 부모님 댁 도착 #가족" class="flex-1 px-4 py-3 rounded-xl border border-haru-accent text-[14px] text-haru-ink" />
+          </div>
+          <div class="mt-2 p-3 rounded-lg bg-black/5">
+            <div class="text-xs text-haru-muted">📝 연휴 첫날 부모님 댁 도착</div>
+            <div class="text-xs text-haru-muted mt-0.5">📅 2026. 9. 24. (목)</div>
+            <div class="text-xs text-haru-muted mt-0.5 text-haru-accent">🇰🇷 추석 인식 — 음력 8월 14일</div>
+            <div class="text-xs text-haru-muted mt-0.5">#가족</div>
+          </div>
+        </div>
+
+        <!-- 한국 자연어 입력 예시 모음 -->
+        <div class="mt-8">
+          <div class="text-xs uppercase tracking-widest text-haru-muted mb-2">또 이런 입력도 인식됩니다</div>
+          <div class="space-y-1.5">
+            <div class="text-xs text-haru-muted bg-black/5 px-3 py-2 rounded-lg">"내일 오후 3시 팀 회의 #회의"</div>
+            <div class="text-xs text-haru-muted bg-black/5 px-3 py-2 rounded-lg">"3일 후 치과 ~까지"</div>
+            <div class="text-xs text-haru-muted bg-black/5 px-3 py-2 rounded-lg">"이번주 금요일 회식"</div>
+            <div class="text-xs text-haru-muted bg-black/5 px-3 py-2 rounded-lg">"4/19 데드라인 !!!"</div>
+            <div class="text-xs text-haru-muted bg-black/5 px-3 py-2 rounded-lg">"월말 신용카드 결제일"</div>
+            <div class="text-xs text-haru-muted bg-black/5 px-3 py-2 rounded-lg">"설날 차례 준비"</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="phone-tabbar">
+        <div class="tab active"><span class="ico">☀︎</span><span>오늘</span></div>
+        <div class="tab"><span class="ico">▦</span><span>이번주</span></div>
+        <div class="tab"><span class="ico">▷</span><span>예정</span></div>
+        <div class="tab"><span class="ico">∞</span><span>언제든지</span></div>
+        <div class="tab"><span class="ico">✧</span><span>언젠가</span></div>
+        <div class="tab"><span class="ico">⚙</span><span>설정</span></div>
+      </div>
+    </div>
+  </div>
+
+  <a href="index.html" class="fixed bottom-6 right-6 text-xs px-4 py-2 rounded-full bg-haru-ink text-haru-paper">← 목업 허브</a>
+</body>
+</html>

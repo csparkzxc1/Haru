@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>이번주 · 하루</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="_shell.css" />
+  <script src="_shell.js" data-active="thisWeek"></script>
+</head>
+<body class="min-h-screen">
+  <div class="flex min-h-screen">
+    <aside id="sidebar"></aside>
+
+    <main class="flex-1 px-8 py-10 max-w-3xl mx-auto">
+      <header class="mb-8">
+        <h1 class="text-3xl font-semibold tracking-tight">이번주</h1>
+        <p class="text-sm text-haru-muted mt-1">한국 직장인 선호 뷰 · 월~일 <span class="ml-2 text-haru-accent">· 공휴일: 어린이날, 부처님오신날</span></p>
+      </header>
+
+      <form class="mb-8">
+        <div class="relative">
+          <input placeholder='무엇을 하실 건가요?  예: "다음주 수요일 회의 #회의"' class="w-full rounded-xl border border-black/10 bg-transparent px-4 py-3 text-[15px] outline-none focus:border-haru-accent transition-colors" />
+        </div>
+      </form>
+
+      <div class="space-y-6">
+        <section>
+          <div class="text-xs uppercase tracking-widest text-haru-muted mb-2">월 · 4월 28일</div>
+          <ul class="divide-y divide-black/5">
+            <li class="flex items-start gap-3 py-3">
+              <button class="mt-0.5 h-5 w-5 rounded-full bg-haru-accent border border-haru-accent text-white flex items-center justify-center text-[10px]">✓</button>
+              <div class="flex-1"><div class="text-[15px] line-through text-haru-muted">월요일 팀 스탠드업</div></div>
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <div class="text-xs uppercase tracking-widest text-haru-muted mb-2">화 · 4월 29일</div>
+          <ul class="divide-y divide-black/5">
+            <li class="flex items-start gap-3 py-3">
+              <button class="mt-0.5 h-5 w-5 rounded-full bg-haru-accent border border-haru-accent text-white flex items-center justify-center text-[10px]">✓</button>
+              <div class="flex-1"><div class="text-[15px] line-through text-haru-muted">PT 트레이닝 (저녁)</div></div>
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <div class="text-xs uppercase tracking-widest text-haru-muted mb-2">수 · 4월 30일</div>
+          <ul class="divide-y divide-black/5">
+            <li class="flex items-start gap-3 py-3">
+              <button class="mt-0.5 h-5 w-5 rounded-full border border-haru-muted/50 flex items-center justify-center"></button>
+              <div class="flex-1">
+                <div class="text-[15px]">신용카드 명세서 확인 (월말)</div>
+                <div class="mt-1 flex flex-wrap gap-2 text-xs text-haru-muted">
+                  <span class="bg-black/5 px-1.5 py-0.5 rounded">#가계부</span>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <div class="text-xs uppercase tracking-widest text-haru-muted mb-2">목 · 5월 1일 <span class="text-haru-accent normal-case tracking-normal">· 근로자의 날</span></div>
+          <ul class="divide-y divide-black/5">
+            <li class="flex items-start gap-3 py-3">
+              <button class="mt-0.5 h-5 w-5 rounded-full border border-haru-muted/50 flex items-center justify-center"></button>
+              <div class="flex-1"><div class="text-[15px]">친구 결혼식 (15만원)</div>
+                <div class="mt-1 flex flex-wrap gap-2 text-xs text-haru-muted">
+                  <span>📅 오전 11:00 · 강남 컨벤션</span>
+                  <span class="bg-black/5 px-1.5 py-0.5 rounded">#경조사</span>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </section>
+
+        <section class="opacity-100">
+          <div class="text-xs uppercase tracking-widest text-haru-accent mb-2">금 · 5월 2일 · 어린이날 · 오늘</div>
+          <ul class="divide-y divide-black/5">
+            <li class="flex items-start gap-3 py-3">
+              <button class="mt-0.5 h-5 w-5 rounded-full border border-haru-muted/50 flex items-center justify-center"></button>
+              <div class="flex-1"><div class="text-[15px]">주간보고 초안 작성</div></div>
+            </li>
+            <li class="flex items-start gap-3 py-3">
+              <button class="mt-0.5 h-5 w-5 rounded-full border border-haru-muted/50 flex items-center justify-center"></button>
+              <div class="flex-1"><div class="text-[15px]">자녀 어린이날 선물 사기</div></div>
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <div class="text-xs uppercase tracking-widest text-haru-muted mb-2">토 · 5월 3일</div>
+          <p class="text-sm text-haru-muted/60 py-2">예정된 할 일이 없습니다</p>
+        </section>
+
+        <section>
+          <div class="text-xs uppercase tracking-widest text-haru-muted mb-2">일 · 5월 4일 <span class="text-haru-accent normal-case tracking-normal">· 부처님오신날</span></div>
+          <ul class="divide-y divide-black/5">
+            <li class="flex items-start gap-3 py-3">
+              <button class="mt-0.5 h-5 w-5 rounded-full border border-haru-muted/50 flex items-center justify-center"></button>
+              <div class="flex-1"><div class="text-[15px]">부모님 댁 방문 (음력 8일)</div>
+                <div class="mt-1 flex flex-wrap gap-2 text-xs text-haru-muted">
+                  <span class="bg-black/5 px-1.5 py-0.5 rounded">#가족</span>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </section>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

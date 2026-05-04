@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <!-- 하루 아이콘 — 단색 + 한글 "하"
+       라이트 배경 (haru-paper #FAFAF7) + 액센트 동그라미 (haru-accent #FF6B35) -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FAFAF7" />
+      <stop offset="100%" stop-color="#F2F0E9" />
+    </linearGradient>
+    <radialGradient id="sun" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#FF8551" />
+      <stop offset="100%" stop-color="#FF6B35" />
+    </radialGradient>
+  </defs>
+
+  <!-- iOS adaptive 안전 영역 (86px corner radius for 1024 - 약 18%) -->
+  <rect width="1024" height="1024" rx="184" fill="url(#bg)" />
+
+  <!-- 떠오르는 해 — 오늘의 시작 -->
+  <circle cx="512" cy="392" r="148" fill="url(#sun)" />
+
+  <!-- 한글 "하" — Pretendard Bold 형태 stroke -->
+  <g transform="translate(512 700)" fill="#1C1C1E">
+    <!-- ㅎ -->
+    <text x="0" y="0" text-anchor="middle"
+          font-family="-apple-system, Apple SD Gothic Neo, Pretendard, Noto Sans KR, sans-serif"
+          font-size="280" font-weight="700"
+          letter-spacing="-8" dominant-baseline="middle">하</text>
+  </g>
+</svg>

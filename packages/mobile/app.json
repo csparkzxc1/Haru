@@ -7,26 +7,85 @@
     "scheme": "haru",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#FAFAF7"
+    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "kr.haru.app",
+      "requireFullScreen": false,
+      "buildNumber": "1",
       "infoPlist": {
-        "CFBundleLocalizations": ["ko"],
-        "CFBundleDevelopmentRegion": "ko"
-      }
+        "CFBundleLocalizations": ["ko", "ja"],
+        "CFBundleDevelopmentRegion": "ko",
+        "UISupportedInterfaceOrientations~ipad": [
+          "UIInterfaceOrientationPortrait",
+          "UIInterfaceOrientationPortraitUpsideDown",
+          "UIInterfaceOrientationLandscapeLeft",
+          "UIInterfaceOrientationLandscapeRight"
+        ],
+        "ITSAppUsesNonExemptEncryption": false
+      },
+      "associatedDomains": ["applinks:haru.app"]
     },
     "android": {
       "package": "kr.haru.app",
+      "versionCode": 1,
       "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#1C1C1E"
-      }
+      },
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "data": [{ "scheme": "haru" }],
+          "category": ["BROWSABLE", "DEFAULT"]
+        },
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            { "scheme": "https", "host": "haru.app", "pathPrefix": "/invite" }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
     },
     "web": {
       "bundler": "metro"
     },
-    "plugins": ["expo-router"],
+    "plugins": [
+      "expo-router",
+      "expo-updates",
+      [
+        "expo-notifications",
+        {
+          "color": "#FF6B35"
+        }
+      ]
+    ],
+    "notification": {
+      "iosDisplayInForeground": true
+    },
+    "updates": {
+      "url": "https://u.expo.dev/PROJECT_ID_REPLACE_AFTER_eas_init",
+      "fallbackToCacheTimeout": 0,
+      "checkAutomatically": "ON_LOAD"
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
     "experiments": {
       "typedRoutes": true
+    },
+    "owner": "haru",
+    "extra": {
+      "eas": {
+        "projectId": "PROJECT_ID_REPLACE_AFTER_eas_init"
+      }
     }
   }
 }
