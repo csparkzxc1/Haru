@@ -27,3 +27,8 @@ Thumbs.db
 
 # Temp files
 *.orig.*
+
+# EAS Submit credentials (절대 commit 금지)
+google-play-service-account.json
+**/google-play-service-account.json
+

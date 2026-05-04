@@ -17,6 +17,7 @@ Things 3의 미니멀한 철학을 계승하되, 한국인의 업무·생활·�
 - [`docs/SHORTCUTS.md`](docs/SHORTCUTS.md) — iOS Shortcuts · Siri · 빅스비 연동
 - [`docs/I18N.md`](docs/I18N.md) — 국제화 (ko/ja) + 일본 공휴일 모듈
 - [`docs/STORE.md`](docs/STORE.md) — 앱스토어 메타데이터 (한국/일본)
+- [`docs/EAS.md`](docs/EAS.md) — EAS Build · Submit · Update 가이드
 - [`docs/api/openapi.yaml`](docs/api/openapi.yaml) — 공개 API OpenAPI 3.1 스펙
 
 ## 모노레포 구조

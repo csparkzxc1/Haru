@@ -1,0 +1,72 @@
+name: 모바일 OTA 업데이트
+
+# JS 만 변경된 PR이 main 에 merge 되면 production 채널에 즉시 OTA push.
+# 네이티브 코드 변경(예: 새 expo 모듈) 은 OTA 가 안 되므로 별도 EAS Build.
+#
+# Runtime version 정책이 `appVersion` 이라 같은 marketing version (예: 0.1.x)
+# 이 깔린 사용자만 받게 된다. 0.2.0 으로 올리면 그 시점부터는 새 빌드로
+# 갈아탄 사용자만 받음 — 안전한 호환성 게이트.
+
+on:
+  push:
+    branches: [main, claude/korean-todo-app-0tfPk]
+    paths:
+      - "packages/mobile/**"
+      - "packages/shared/**"
+      - "!packages/mobile/ios/**"
+      - "!packages/mobile/android/**"
+      - "!packages/mobile/eas.json"
+      - "!packages/mobile/app.json"
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: "EAS Update 채널 (production / preview)"
+        required: true
+        default: "preview"
+        type: choice
+        options: [production, preview, development]
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.12.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: 의존성 설치
+        run: pnpm install --frozen-lockfile
+
+      - name: 채널 결정
+        id: channel
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "branch=${{ github.event.inputs.branch }}" >> $GITHUB_OUTPUT
+          else
+            echo "branch=production" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 메시지 (커밋 첫 줄)
+        id: msg
+        run: echo "msg=$(git log -1 --pretty=%s)" >> $GITHUB_OUTPUT
+
+      - name: EAS Update push
+        working-directory: packages/mobile
+        run: |
+          eas update \
+            --branch ${{ steps.channel.outputs.branch }} \
+            --message "${{ steps.msg.outputs.msg }}" \
+            --non-interactive

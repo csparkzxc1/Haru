@@ -17,6 +17,7 @@ import { useIsTablet } from "../lib/responsive";
 import { TabletSidebar } from "../components/SplitView";
 import * as Linking from "expo-linking";
 import { handleDeepLink } from "../lib/deep-link";
+import { checkForUpdates } from "../lib/ota";
 
 /**
  * 태블릿(>= 768pt 가로)이면 사이드바 옆에 콘텐츠. 폰이면 그대로 통과 →
@@ -45,6 +46,8 @@ function AuthedShell({ children }: { children: React.ReactNode }) {
       if (active) qc.invalidateQueries({ queryKey: ["local-tasks"] });
       // 푸시 토큰 등록은 권한 요청이 따르므로 비동기·실패 허용.
       void registerPushTokenWithBackend();
+      // OTA — 새 JS 번들이 있으면 다음 콜드 스타트에 적용.
+      void checkForUpdates();
     })();
 
     const sub = AppState.addEventListener("change", (state) => {
@@ -53,6 +56,7 @@ function AuthedShell({ children }: { children: React.ReactNode }) {
           qc.invalidateQueries({ queryKey: ["local-tasks"] });
           void syncLocalNotifications();
         });
+        void checkForUpdates();
       }
     });
 
